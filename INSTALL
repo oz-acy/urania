@@ -1,0 +1,11 @@
+"INSTALL" of LIBURANIA
+
+1. 基本的には ./configure, make, make install を順に實行すれば、
+   本ライブラリのヘッダファイル及びライブラリ・アーカイブは
+   /usr/local/include, /usr/local/lib にインストールされる。
+
+2. prefix を變更する場合は ./configure --prefix=DIR で變更すればよい。
+
+3. その他、./configure --help も參照のこと。
+
+4. 本ライブラリは Windows 用であり、他環境での使用は不可能である。

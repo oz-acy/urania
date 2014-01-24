@@ -1,0 +1,3 @@
+#include "csr.h"
+
+CV_CSR CURSOR cv.cur
