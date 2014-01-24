@@ -69,10 +69,10 @@ am_liburania_a_OBJECTS = sys.$(OBJEXT) sys-ws2mbs.$(OBJEXT) \
 	getLongPath.$(OBJEXT) task.$(OBJEXT) task3.$(OBJEXT) \
 	ctrl.$(OBJEXT) ctrl_sb.$(OBJEXT) bwin.$(OBJEXT) win.$(OBJEXT) \
 	scroll-h.$(OBJEXT) drop-h.$(OBJEXT) dialog.$(OBJEXT) \
-	menu.$(OBJEXT) menu2.$(OBJEXT) menudesc.$(OBJEXT) \
-	clkpanel.$(OBJEXT) cmndlg.$(OBJEXT) pdev.$(OBJEXT) \
-	pdev2.$(OBJEXT) pmdev.$(OBJEXT) pmdidx.$(OBJEXT) \
-	registry.$(OBJEXT) regread.$(OBJEXT) regwrite.$(OBJEXT)
+	menu.$(OBJEXT) menudesc.$(OBJEXT) clkpanel.$(OBJEXT) \
+	cmndlg.$(OBJEXT) pdev.$(OBJEXT) pdev2.$(OBJEXT) \
+	pmdev.$(OBJEXT) pmdidx.$(OBJEXT) registry.$(OBJEXT) \
+	regread.$(OBJEXT) regwrite.$(OBJEXT)
 liburania_a_OBJECTS = $(am_liburania_a_OBJECTS)
 DEFAULT_INCLUDES = -I.
 depcomp = $(SHELL) $(top_srcdir)/depcomp
@@ -213,7 +213,8 @@ liburania_a_SOURCES = \
 	bwin.h bwin.cpp \
 	win.h win.cpp scroll-h.cpp drop-h.cpp \
 	dialog.h dialog.cpp \
-	menu.h menu.cpp menu2.cpp menudesc.cpp \
+	menu.h menu.cpp \
+	menudesc.cpp \
 	clkpanel.h clkpanel.cpp cmndlg.h cmndlg.cpp \
 	pdev.h pdev.cpp pdev2.cpp pmdev.cpp pmdidx.cpp \
 	canvas.h \
@@ -341,7 +342,6 @@ include ./$(DEPDIR)/drop-h.Po
 include ./$(DEPDIR)/getCLArgs.Po
 include ./$(DEPDIR)/getLongPath.Po
 include ./$(DEPDIR)/menu.Po
-include ./$(DEPDIR)/menu2.Po
 include ./$(DEPDIR)/menudesc.Po
 include ./$(DEPDIR)/pdev.Po
 include ./$(DEPDIR)/pdev2.Po
