@@ -2,11 +2,11 @@
  *
  *  win.h
  *  by oZ/acy
- *  (c) 2002-2012 oZ/acy.  ALL RIGHTS RESERVED.
+ *  (c) 2002-2014 oZ/acy.  ALL RIGHTS RESERVED.
  *
  *  WINdow class
  *
- *  last update: 13 May MMXII
+ *  last update: 25 Jan MMXIV
  */
 #ifndef INC_URANIA_WINDOW_H___
 #define INC_URANIA_WINDOW_H___
@@ -20,13 +20,7 @@ namespace urania
 {
 
 struct WndMessage;
-class WMsgHandler;
-class WMHManager;
-
-class FuncHandler;
-class ScrollHandler;
-class DropHandler;
-
+class WMHandler;
 class WindowFactory;
 
 
@@ -47,10 +41,9 @@ struct urania::WndMessage
 
 
 /*------------------------------------------------
- * WMHManager
- * WMsgHandlerとWindow Messageの關係を管理
+ * WMsgHandler
  */
-class urania::WMHManager : boost::noncopyable
+class urania::WMHandler : boost::noncopyable
 {
 public:
   typedef void (*CmdHandler)(Window*);
@@ -59,8 +52,7 @@ private:
   std::map<int, CmdHandler> cmap_;
 
 public:
-  virtual ~WMHManager() {}
-
+  virtual ~WMHandler() {}
 
   virtual bool onDestroy() { return false; }
   virtual bool onSize(Window*, int typ, int w, int h) { return false; }
@@ -103,13 +95,13 @@ public:
 
 
 protected:
-  urania::WMHManager* msgmanager_;
+  urania::WMHandler* msgHandler_;
   urania::RCP_Menu menu_; // 関連づけられたメニュー
   bool dad_;  // trueなら Drag&Drop受け付ける
 
 
 protected:
-  Window() : dad_(false), msgmanager_(nullptr) {}
+  Window() : dad_(false), msgHandler_(nullptr) {}
 
   void init__(HWND hw);
   void uninit__();
@@ -119,8 +111,11 @@ public:
   ~Window()
   {
     deleting__();
-    delete msgmanager_;
+    delete msgHandler_;
   }
+
+  urania::RCP_Menu getMenu() const { return menu_; }
+  void setMenu(const urania::RCP_Menu& m) { linkMenu__(m); }
 
 protected:
   virtual LRESULT wproc__(UINT msg, WPARAM wp, LPARAM lp);
@@ -169,27 +164,27 @@ public:
       border_only(false), resizeable(false)
   {}
 
-  urania::Window* create(urania::WMHManager* mng, int menu =0)
+  urania::Window* create(urania::WMHandler* mh, int menu =0)
   {
-    return factory__(mng, menu, nullptr, 0);
+    return factory__(mh, menu, nullptr, 0);
   }
 
   urania::Window*
   createAsOwned(
-    urania::BasicWindow* owner, urania::WMHManager* mng, int menu =0)
+    urania::BasicWindow* owner, urania::WMHandler* mh, int menu =0)
   {
-    return factory__(mng, menu, owner, 0);
+    return factory__(mh, menu, owner, 0);
   }
 
   urania::Window*
-  createAsChild(urania::BasicWindow* parent, int cid, urania::WMHManager* mng)
+  createAsChild(urania::BasicWindow* parent, int cid, urania::WMHandler* mh)
   {
-    return factory__(mng, 0, parent, cid);
+    return factory__(mh, 0, parent, cid);
   }
 
 private:
   urania::Window* factory__(
-    urania::WMHManager* mng, int menu, urania::BasicWindow* par, int cid);
+    urania::WMHandler* mh, int menu, urania::BasicWindow* par, int cid);
 };
 
 

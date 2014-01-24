@@ -2,21 +2,21 @@
 *
 *  drop-h.cpp
 *  by oZ/acy
-*  (c) 2009-2012 oZ/acy. ALL RIGHTS RESERVED.
+*  (c) 2009-2014 oZ/acy. ALL RIGHTS RESERVED.
 *
 *  Dropfiles Handler
 *
-*  last update: 8 Apr 2012
+*  last update: 25 Jan 2014
 */
 
 #include "win.h"
 
 
 /*===============================================================
- *  WMHManager::onDropFiles_()
+ *  WMHandler::onDropFiles_()
  *  ドロップファイルの定型處理を行ひ、ユーザ實裝部を呼び出す
  */
-void urania::WMHManager::onDropFiles_(urania::Window* win, WPARAM wp)
+void urania::WMHandler::onDropFiles_(urania::Window* win, WPARAM wp)
 {
   HDROP hd = (HDROP)wp;
   POINT p;

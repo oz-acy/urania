@@ -4,7 +4,7 @@
  *  by oZ/acy
  *  (c) 2002-2014 oZ/acy. ALL RIGHTS RESERVED.
  *
- *  last update: 21 Jan MMXIV
+ *  last update: 25 Jan MMXIV
  *************************************************************************/
 
 #include "win.h"
@@ -19,12 +19,12 @@
  *==================================*/
 urania::Window*
 urania::WindowFactory::factory__(
-  urania::WMHManager* mng, int menu, urania::BasicWindow* par, int cid)
+  urania::WMHandler* mh, int menu, urania::BasicWindow* par, int cid)
 {
   Window* res = new Window;
 
   // ハンドラマネージャとD&Dの設定
-  res->msgmanager_ = mng;
+  res->msgHandler_ = mh;
   res->dad_ = drag_and_drop;
 
   // BasicWindow記述構造体の構築
@@ -70,14 +70,14 @@ urania::WindowFactory::factory__(
  *==============================================*/
 LRESULT urania::Window::wproc__(UINT msg, WPARAM wp, LPARAM lp)
 {
-  if (msgmanager_)
+  if (msgHandler_)
   {
     Msg_ m;
     m.window = this;
     m.id = msg;
     m.wparam = wp;
     m.lparam = lp;
-    return (*msgmanager_)(&m);
+    return (*msgHandler_)(&m);
   }
   else
     return defHandler(msg, wp, lp);
@@ -121,10 +121,10 @@ void urania::Window::uninit__()
 
 
 /*================================================
- *  WMHManager::operator()
+ *  WMHandler::operator()
  *  メッセージに應じてハンドラを呼び出す
  */
-LRESULT urania::WMHManager::operator()(urania::WndMessage* msg)
+LRESULT urania::WMHandler::operator()(urania::WndMessage* msg)
 {
   using namespace std;
   using namespace std::placeholders;
@@ -168,7 +168,7 @@ LRESULT urania::WMHManager::operator()(urania::WndMessage* msg)
 
   case WM_PAINT:
     return msg->window->onPaint(
-             bind(&WMHManager::onPaint, this, _1, _2),
+             bind(&WMHandler::onPaint, this, _1, _2),
              msg->wparam, msg->lparam);
     break;
 

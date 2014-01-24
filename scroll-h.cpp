@@ -2,19 +2,19 @@
  *
  *  scroll-h.cpp
  *  by oZ/acy
- *  (c) 2009-2012 oZ/acy. ALL RIGHTS RESERVED.
+ *  (c) 2009-2014 oZ/acy. ALL RIGHTS RESERVED.
  *
- *  last update: 13 May 2012
+ *  last update: 25 Jan 2014
  *************************************************************************/
 
 #include "win.h"
 
 
 /*==========================================================
- *  WMHManager::onScroll_()
+ *  WMHandler::onScroll_()
  *  スクロール系の定型處理を行ひ、コールバックを呼び出す
  */
-void urania::WMHManager::onScroll_(
+void urania::WMHandler::onScroll_(
   urania::Window* w, UINT msg, WPARAM wparam, LPARAM lparam)
 {
   int code = LOWORD(wparam);
