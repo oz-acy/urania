@@ -114,7 +114,6 @@ public:
     delete msgHandler_;
   }
 
-  urania::WMHandler* getHandler() const { return msgHandler_; }
   urania::RCP_Menu getMenu() const { return menu_; }
   void setMenu(const urania::RCP_Menu& m) { linkMenu__(m); }
 

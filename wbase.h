@@ -7,7 +7,7 @@
  *  Window & Dialog BASE class
  *  Window, Dialog 共通の HWND 管理用基底クラス
  *
- *  last update: 20 Jan MMXIV
+ *  last update: 25 Jan MMXIV
  *************************************************************************/
 #ifndef INC_URANIA_WBASE_H___
 #define INC_URANIA_WBASE_H___
@@ -213,6 +213,16 @@ public:
       ::SetWindowPos(hw_, NULL, x, y, 0, 0, SWP_NOSIZE|SWP_NOZORDER);
   }
 
+  //=======================
+  // postMessage()
+  // メッセージを投げる
+  //=======================
+  void postMessage(UINT msg, WPARAM wp, LPARAM lp)
+  {
+    if (hw_)
+      ::PostMessage(hw_, msg, wp, lp);
+  }
+
 
   /////////////////////////////////////////
   //  Window本体情報取得系
@@ -265,6 +275,12 @@ public:
   }
 
 
+  ///////////////////////////////////////
+  //  コントロールの有效化/無效化
+  ///////////////////////////////////////
+  void enableCtrl(int id);
+  void disableCtrl(int id);
+
   //////////////////////////////////////////////
   //  コントロール生成系
   //////////////////////////////////////////////
@@ -280,8 +296,6 @@ public:
   void createActiveButton(
     int id, const std::wstring& str, const urania::CtrlDesc& de);
 
-  void enableCtrl(int id);
-  void disableCtrl(int id);
 
 
   ///////////////////////////////
@@ -398,7 +412,7 @@ public:
   //  ID付きスクロールバー操作系
   //  (2012.5.13以降削除)
   /////////////////////////////////////////////
-
+  /*
   void setIDSBarRange(int id, int min, int max)
   {
     if (!hw_)
@@ -430,7 +444,7 @@ public:
     HWND w = ::GetDlgItem(hw_, id);
     ::EnableScrollBar(w, SB_CTL, ESB_DISABLE_BOTH);
   }
-
+  */
 
   //////////////////////////////
   //  共通 (2012.5.13以降追加)

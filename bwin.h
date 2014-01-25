@@ -7,7 +7,7 @@
  *  Basic WINdow  for part "URANIA"
  *  Window—pŠî’êƒNƒ‰ƒX
  *
- *  last update: 20 Jan MMXVI
+ *  last update: 20 Jan MMXIV
  *
  *************************************************************************/
 
