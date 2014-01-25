@@ -11,7 +11,7 @@
 #include <cstdlib>
 #include <algorithm>
 #include <functional>
-
+#include <windowsx.h>
 
 /*====================================
  *  WindowFactory::factory__()
@@ -172,6 +172,16 @@ LRESULT urania::WMHandler::operator()(urania::WndMessage* msg)
              msg->wparam, msg->lparam);
     break;
 
+  case WM_MOUSEWHEEL:
+    {
+      int d = GET_WHEEL_DELTA_WPARAM(msg->wparam);
+      int k = GET_KEYSTATE_WPARAM(msg->wparam);
+      int x = GET_X_LPARAM(msg->lparam);
+      int y = GET_Y_LPARAM(msg->lparam);
+      onMouseWheel(msg->window, d, k, x, y);
+    }
+    return 0;
+    break;
 
   case WM_HSCROLL:
   case WM_VSCROLL:
@@ -183,7 +193,6 @@ LRESULT urania::WMHandler::operator()(urania::WndMessage* msg)
     onDropFiles_(msg->window, msg->wparam);
     return 0;
     break;
-
   }
 
   return msg->window->defHandler(msg->id, msg->wparam, msg->lparam);

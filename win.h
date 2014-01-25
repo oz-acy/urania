@@ -61,10 +61,12 @@ public:
 
   virtual void onPaint(BasicWindow*, PaintDevice*) {}
   virtual void onScroll(Window*, int id, int pos) {}
+  virtual void onMouseWheel(Window* w, int delta, int keys, int x, int y) {}
 
   virtual void onDropFiles(
     Window* w, std::vector<std::wstring>& fa, int x, int y)
     {}
+
 
   void set(int cmdid, CmdHandler c) { cmap_[cmdid] = c; }
   LRESULT operator()(urania::WndMessage* msg);
