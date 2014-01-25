@@ -2,8 +2,8 @@ dnl ====================================================================
 dnl   configure.in for URANIA
 dnl ====================================================================
 
-AC_PREREQ(2.61)
-AC_INIT(urania, 0.5.3, [acy@hiemalis.org])
+AC_PREREQ([2.69])
+AC_INIT(urania, 0.6.0, [acy@hiemalis.org])
 AC_CONFIG_SRCDIR([wmain.cpp])
 AC_CONFIG_HEADER([config.h])
 AM_INIT_AUTOMAKE
