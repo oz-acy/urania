@@ -1,4 +1,4 @@
-"INSTALL" of LIBPOLYMNIA
+"INSTALL" of LIBURANIA
 
 1. 基本的には、cmake, make, make install を順に實行すれば、
    本ライブラリのヘッダファイルやライブラリアーカイブは
