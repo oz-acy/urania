@@ -1,13 +1,14 @@
 /**************************************************************************
-*
-*  drop-h.cpp
-*  by oZ/acy
-*  (c) 2009-2014 oZ/acy. ALL RIGHTS RESERVED.
-*
-*  Dropfiles Handler
-*
-*  last update: 25 Jan 2014
-*/
+ *
+ *  drop-h.cpp
+ *  by oZ/acy
+ *  (c) 2009-2014 oZ/acy. ALL RIGHTS RESERVED.
+ *
+ *  Dropfiles Handler
+ *
+ *  óöó
+ *    2016.2.28  èCê≥
+ */
 
 #include "win.h"
 
@@ -23,12 +24,12 @@ void urania::WMHandler::onDropFiles_(urania::Window* win, WPARAM wp)
   DragQueryPoint(hd, &p);
 
   std::vector<std::wstring> astr;
-  wchar_t temp[256];
+  wchar_t temp[MAX_PATH];
   int n = DragQueryFile(hd, 0xffffffff, nullptr, 0);
 
   for (int i = 0; i < n; i++)
   {
-    DragQueryFile(hd, i, temp, 256);
+    DragQueryFile(hd, i, temp, MAX_PATH);
     astr.push_back(temp);
   }
 

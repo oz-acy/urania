@@ -2,40 +2,40 @@
  *
  *  bwin.cpp
  *  by oZ/acy
- *  (c) 2002-2014 oZ/acy.  ALL RIGHTS RESERVED.
+ *  (c) 2002-2016 oZ/acy.  ALL RIGHTS RESERVED.
  *
- *  Window—pŠî’êƒNƒ‰ƒX À‘•
+ *  Windowç”¨åŸºåº•ã‚¯ãƒ©ã‚¹ å®Ÿè£…
  *
- *  last update: 20 Jan MMXIV
- *
+ *  å±¥æ­´
+ *    2016.2.28  ä¿®æ­£
  *************************************************************************/
 
-#include "bwin.h"
 #include <cstdlib>
 #include <algorithm>
 #include <sstream>
+#include "bwin.h"
 
 
-/* WNDCLASS“o˜^î•ñƒxƒNƒ^ */
+/* WNDCLASSç™»éŒ²æƒ…å ±ãƒ™ã‚¯ã‚¿ */
 std::vector<urania::BasicWindow::WC_> urania::BasicWindow::vwc_S;
 
 
 /*============================================
  *  BasicWindow::registWC__()
- *  WNDCLASS“o˜^ & WNDCLASS–¼‚ğ•Ô‚·
- *  “¯‚¶“à—e‚ÌWNDCLASS‚Ì“ñd“o˜^‚ğ‘j~‚·‚é
+ *  WNDCLASSç™»éŒ² & WNDCLASSåã‚’è¿”ã™
+ *  åŒã˜å†…å®¹ã®WNDCLASSã®äºŒé‡ç™»éŒ²ã‚’é˜»æ­¢ã™ã‚‹
  *==========================================*/
 std::wstring urania::BasicWindow::registWC__
 (const urania::BasicWindow::WC_& wc)
 {
   std::vector<WC_>::iterator it = std::find(vwc_S.begin(), vwc_S.end(), wc);
-  if (it==vwc_S.end())
+  if (it == vwc_S.end())
   {
     ////////////////////////////////////////////////////////
-    // WNDCLASS‚Ì“o˜^‚Ævector‚Ö‚Ì’Ç‰Á
+    // WNDCLASSã®ç™»éŒ²ã¨vectorã¸ã®è¿½åŠ 
     ////////////////////////////////////////////////////////
 
-    // ƒNƒ‰ƒX–¼‚ğWC_‚Éİ’è
+    // ã‚¯ãƒ©ã‚¹åã‚’WC_ã«è¨­å®š
     WC_ wc2 = wc;
     //std::wostringstream tmp;
     std::basic_ostringstream<wchar_t> tmp;
@@ -58,20 +58,20 @@ std::wstring urania::BasicWindow::registWC__
       wc2.wcname_.c_str()
     };
 
-    // Icon ‚Ìİ’è
-    if (wc2.icon_id_!=DEFAULT_RC)
+    // Icon ã®è¨­å®š
+    if (wc2.icon_id_ != DEFAULT_RC)
       wndcls.hIcon = LoadIcon(getHI__(), MAKEINTRESOURCE(wc2.icon_id_));
     else
       wndcls.hIcon = LoadIcon(0, IDI_APPLICATION);
 
-    // Cursor ‚Ìİ’è
-    if (wc2.cursor_id_!=DEFAULT_RC)
+    // Cursor ã®è¨­å®š
+    if (wc2.cursor_id_ != DEFAULT_RC)
       wndcls.hCursor = LoadCursor(getHI__(), MAKEINTRESOURCE(wc2.cursor_id_));
     else
       wndcls.hCursor = LoadCursor(0, IDC_ARROW);
 
 
-    // ”wŒiF‚Ìİ’è
+    // èƒŒæ™¯è‰²ã®è¨­å®š
     switch (wc2.bkcolor_)
     {
     case BG_WHITE:
@@ -107,27 +107,27 @@ std::wstring urania::BasicWindow::registWC__
       break;
     }
 
-    // ÀÛ‚É“o˜^
+    // å®Ÿéš›ã«ç™»éŒ²
     ::RegisterClass(&wndcls);
 
     vwc_S.push_back(wc2);
     return wc2.wcname_;
   }
   else
-    return it->wcname_; // WNDCLASS–¼‚ğ•Ô‚·
+    return it->wcname_; // WNDCLASSåã‚’è¿”ã™
 }
 
 
 /*=========================================
  *  BasicWindow::createWindow0__()
- *  ƒEƒBƒ“ƒhƒE‚Ì¶¬
+ *  ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ç”Ÿæˆ
  *=======================================*/
 void urania::BasicWindow::createWindow0__(const urania::BasicWindow::D0_& de)
 {
   HWND hwnd;
   int style = WS_CLIPCHILDREN;
 
-  // WNDCLASS‚ª–¢“o˜^‚È‚ç“o˜^‚·‚é
+  // WNDCLASSãŒæœªç™»éŒ²ãªã‚‰ç™»éŒ²ã™ã‚‹
   WC_ wc;
   wc.icon_id_ = de.icon;
   wc.cursor_id_ = de.cursor;
@@ -138,7 +138,7 @@ void urania::BasicWindow::createWindow0__(const urania::BasicWindow::D0_& de)
     wc.proc_ = winproc__;
   std::wstring wcname = registWC__(wc);
 
-  // Window Style ‚Ìİ’è
+  // Window Style ã®è¨­å®š
   if (de.can_resize)
     style |= WS_THICKFRAME;
   if (de.v_scrollbar)
@@ -150,7 +150,7 @@ void urania::BasicWindow::createWindow0__(const urania::BasicWindow::D0_& de)
   if (de.minbox)
     style |= WS_MINIMIZEBOX;
 
-  // qWindow‚É‚È‚é‚©‚Ç‚¤‚©‚Å•Ï‚í‚éİ’è
+  // å­Windowã«ãªã‚‹ã‹ã©ã†ã‹ã§å¤‰ã‚ã‚‹è¨­å®š
   if (de.pwnd && de.hm)
   {
     style |= WS_CHILD | WS_CLIPSIBLINGS;
@@ -169,7 +169,7 @@ void urania::BasicWindow::createWindow0__(const urania::BasicWindow::D0_& de)
       style |= WS_POPUP;
   }
 
-  // Window‚ğÀÛ‚É¶¬E‰Â‹‰»EXV
+  // Windowã‚’å®Ÿéš›ã«ç”Ÿæˆãƒ»å¯è¦–åŒ–ãƒ»æ›´æ–°
   hwnd
     = ::CreateWindow(
         wcname.c_str(), de.title.c_str(), style, de.x, de.y, de.w, de.h,
@@ -182,14 +182,14 @@ void urania::BasicWindow::createWindow0__(const urania::BasicWindow::D0_& de)
 
 /*===================================================================
  *  BasicWindow::winproc__()
- *  BasicWindow‚ÆŒ‹‡‚µ‚Ä‚¢‚éHWND—p‚ÌWindow Procedure
+ *  BasicWindowã¨çµåˆã—ã¦ã„ã‚‹HWNDç”¨ã®Window Procedure
  *=================================================================*/
 LRESULT CALLBACK urania::BasicWindow::winproc__(
   HWND hw, UINT msg, WPARAM wp, LPARAM lp)
 {
   BasicWindow* pw = (BasicWindow*)GetWindowLongPtr(hw, 0);
 
-  // pw‚ªİ’è‚³‚ê‚Ä‚È‚¢‚Æ‚«‚Ìˆ—
+  // pwãŒè¨­å®šã•ã‚Œã¦ãªã„ã¨ãã®å‡¦ç†
   if (!pw)
   {
     if (msg != WM_CREATE)
@@ -216,7 +216,7 @@ LRESULT CALLBACK urania::BasicWindow::winproc__(
 
 /*=======================================
  *  BasicWindow::defHandler()
- *  ƒfƒtƒHƒ‹ƒg‚ÌƒƒbƒZ[ƒWˆ—
+ *  ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸å‡¦ç†
  *=====================================*/
 LRESULT urania::BasicWindow::defHandler(UINT msg, WPARAM wp, LPARAM lp)
 {
@@ -227,7 +227,7 @@ LRESULT urania::BasicWindow::defHandler(UINT msg, WPARAM wp, LPARAM lp)
 
 /*========================================================
  *  BasicWindow::getPaintDevice()
- *  Window‚ÌDC‚É‘Î‰‚µ‚½PaintDevice‚ğ¶¬
+ *  Windowã®DCã«å¯¾å¿œã—ãŸPaintDeviceã‚’ç”Ÿæˆ
  *======================================================*/
 namespace
 {

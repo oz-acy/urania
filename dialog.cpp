@@ -2,20 +2,19 @@
  *
  *  dialog.cpp
  *  by oZ/acy
- *  (c) 2002-2014 oZ/acy.  ALL RIGHTS RESERVED.
+ *  (c) 2002-2016 oZ/acy.  ALL RIGHTS RESERVED.
  *
- *  DialogBox ƒNƒ‰ƒX›‰åä
+ *  DialogBox ã‚¯ãƒ©ã‚¹å¯¦è£
  *
- *  last update : 21 Jan 2014
- *
+ *  å±¥æ­´
+ *    2016.2.28  ä¿®æ­£
  *************************************************************************/
 
 #include "dialog.h"
 
-
 /*====================================
  *  Dialog::doModal()
- *  Modal‚ÈDialogBox‚Ì‰^—p
+ *  ModalãªDialogBoxã®é‹ç”¨
  *==================================*/
 int urania::Dialog::doModal(int rid, Ini_ ini, Ini_ ui, H_ hnd, void* app)
 {
@@ -23,14 +22,13 @@ int urania::Dialog::doModal(int rid, Ini_ ini, Ini_ ui, H_ hnd, void* app)
 
   return
     ::DialogBoxParam(
-      getHI__(), MAKEINTRESOURCE(rid), NULL, (DLGPROC)dlgproc__,
-      reinterpret_cast<LPARAM>(dlg));
+      getHI__(), MAKEINTRESOURCE(rid), NULL, (DLGPROC)dlgproc__, (LPARAM)dlg);
 }
 
 
 /*-----------------------------
  *  Dialog::doModeless()
- *  Modeless Dialog‚Ì¶¬
+ *  Modeless Dialogã®ç”Ÿæˆ
  *---------------------------*/
 urania::Dialog* urania::Dialog::doModeless(
   int rid, Ini_ ini, Ini_ ui, H_ hnd, void* app)
@@ -38,8 +36,7 @@ urania::Dialog* urania::Dialog::doModeless(
   Dialog* dlg = new Dialog(ini, ui, hnd, false, app);
 
   ::CreateDialogParam(
-    getHI__(), MAKEINTRESOURCE(rid), NULL, (DLGPROC)dlgproc__,
-    reinterpret_cast<LPARAM>(dlg));
+    getHI__(), MAKEINTRESOURCE(rid), NULL, (DLGPROC)dlgproc__, (LPARAM)dlg);
 
   return dlg;
 }
@@ -47,7 +44,7 @@ urania::Dialog* urania::Dialog::doModeless(
 
 /*----------------------------------
  *  doOwnedModal()
- *  ƒI[ƒi[•t‚«Modal DialogÀs
+ *  ã‚ªãƒ¼ãƒŠãƒ¼ä»˜ãModal Dialogå®Ÿè¡Œ
  *--------------------------------*/
 int urania::Dialog::doOwnedModal(
   int rid, urania::WndBase* par, Ini_ ini, Ini_ ui, H_ hnd, void* app)
@@ -57,13 +54,13 @@ int urania::Dialog::doOwnedModal(
   return
     ::DialogBoxParam(
       getHI__(), MAKEINTRESOURCE(rid), getHW__(par), (DLGPROC)dlgproc__,
-      reinterpret_cast<LPARAM>(dlg));
+      (LPARAM)dlg);
 }
 
 
 /*-------------------------------------
  *  doOwnedModeless()
- *  ƒI[ƒi[•t‚«ModelessDialog¶¬
+ *  ã‚ªãƒ¼ãƒŠãƒ¼ä»˜ãModelessDialogç”Ÿæˆ
  *-----------------------------------*/
 urania::Dialog* urania::Dialog::doOwnedModeless(
   int rid, urania::WndBase* par, Ini_ ini, Ini_ ui, H_ hnd, void* app)
@@ -72,7 +69,7 @@ urania::Dialog* urania::Dialog::doOwnedModeless(
 
   ::CreateDialogParam(
     getHI__(), MAKEINTRESOURCE(rid), getHW__(par), (DLGPROC)dlgproc__,
-    reinterpret_cast<LPARAM>(dlg));
+    (LPARAM)dlg);
 
   return dlg;
 }
@@ -81,7 +78,7 @@ urania::Dialog* urania::Dialog::doOwnedModeless(
 
 /*-------------------------------------------------
  *  Dialog::dlgproc__()
- *  Dialog‚ÆŒ‹‡‚µ‚Ä‚¢‚éDialogBox—p‚ÌDlgProc
+ *  Dialogã¨çµåˆã—ã¦ã„ã‚‹DialogBoxç”¨ã®DlgProc
  *-----------------------------------------------*/
 BOOL CALLBACK urania::Dialog::dlgproc__(HWND hw, UINT msg, WPARAM wp, LPARAM lp)
 {
@@ -111,7 +108,7 @@ BOOL CALLBACK urania::Dialog::dlgproc__(HWND hw, UINT msg, WPARAM wp, LPARAM lp)
 
 /*------------------------------------------
  *  Dialog::dproc__()
- *  ŠeDialog‚ÌƒƒbƒZ[ƒWˆ—ƒvƒƒV[ƒWƒƒ
+ *  å„Dialogã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸å‡¦ç†ãƒ—ãƒ­ã‚·ãƒ¼ã‚¸ãƒ£
  *----------------------------------------*/
 BOOL urania::Dialog::dproc__(UINT msg, WPARAM wp, LPARAM lp)
 {
@@ -124,7 +121,7 @@ BOOL urania::Dialog::dproc__(UINT msg, WPARAM wp, LPARAM lp)
 
 /*-----------------------------
  *  Dialog::endModal()
- *  Modal DialogBox‚ÌI—¹
+ *  Modal DialogBoxã®çµ‚äº†
  *---------------------------*/
 void urania::Dialog::endModal(int i)
 {
@@ -135,7 +132,7 @@ void urania::Dialog::endModal(int i)
 
 /*------------------------------
  *  Dialog::destroyWindow__()
- *  DialogBox‚Ì”jŠü
+ *  DialogBoxã®ç ´æ£„
  *----------------------------*/
 void urania::Dialog::destroyWindow__()
 {
@@ -149,19 +146,19 @@ void urania::Dialog::destroyWindow__()
 
 /*-------------------------------
  *  Dialog::init__()
- *  ƒƒbƒZ[ƒWˆ—Œn‚Ì‰Šú‰»
+ *  ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸å‡¦ç†ç³»ã®åˆæœŸåŒ–
  *-----------------------------*/
 void urania::Dialog::init__(HWND hw)
 {
-  // HWND‚ÆWindow object‚ÌŒ‹‡
+  // HWNDã¨Window objectã®çµåˆ
    if (modal_)
      attach__(hw);
    else
      link__(hw);
 
-   SetWindowLong(hw, DWLP_USER, reinterpret_cast<ULONG_PTR>(this));
+   SetWindowLongPtr(hw, DWLP_USER, (LONG_PTR)this);
 
-  // initializer‚ÌŒÄ‚Ño‚µ
+  // initializerã®å‘¼ã³å‡ºã—
    if (init_)
      init_(this);
 }
@@ -169,19 +166,20 @@ void urania::Dialog::init__(HWND hw)
 
 /*-------------------------------
  *  Dialog::uninit__()
- *  ƒƒbƒZ[ƒWˆ—Œn‚ÌŒãn––
- *  destroyed‚Ædeleting‚Ì‰º¿
+ *  ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸å‡¦ç†ç³»ã®å¾Œå§‹æœ«
+ *  destroyedã¨deletingã®ä¸‹è«‹
  *-----------------------------*/
 void urania::Dialog::uninit__()
 {
-  // uninitializer‚ÌŒÄ‚Ño‚µ
+  // uninitializerã®å‘¼ã³å‡ºã—
   if (uninit_)
     uninit_(this);
 
-  // HWND‘¤‚©‚ç‚ÌƒŠƒ“ƒN‚ğØ’f
+  // HWNDå´ã‹ã‚‰ã®ãƒªãƒ³ã‚¯ã‚’åˆ‡æ–­
   if (hw_)
-    ::SetWindowLong(hw_, DWLP_USER, reinterpret_cast<ULONG_PTR>(nullptr));
+    ::SetWindowLongPtr(hw_, DWLP_USER, (LONG_PTR)nullptr);
 }
+
 
 
 

@@ -1,15 +1,16 @@
 /**************************************************************************
-*
-*  getCLArgs.cpp
-*  by oZ/acy
-*  (c) 2004-2008 oZ/acy.  ALL RIGHTS RESERVED.
-*
-*  —š—ğ
-*    14 Feb 2004  ì¬
-*    30 Mar 2008  C³
-**************************************************************************/
+ *
+ *  getCLArgs.cpp
+ *  by oZ/acy
+ *  (c) 2004-2008 oZ/acy.  ALL RIGHTS RESERVED.
+ *
+ *  —š—ğ
+ *    14 Feb 2004  ì¬
+ *    30 Mar 2008  C³
+ *    27 Feb 2016  C³
+ *************************************************************************/
 
-#include "sys.h"
+#include "system.h"
 
 // ‚à‚µ‚©‚µ‚ÄƒRƒ“ƒpƒCƒ‰ˆË‘¶??
 extern int __argc;
@@ -23,7 +24,7 @@ std::vector<std::string> urania::System::getCmdLineArgs()
 {
   std::vector<std::string> args(__argc);
 
-  for (int i=0; i < __argc; i++)
+  for (int i = 0; i < __argc; i++)
     args[i] = __argv[i];
 
   return args;

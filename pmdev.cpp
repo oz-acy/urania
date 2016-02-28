@@ -2,15 +2,16 @@
  *
  *  pmdev.cpp
  *  by oZ/acy
- *  (c) 2002-2011 oZ/acy.  ALL RIGHTS RESERVED.
+ *  (c) 2002-2016 oZ/acy.  ALL RIGHTS RESERVED.
  *
  *  class urania::PaintMemDevice ‚ÌÀ‘•’è‹`
  *
- *  last update: 8 Sep 2011
+ *  —š—ğ
+ *    2016.2.27  C³
  **************************************************************************/
 
 #include <algorithm>
-#include "pdev.h"
+#include "paintdev.h"
 
 /*================================================
  *  PaintMemDevice::PaintMemDevice()
@@ -21,9 +22,9 @@ urania::PaintMemDevice::PaintMemDevice(unsigned w, unsigned h)
 {
   using namespace std;
 
-  int s = sizeof(C_);
-  int oo = w_*sizeof(C_);
-  offset_ = (oo%(4*s)) ? (oo/(4*s)+1)*4 : oo/s;
+  int s = sizeof(Color);
+  int oo = w_ * sizeof(Color);
+  offset_ = (oo % (4 * s)) ? (oo / (4 * s) + 1) * 4  :  oo / s;
 
   HBITMAP hBitmapNew;
   HDC hTmpDC;
@@ -129,15 +130,15 @@ urania::PaintMemDevice::create(const polymnia::Picture* pct)
     return nullptr;
 
   const polymnia::RgbColor* src = pct->buffer();
-  C_* res = vd->buffer();
+  Color* res = vd->buffer();
 
-  int p=0;
-  int q=0;
+  int p = 0;
+  int q = 0;
   int o = pct->offset();
   int oo = vd->offset_;
-  for (int j=0; j<hh; j++, p+=o, q+=oo)
-    for (int i=0; i<ww; i++)
-      res[q+i] = src[p+i];
+  for (int j = 0; j < hh; j++, p += o, q += oo)
+    for (int i = 0; i < ww; i++)
+      res[q + i] = src[p + i];
 
   return vd;
 }
@@ -158,12 +159,12 @@ polymnia::Picture* urania::PaintMemDevice::createPicture() const
 
   RgbColor* res = pct->buffer();
 
-  int p=0;
-  int q=0;
+  int p = 0;
+  int q = 0;
   int oo = pct->offset();
-  for (int j=0; j<h_; j++, p+=offset_, q+=oo)
-    for (int i=0; i<w_; i++)
-      res[q+i] = buf_[p+i];
+  for (int j = 0; j < h_; j++, p += offset_, q += oo)
+    for (int i = 0; i < w_; i++)
+      res[q + i] = buf_[p + i];
 
   return pct;
 }
@@ -185,6 +186,8 @@ urania::PaintMemDevice* urania::PaintMemDevice::clone() const
   copy(buf_, buf_ + h_ * offset_, res->buf_);
   return res;
 }
+
+
 
 
 //eof

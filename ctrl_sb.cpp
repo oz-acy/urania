@@ -2,18 +2,20 @@
  *
  *  ctrl_sb.cpp
  *  by oZ/acy
- *  (c) 2012 oZ/acy.  ALL RIGHTS RESERVED.
+ *  (c) 2012-2016 oZ/acy.  ALL RIGHTS RESERVED.
  *
  *  WndBase スクロールバー制禦關係
  *
- *  last update : 13 May MMXII
+ *  履歴
+ *    2016.2.27  修正
  *************************************************************************/
+
 #include "wbase.h"
 
 /*================================================
  *  スクロール位置を設定
  */
-int urania::WndBase::getSBPos(int id)
+int urania::WndBase::getPosSB(int id)
 {
   HWND w;
   int bar;
@@ -46,7 +48,7 @@ int urania::WndBase::getSBPos(int id)
 /*================================================
  *  スクロール位置を取得
  */
-void urania::WndBase::setSBPos(int id, int pos)
+void urania::WndBase::setPosSB(int id, int pos)
 {
   HWND w;
   int bar;
@@ -80,7 +82,7 @@ void urania::WndBase::setSBPos(int id, int pos)
 /*================================================
  *  レンジを設定
  */
-void urania::WndBase::setSBRange(int id, int min, int max, int page)
+void urania::WndBase::setRangeSB(int id, int min, int max, int page)
 {
   HWND w;
   int bar;

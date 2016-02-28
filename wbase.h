@@ -2,19 +2,20 @@
  *
  *  wbase.h
  *  by oZ/acy
- *  (c) 2002-2014 oZ/acy.  ALL RIGHTS RESERVED.
+ *  (c) 2002-2016 oZ/acy.  ALL RIGHTS RESERVED.
  *
  *  Window & Dialog BASE class
  *  Window, Dialog 共通の HWND 管理用基底クラス
  *
- *  last update: 25 Jan MMXIV
+ *  履歴
+ *    2016.2.27  修正
  *************************************************************************/
-#ifndef INC_URANIA_WBASE_H___
-#define INC_URANIA_WBASE_H___
+#ifndef INC_URANIA_WINDOW_BASE_H___
+#define INC_URANIA_WINDOW_BASE_H___
 
-#include "sys.h"
 #include <boost/utility.hpp>
 #include <polymnia/ibuf.h>
+#include "system.h"
 
 
 /*-------------------------------------------
@@ -27,8 +28,8 @@ class urania::WndBase : boost::noncopyable
   friend class urania::System;
   friend class urania::CommonDialogBase;
 
-private:
-  typedef urania::WndBase* P_;
+//private:
+//  typedef urania::WndBase* P_;
 
 protected:
   HWND hw_;
@@ -131,7 +132,7 @@ protected:
     return System::hi_S;
   }
 
-  static HWND getHW__(P_ wb)
+  static HWND getHW__(urania::WndBase* wb)
   {
     return wb->hw_;
   }
@@ -140,7 +141,7 @@ public:
   /////////////////////////////////////
   //  HWND取得
   /////////////////////////////////////
-  static HWND getHWND(P_ wb)
+  static HWND getHWND(urania::WndBase* wb)
   {
     return wb->hw_;
   }
@@ -278,21 +279,74 @@ public:
   ///////////////////////////////////////
   //  コントロールの有效化/無效化
   ///////////////////////////////////////
-  void enableCtrl(int id);
-  void disableCtrl(int id);
+  void enableCtrl(int id)
+  {
+    HWND w = GetDlgItem(hw_, id);
+    ::EnableWindow(w, TRUE);
+  }
+
+  void disableCtrl(int id)
+  {
+    HWND w = GetDlgItem(hw_, id);
+    ::EnableWindow(w, FALSE);
+  }
 
   //////////////////////////////////////////////
   //  コントロール生成系
   //////////////////////////////////////////////
-  void createSEditBox(int id, const urania::CtrlDesc& de);
-  void createMEditBox(int id, const urania::CtrlDesc& de);
-  void createListBox(int id, const urania::CtrlDesc& de);
-  void createComboBox(int id, const urania::CtrlDesc& de);
+  void createEditBox(int id, const urania::CtrlDesc& de)
+  {
+    CreateWindow(L"EDIT", L"", WS_CHILD | WS_VISIBLE | WS_BORDER,
+      de.x, de.y, de.w, de.h, hw_, (HMENU)id, getHI__(), nullptr);
+  }
+
+  void createMultiLineEditBox(int id, const urania::CtrlDesc& de)
+  {
+    CreateWindow(L"EDIT", L"",
+      WS_CHILD | WS_VISIBLE | WS_BORDER | ES_MULTILINE | ES_NOHIDESEL |
+      ES_WANTRETURN | ES_AUTOVSCROLL | WS_VSCROLL,
+      de.x, de.y, de.w, de.h, hw_, (HMENU)id, getHI__(), nullptr);
+  }
+
+  void createListBox(int id, const urania::CtrlDesc& de)
+  {
+    CreateWindow(
+      L"LISTBOX", L"",
+      WS_CHILD | WS_VISIBLE | WS_BORDER | LBS_DISABLENOSCROLL | WS_VSCROLL,
+      de.x, de.y, de.w, de.h, hw_, (HMENU)id, getHI__(), nullptr);
+  }
+
+  void createComboBox(int id, const urania::CtrlDesc& de)
+  {
+    CreateWindow(L"COMBOBOX", L"",
+      WS_CHILD | WS_VISIBLE | WS_VSCROLL | CBS_DISABLENOSCROLL
+      | CBS_DROPDOWNLIST, de.x, de.y, de.w, de.h, hw_,
+      (HMENU)id, getHI__(), nullptr);
+  }
+
   void createPushButton(
-    int id, const std::wstring& str, const urania::CtrlDesc& de);
-  void createLabel(int id, const std::wstring& str, const urania::CtrlDesc& de);
+    int id, const std::wstring& str, const urania::CtrlDesc& de)
+  {
+    CreateWindow(
+      L"BUTTON", str.c_str(), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+      de.x, de.y, de.w, de.h, hw_, (HMENU)id, getHI__(), nullptr);
+  }
+
+  void createLabel(int id, const std::wstring& str, const urania::CtrlDesc& de)
+  {
+    CreateWindow(
+      L"STATIC", str.c_str(), WS_CHILD | WS_VISIBLE | SS_LEFT,
+      de.x, de.y, de.w, de.h, hw_, (HMENU)id, getHI__(), nullptr);
+  }
+  
   void createCheckBox(
-    int id, const std::wstring& str, const urania::CtrlDesc& de);
+    int id, const std::wstring& str, const urania::CtrlDesc& de)
+  {
+    CreateWindow(
+      L"BUTTON", str.c_str(), WS_CHILD | WS_VISIBLE | BS_AUTOCHECKBOX,
+      de.x, de.y, de.w, de.h, hw_, (HMENU)id, getHI__(), nullptr);
+  }
+
   void createActiveButton(
     int id, const std::wstring& str, const urania::CtrlDesc& de);
 
@@ -301,76 +355,210 @@ public:
   ///////////////////////////////
   //  EditBox操作系
   ///////////////////////////////
-  std::wstring getEBText(int id);
-  void setEBText(int id, const std::wstring& txt);
-  void clearEB(int id);
-  void copyEB(int id);
-  void cutEB(int id);
-  void pasteEB(int id);
-  bool canUndoEB(int id);
-  void undoEB(int id);
-  std::wstring getEBLineText(int id, int li);
-  int countEBLine(int id);
+  std::wstring getTextEB(int id);
+
+  void setEBText(int id, const std::wstring& txt)
+  {
+    HWND w = ::GetDlgItem(hw_, id);
+    ::SendMessage(w, WM_SETTEXT, 0, (LPARAM)(txt.c_str()));
+  }
+
+  void clearEB(int id)
+  {
+    HWND w = ::GetDlgItem(hw_, id);
+    ::SendMessage(w, WM_CLEAR, 0, 0);
+  }
+
+  void copyEB(int id)
+  {
+    HWND w = ::GetDlgItem(hw_, id);
+    ::SendMessage(w, WM_COPY, 0, 0);
+  }
+
+  void cutEB(int id)
+  {
+    HWND w = ::GetDlgItem(hw_, id);
+    ::SendMessage(w, WM_CUT, 0, 0);
+  }
+
+  void pasteEB(int id)
+  {
+    HWND w = ::GetDlgItem(hw_, id);
+    ::SendMessage(w, WM_PASTE, 0, 0);
+  }
+
+  bool canUndoEB(int id)
+  {
+    HWND w = ::GetDlgItem(hw_, id);
+    if (::SendMessage(w, EM_CANUNDO, 0, 0))
+      return true;
+    else
+      return false;
+  }
+
+  void undoEB(int id)
+  {
+    HWND w = ::GetDlgItem(hw_, id);
+    ::SendMessage(w, EM_UNDO, 0, 0);
+  }
+
+  std::wstring getLineTextEB(int id, int li);
+
+  int countLineEB(int id)
+  {
+    HWND w = ::GetDlgItem(hw_, id);
+    return ::SendMessage(w, EM_GETLINECOUNT, 0, 0);
+  }
 
 
   ///////////////////////////////////
   //  ListBox操作系
   ///////////////////////////////////
-  std::wstring getLBItem(int id, int no);
-  void addLBItem(int id, const std::wstring& txt);
-  void insertLBItem(int id, int no, const std::wstring& txt);
-  void deleteLBItem(int id, int no);
-  int countLB(int id);
-  int getCurrentLB(int id);
-  void setCurrentLB(int id, int no);
-  void resetLB(int id);
+  std::wstring getItemLB(int id, int no);
+
+  void addItemLB(int id, const std::wstring& txt)
+  {
+    HWND w = ::GetDlgItem(hw_, id);
+    ::SendMessage(w, LB_ADDSTRING, 0, (LPARAM)(txt.c_str()));
+  }
+
+  void insertItemLB(int id, int no, const std::wstring& txt)
+  {
+    HWND w = ::GetDlgItem(hw_, id);
+    ::SendMessage(w, LB_INSERTSTRING, no, (LPARAM)(txt.c_str()));
+  }
+
+  void deleteItemLB(int id, int no)
+  {
+    HWND w = ::GetDlgItem(hw_, id);
+    ::SendMessage(w, LB_DELETESTRING, no, 0);
+  }
+
+  int countItemLB(int id)
+  {
+    HWND w = ::GetDlgItem(hw_, id);
+    return ::SendMessage(w, LB_GETCOUNT, 0, 0);
+  }
+
+  int getCurrentLB(int id)
+  {
+    HWND w = ::GetDlgItem(hw_, id);
+    int r = ::SendMessage(w, LB_GETCURSEL, 0, 0);
+    if (r == LB_ERR)
+      return -1;
+    else
+      return r;
+  }
+
+  void setCurrentLB(int id, int no)
+  {
+    HWND w = ::GetDlgItem(hw_, id);
+    ::SendMessage(w, LB_SETCURSEL, no, 0);
+  }
+
+  void clearLB(int id)
+  {
+    HWND w = ::GetDlgItem(hw_, id);
+    ::SendMessage(w, LB_RESETCONTENT, 0, 0);
+  }
+
   void dirLB(int id, const std::wstring& path, int flag);
 
   ////////////////////////////
   //  ComboBox操作系
   ////////////////////////////
-  std::wstring getCBItem(int id, int no);
-  void addCBItem(int id, const std::wstring& txt);
-  void insertCBItem(int id, int no, const std::wstring& txt);
-  void deleteCBItem(int id, int no);
-  int countCB(int id);
-  int getCurrentCB(int id);
-  void setCurrentCB(int id, int no);
-  void resetCB(int id);
+  std::wstring getItemCB(int id, int no);
+
+  void addItemCB(int id, const std::wstring& txt)
+  {
+    HWND w = ::GetDlgItem(hw_,id);
+    ::SendMessage(w,CB_ADDSTRING, 0, (LPARAM)(txt.c_str()));
+  }
+
+  void insertItemCB(int id, int no, const std::wstring& txt)
+  {
+    HWND w = ::GetDlgItem(hw_,id);
+    ::SendMessage(w,CB_INSERTSTRING,no,(LPARAM)(txt.c_str()));
+  }
+
+  void deleteItemCB(int id, int no)
+  {
+    HWND w = ::GetDlgItem(hw_,id);
+    ::SendMessage(w,CB_DELETESTRING,no,0);
+  }
+
+  int countItemCB(int id)
+  {
+    HWND w = ::GetDlgItem(hw_,id);
+    return ::SendMessage(w,CB_GETCOUNT,0,0);
+  }
+
+  int getCurrentCB(int id)
+  {
+    HWND w = ::GetDlgItem(hw_, id);
+    int r = ::SendMessage(w, CB_GETCURSEL, 0, 0);
+    if (r == CB_ERR)
+      return -1;
+    else
+      return r;
+  }
+
+  void setCurrentCB(int id, int no)
+  {
+    HWND w = ::GetDlgItem(hw_, id);
+    ::SendMessage(w, CB_SETCURSEL, no, 0);
+  }
+
+  void clearCB(int id)
+  {
+    HWND w = ::GetDlgItem(hw_,id);
+    ::SendMessage(w, CB_RESETCONTENT, 0, 0);
+  }
+
   void dirCB(int id, const std::wstring& path, int flag);
 
 
   //================================
   //  CheckBox 等の状態取得
   //================================
-  bool isChecked(int id);
+  bool isChecked(int id)
+  {
+    return IsDlgButtonChecked(hw_, id);
+  }
 
 
   ////////////////////////////////////////
   //  横スクロールバー操作系
   ////////////////////////////////////////
-  int getHSBarPos() { return getSBPos(ID_SBH); }
-  void setHSBarPos(int pos) { setSBPos(ID_SBH, pos); }
+  int getPosHSB()
+  {
+    return getPosSB(ID_SBH);
+  }
 
-  void setHSBarRange(int min, int max)
+  void setPosHSB(int pos)
+  {
+    setPosSB(ID_SBH, pos);
+  }
+
+  void setRangeHSB(int min, int max)
   {
     if (hw_)
       ::SetScrollRange(hw_, SB_HORZ, min, max, TRUE);
   }
 
-  void getHSBarRange(int& min, int& max)
+  void getRangeHSB(int& min, int& max)
   {
     if (hw_)
       ::GetScrollRange(hw_, SB_HORZ, &min, &max);
   }
 
-  void enableHSBar()
+  void enableHSB()
   {
     if (hw_)
       ::EnableScrollBar(hw_, SB_HORZ, ESB_ENABLE_BOTH);
   }
 
-  void disableHSBar()
+  void disableHSB()
   {
     if (hw_)
       ::EnableScrollBar(hw_, SB_HORZ, ESB_DISABLE_BOTH);
@@ -380,31 +568,64 @@ public:
   ///////////////////////////////////////////////
   //  縦スクロールバー操作系
   ///////////////////////////////////////////////
-  int getVSBarPos() { return getSBPos(ID_SBV); }
-  void setVSBarPos(int pos) { setSBPos(ID_SBV, pos); }
+  int getPosVSB()
+  {
+    return getPosSB(ID_SBV);
+  }
 
-  void setVSBarRange(int min, int max)
+  void setPosVSB(int pos)
+  {
+    setPosSB(ID_SBV, pos);
+  }
+
+  void setRangeVSB(int min, int max)
   {
     if (hw_)
       ::SetScrollRange(hw_, SB_VERT, min, max, TRUE);
   }
 
-  void getVSBarRange(int& min, int& max)
+  void getRangeVSB(int& min, int& max)
   {
     if (hw_)
       ::GetScrollRange(hw_, SB_VERT, &min, &max);
   }
 
-  void enableVSBar()
+  void enableVSB()
   {
     if (hw_)
       ::EnableScrollBar(hw_, SB_VERT, ESB_ENABLE_BOTH);
   }
 
-  void disableVSBar()
+  void disableVSB()
   {
     if (hw_)
       ::EnableScrollBar(hw_, SB_VERT, ESB_DISABLE_BOTH);
+  }
+
+  /////////////////////////////////////////////////////
+  //  共通 (2012.5.13以降追加; 2016.2.27改名)
+  /////////////////////////////////////////////////////
+  int getPosSB(int id);
+  void setPosSB(int id, int pos);
+  void setRangeSB(int id, int min, int max, int page);
+
+  ////////////////////////////////////////////////
+  // ID付スクロールバー用 (2016.2.27再實裝)
+  ////////////////////////////////////////////////
+  void enableSB(int id)
+  {
+    if (!hw_)
+      return;
+    HWND w = ::GetDlgItem(hw_, id);
+    ::EnableScrollBar(w, SB_CTL, ESB_ENABLE_BOTH);
+  }
+
+  void disableSB(int id)
+  {
+    if (!hw_)
+      return;
+    HWND w = ::GetDlgItem(hw_, id);
+    ::EnableScrollBar(w, SB_CTL, ESB_DISABLE_BOTH);
   }
 
 
@@ -428,30 +649,7 @@ public:
     HWND w = ::GetDlgItem(hw_, id);
     ::GetScrollRange(w, SB_CTL, &min, &max);
   }
-
-  void enableIDSBar(int id)
-  {
-    if (!hw_)
-      return;
-    HWND w = ::GetDlgItem(hw_, id);
-    ::EnableScrollBar(w, SB_CTL, ESB_ENABLE_BOTH);
-  }
-
-  void disableIDSBar(int id)
-  {
-    if (!hw_)
-      return;
-    HWND w = ::GetDlgItem(hw_, id);
-    ::EnableScrollBar(w, SB_CTL, ESB_DISABLE_BOTH);
-  }
   */
-
-  //////////////////////////////
-  //  共通 (2012.5.13以降追加)
-  //////////////////////////////
-  int getSBPos(int id);
-  void setSBPos(int id, int pos);
-  void setSBRange(int id, int min, int max, int page);
 };
 
 

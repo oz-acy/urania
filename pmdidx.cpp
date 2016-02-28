@@ -2,16 +2,17 @@
  *
  *  pmdidx.cpp
  *  by oZ/acy
- *  (c) 2002-2011 oZ/acy.  ALL RIGHTS RESERVED.
+ *  (c) 2002-2016 oZ/acy.  ALL RIGHTS RESERVED.
  *
  *  class urania::PaintMemDeviceIndexed ‚Μ›‰εδ’θ‹`
  *
- *  last update: 30 Oct 2011
+ *  ——π
+ *    2016.2.27  C³
  *************************************************************************/
 
 #include <cstring>
 #include <algorithm>
-#include "pdev.h"
+#include "paintdev.h"
 
 
 namespace
@@ -250,7 +251,7 @@ urania::PaintMemDeviceIndexed::create(const polymnia::PictureIndexed* pct)
     copy(src + p, src + p + ww, res + q);
 
   const RgbColor* sp = pct->paletteBuffer();
-  C_* rp = vd->paletteBuffer();
+  Color* rp = vd->paletteBuffer();
   copy(sp, sp + 256, rp);
   vd->updatePalette();
 

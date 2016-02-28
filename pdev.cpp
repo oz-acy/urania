@@ -2,15 +2,16 @@
  *
  *  pdev.cpp
  *  by oZ/acy
- *  (C) 2002-2011 oZ/acy.  ALL RIGHTS RESERVED.
+ *  (C) 2002-2016 oZ/acy.  ALL RIGHTS RESERVED.
  *
  *  class urania::PaintDevice の実装定義その壱
  *   コンストラクタ、デストラクタ、システムカラー系、クリア及びBLT処理
  *
- *  last update : 8 Sep 2011
+ *  履歴
+ *    2016.2.27  修正
  *************************************************************************/
 
-#include "pdev.h"
+#include "paintdev.h"
 #include <cstring>
 
 
@@ -80,31 +81,18 @@ urania::PaintDevice* urania::PaintDevice::create(
 
 
 /*====================================================================
- *  PaintDevice::getSysColor()
- *  システムカラー取得
- *   引数 : int id : システムカラーのID(gpGuiDef.hでenum定義)
- *   返値 : 指定したシステムカラーの色(BGR)
- */
-urania::Color urania::PaintDevice::getSysColor(int id)
-{
-  COLORREF col = GetSysColor(id);
-  return C_(GetRValue(col),GetGValue(col),GetBValue(col));
-}
-
-
-/*====================================================================
  *  PaintDevice::setSysColor()
  *  システムカラー設定
  *   引数 : int id        : システムカラーのID(gpGuiDef.hでenum定義)
  *          const C_& col : 設定する色(BGR)
  */
-void urania::PaintDevice::setSysColor(int id, const C_& col)
+void urania::PaintDevice::setSysColor(int id, const urania::Color& col)
 {
-  int i[1];
-  COLORREF c[1];
+  int i[1] = { id };
+  COLORREF c[1] = { col.getColorref() };
 
-  i[0] = id;
-  c[0] = col.getColorref();
+//  i[0] = id;
+//  c[0] = col.getColorref();
 
   SetSysColors(1, i, c);
 }
@@ -115,7 +103,7 @@ void urania::PaintDevice::setSysColor(int id, const C_& col)
  *  描画領域のクリア
  *   引数 : const C_& col : クリアするときの色
  */
-void urania::PaintDevice::clear(const C_& col)
+void urania::PaintDevice::clear(const urania::Color& col)
 {
   HBRUSH br = CreateSolidBrush(col.getColorref());
   RECT rc = {0, 0, width_, height_};
@@ -200,6 +188,7 @@ void urania::PaintDevice::blt(urania::PaintMemDeviceIndexed* src)
     hdc_, 0, 0, width_, height_, src->hdc_, 0, 0, src->width(), src->height(),
     SRCCOPY);
 }
+
 
 
 

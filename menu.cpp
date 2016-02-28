@@ -2,16 +2,16 @@
  *
  *  menu.cpp
  *  by oZ/acy
- *  (c) 2002-2014 oZ/acy. ALL RIGHTS RESERVED.
+ *  (c) 2002-2016 oZ/acy. ALL RIGHTS RESERVED.
  *
  *  class urania::Menu ‚ÌÀ‘•’è‹`
  *
- *  last update: 25 Jan MMXIV
- *
+ *  —š—ğ
+ *    2016.2.28  C³
  *************************************************************************/
 
 #include "menu.h"
-#include "sys.h"
+#include "system.h"
 
 /*====================================
  *  Menu::create()

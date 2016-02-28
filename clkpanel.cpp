@@ -60,7 +60,7 @@ LRESULT urania::ClickPanel::wproc__(UINT msg, WPARAM wp, LPARAM lp)
     onPaint(bind(&ClickPanel::paint, this, _1, _2), wp, lp);
     return 0;
 
-  case WM_LBUTTONDOWN:
+  case WM_LBUTTONUP:
     PostMessage(pw_, WM_COMMAND, id_, (LPARAM)hw_);
     return 0;
   }

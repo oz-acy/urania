@@ -2,65 +2,65 @@
  *
  *  bwin.h
  *  by oZ/acy
- *  (c) 2002-2014 oZ/acy.  ALL RIGHTS RESERVED.
+ *  (c) 2002-2016 oZ/acy.  ALL RIGHTS RESERVED.
  *
  *  Basic WINdow  for part "URANIA"
- *  Window—pŠî’êƒNƒ‰ƒX
+ *  Windowç”¨åŸºåº•ã‚¯ãƒ©ã‚¹
  *
- *  last update: 20 Jan MMXIV
- *
+ *  å±¥æ­´
+ *    2016.2.28  ä¿®æ­£
  *************************************************************************/
 
 #ifndef INC_URANIA_BASICWINDOW_H___
 #define INC_URANIA_BASICWINDOW_H___
 
-#include "wbase.h"
-#include "pdev.h"
 #include <vector>
+#include "wbase.h"
+#include "paintdev.h"
 
 
 /*---------------------------------------
  *  class BasicWindow
- *  WindowŠÇ—E‘€ì—pŠî’êƒNƒ‰ƒX
+ *  Windowç®¡ç†ãƒ»æ“ä½œç”¨åŸºåº•ã‚¯ãƒ©ã‚¹
  *-------------------------------------*/
 class urania::BasicWindow : public urania::WndBase
 {
-public:
-  typedef urania::BasicWindow BW_;
-  typedef BW_* PBW_;
+//public:
+//  typedef urania::BasicWindow BW_;
+//  typedef BW_* PBW_;
 
 
 public:
   //-------------------
   //  struct D0_
-  //  ‹Lq\‘¢‘Ì
+  //  è¨˜è¿°æ§‹é€ ä½“
   //-------------------
   struct D0_
   {
-    std::wstring title;  /* ƒ^ƒCƒgƒ‹ */
-    HWND pwnd;  /* eƒEƒBƒ“ƒhƒE */
-    HMENU hm;  /* ƒƒjƒ…[ */
-    WNDPROC winproc;  /* ƒEƒBƒ“ƒhƒEƒvƒƒV[ƒWƒƒ */
+    std::wstring title;  /* ã‚¿ã‚¤ãƒˆãƒ« */
+    HWND pwnd;  /* è¦ªã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ */
+    HMENU hm;  /* ãƒ¡ãƒ‹ãƒ¥ãƒ¼ */
+    WNDPROC winproc;  /* ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒ—ãƒ­ã‚·ãƒ¼ã‚¸ãƒ£ */
 
-    int x, y, w, h;  /* ƒEƒBƒ“ƒhƒE‚ÌˆÊ’uA‘å‚«‚³ */
+    int x, y, w, h;  /* ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ä½ç½®ã€å¤§ãã• */
 
-    unsigned icon;  /* ƒAƒCƒRƒ“‚ÌƒŠƒ\[ƒX”Ô† */
-    unsigned cursor;  /* ƒJ[ƒ\ƒ‹‚ÌƒŠƒ\[ƒX”Ô† */
-    unsigned bkcolor;  /* ”wŒiF‚Ì”Ô†(?) */
+    unsigned icon;  /* ã‚¢ã‚¤ã‚³ãƒ³ã®ãƒªã‚½ãƒ¼ã‚¹ç•ªå· */
+    unsigned cursor;  /* ã‚«ãƒ¼ã‚½ãƒ«ã®ãƒªã‚½ãƒ¼ã‚¹ç•ªå· */
+    unsigned bkcolor;  /* èƒŒæ™¯è‰²ã®ç•ªå·(?) */
 
-    bool maxbox;  /* Å‘å‰»ƒ{ƒbƒNƒX•t‚«? */
-    bool minbox;  /* Å¬‰»ƒ{ƒbƒNƒX•t‚«? */
-    bool h_scrollbar;  /* ‰¡ƒXƒNƒ[ƒ‹ƒo[•t‚«? */
-    bool v_scrollbar;  /* cƒXƒNƒ[ƒ‹ƒo[•t‚«? */
-    bool popup;  /* ƒ|ƒbƒvƒAƒbƒvƒEƒBƒ“ƒhƒE? */
-    bool border_only;  /* ‹«ŠE‚¾‚¯? */
-    bool can_resize;  /* ƒŠƒTƒCƒY‰Â”\? */
+    bool maxbox;  /* æœ€å¤§åŒ–ãƒœãƒƒã‚¯ã‚¹ä»˜ã? */
+    bool minbox;  /* æœ€å°åŒ–ãƒœãƒƒã‚¯ã‚¹ä»˜ã? */
+    bool h_scrollbar;  /* æ¨ªã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ãƒãƒ¼ä»˜ã? */
+    bool v_scrollbar;  /* ç¸¦ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ãƒãƒ¼ä»˜ã? */
+    bool popup;  /* ãƒãƒƒãƒ—ã‚¢ãƒƒãƒ—ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦? */
+    bool border_only;  /* å¢ƒç•Œã ã‘? */
+    bool can_resize;  /* ãƒªã‚µã‚¤ã‚ºå¯èƒ½? */
 
 
     D0_()
     : pwnd(nullptr), hm(nullptr), winproc(nullptr),
-      icon(DEFAULT_RC), cursor(DEFAULT_RC), bkcolor(BG_WHITE),
       x(CW_USEDEFAULT), w(CW_USEDEFAULT),
+      icon(DEFAULT_RC), cursor(DEFAULT_RC), bkcolor(BG_WHITE),
       maxbox(false), minbox(false),
       h_scrollbar(false), v_scrollbar(false), popup(false),
       border_only(false), can_resize(false)
@@ -71,7 +71,7 @@ public:
 private:
   //----------------------------------
   //  struct WC_
-  //  WNDCLASS ¶¬î•ñŠi”[ƒNƒ‰ƒX
+  //  WNDCLASS ç”Ÿæˆæƒ…å ±æ ¼ç´ã‚¯ãƒ©ã‚¹
   //--------------------------------//
   struct WC_
   {
@@ -82,17 +82,17 @@ private:
     std::wstring wcname_;
 
     //========================================================================
-    //  WNDCLASS “o˜^‚Ì—v•s—v‚ğŒˆ‚ß‚é‚½‚ß‚Ì operator==() ‚Æ operator!=()
+    //  WNDCLASS ç™»éŒ²ã®è¦ä¸è¦ã‚’æ±ºã‚ã‚‹ãŸã‚ã® operator==() ã¨ operator!=()
     //========================================================================
     bool operator==(const WC_& my) const
     {
-      if (icon_id_!=my.icon_id_)
+      if (icon_id_ != my.icon_id_)
         return false;
-      if (cursor_id_!=my.cursor_id_)
+      if (cursor_id_ != my.cursor_id_)
         return false;
-      if (bkcolor_!=my.bkcolor_)
+      if (bkcolor_ != my.bkcolor_)
         return false;
-      if (proc_!=my.proc_)
+      if (proc_ != my.proc_)
         return false;
 
       return true;
@@ -100,13 +100,13 @@ private:
 
     bool operator!=(const WC_& my) const
     {
-      return !(*this==my);
+      return !(*this == my);
     }
   };
 
 
 private:
-  static std::vector<WC_> vwc_S;  // WNDCLASSî•ñƒxƒNƒ^
+  static std::vector<WC_> vwc_S;  // WNDCLASSæƒ…å ±ãƒ™ã‚¯ã‚¿
 
 protected:
   BasicWindow() {}
@@ -115,7 +115,7 @@ protected:
 
   //===========================================
   //  bindHWND__()
-  //  BasicWindow ‚Æ HWND ‚Ì“ñdŒ‹‡‚ğŒ`¬
+  //  BasicWindow ã¨ HWND ã®äºŒé‡çµåˆã‚’å½¢æˆ
   //===========================================
   void bindHWND__(HWND hw)
   {
@@ -125,7 +125,7 @@ protected:
 
   //==========================================
   //  unbindHWND__()
-  //  HWND ‚©‚ç BasicWindow ‚Ö‚ÌŒ‹‡‚ğØĞ
+  //  HWND ã‹ã‚‰ BasicWindow ã¸ã®çµåˆã‚’åˆ‡æ–·
   //==========================================
   void unbindHWND__()
   {
@@ -222,7 +222,7 @@ public:
   void resize(int w, int h)
   {
     if (hw_)
-      ::SetWindowPos(hw_, nullptr, 0, 0, w, h, SWP_NOMOVE|SWP_NOZORDER);
+      ::SetWindowPos(hw_, nullptr, 0, 0, w, h, SWP_NOMOVE | SWP_NOZORDER);
   }
 
   void resizeScreen(int w, int h)
@@ -234,7 +234,7 @@ public:
     ::GetClientRect(hw_, &cr);
     w += wr.right - wr.left - cr.right;
     h += wr.bottom - wr.top - cr.bottom;
-    ::SetWindowPos(hw_, nullptr, 0, 0, w, h, SWP_NOMOVE|SWP_NOZORDER);
+    ::SetWindowPos(hw_, nullptr, 0, 0, w, h, SWP_NOMOVE | SWP_NOZORDER);
   }
 
   void setTimer(int id, int elapse) { ::SetTimer(hw_, id, elapse, nullptr); }
@@ -243,7 +243,7 @@ public:
 
   //==========================================================
   //  BasicWindow::defHandler()
-  //  ƒfƒtƒHƒ‹ƒg‚ÌƒƒbƒZ[ƒWˆ—
+  //  ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸å‡¦ç†
   //==========================================================
   virtual LRESULT defHandler(UINT msg, WPARAM wp, LPARAM lp);
 };
@@ -253,9 +253,9 @@ public:
 
 /*=================================================================
  *  BasicWindow::onPaint()
- *  WM_PAINT‚É‘Î‰‚·‚é‚½‚ß‚Ìƒwƒ‹ƒp
- *  PaintDevice‚ğ¶¬‚µ‚Äproc‚É“n‚·
- *  ƒ†[ƒU’è‹`‚Ìƒnƒ“ƒhƒ‰‚©‚ç•K—v‚É‰‚¶‚Ä–¾¦“I‚ÉŒÄ‚Ño‚·‚±‚Æ
+ *  WM_PAINTã«å¯¾å¿œã™ã‚‹ãŸã‚ã®ãƒ˜ãƒ«ãƒ‘
+ *  PaintDeviceã‚’ç”Ÿæˆã—ã¦procã«æ¸¡ã™
+ *  ãƒ¦ãƒ¼ã‚¶å®šç¾©ã®ãƒãƒ³ãƒ‰ãƒ©ã‹ã‚‰å¿…è¦ã«å¿œã˜ã¦æ˜ç¤ºçš„ã«å‘¼ã³å‡ºã™ã“ã¨
  *===============================================================*/
 template<class PT_>
 inline LRESULT urania::BasicWindow::onPaint(PT_ proc, WPARAM wp, LPARAM lp)

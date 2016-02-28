@@ -2,18 +2,19 @@
  *
  *  cmndlg.h
  *  by oZ/acy
- *  (c) 2002-2011 oZ/acy.  ALL RIGHTS RESERVED.
+ *  (c) 2002-2016 oZ/acy.  ALL RIGHTS RESERVED.
  *
  *  コモンダイアログラッパー
  *
- *  last update : 8 Sep 2011
+ *  履歴
+ *    2016.2.28  修正
  *************************************************************************/
 
 #ifndef INC_URANIA_COMMONDLG_H___
 #define INC_URANIA_COMMONDLG_H___
 
-#include "wbase.h"
 #include <boost/utility.hpp>
+#include "wbase.h"
 
 /*------------------------------------------------
  *  class CommonDialogBase
@@ -39,21 +40,30 @@ inline urania::CommonDialogBase::~CommonDialogBase() {}
  *----------------------------------------------*/
 class urania::FileDialogBase : public urania::CommonDialogBase
 {
- protected:
+protected:
   OPENFILENAME ofn_;
-  wchar_t filter_[256];
-  wchar_t name_[256];
-  wchar_t def_ext_[5];
+  wchar_t name_[MAX_PATH];
+  wchar_t initDir_[MAX_PATH];
+  std::wstring filter_;
+  std::wstring defExt_;
 
- public:
+public:
   FileDialogBase(const std::wstring& flt, const std::wstring& ext);
   virtual ~FileDialogBase() {}
 
   virtual bool doModal(const urania::WndBase* win) = 0;
-  std::wstring getPath() const;
-  std::wstring getTitle() const;
-  std::wstring getExt() const;
-  void setPath(const std::wstring& path);
+  std::wstring getFilePath() const;
+  std::wstring getFileName() const;
+  std::wstring getFileDir() const;
+  std::wstring getFileExt() const;
+
+  std::wstring clearFilePath()
+  { 
+    name_[0] = L'\0';
+  }
+
+  void setFilePath(const std::wstring& path);
+  void setInitDir(const std::wstring& path);
 };
 
 
@@ -63,9 +73,6 @@ class urania::FileDialogBase : public urania::CommonDialogBase
  *-----------------------------------------------*/
 class urania::OpenFileDialog : public urania::FileDialogBase
 {
-private:
-  typedef urania::OpenFileDialog* P_;
-
 protected:
   OpenFileDialog(const std::wstring& flt, const std::wstring& ext)
     : FileDialogBase(flt, ext)
@@ -76,7 +83,8 @@ protected:
 public:
   ~OpenFileDialog() {}
 
-  static P_ create(const std::wstring& flt, const std::wstring& ext =L"")
+  static urania::OpenFileDialog* create(
+    const std::wstring& flt, const std::wstring& ext =L"")
   {
     return new OpenFileDialog(flt, ext);
   }
@@ -91,9 +99,6 @@ public:
  *--------------------------------------------*/
 class urania::SaveFileDialog : public urania::FileDialogBase
 {
-private:
-  typedef urania::SaveFileDialog* P_;
-
 protected:
   SaveFileDialog(const std::wstring& flt, const std::wstring& ext)
     : FileDialogBase(flt, ext)
@@ -104,7 +109,8 @@ protected:
 public:
   ~SaveFileDialog() {}
 
-  static P_ create(const std::wstring& flt, const std::wstring& ext =L"")
+  static urania::SaveFileDialog* create(
+    const std::wstring& flt, const std::wstring& ext =L"")
   {
     return new SaveFileDialog(flt, ext);
   }

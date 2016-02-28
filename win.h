@@ -2,18 +2,19 @@
  *
  *  win.h
  *  by oZ/acy
- *  (c) 2002-2014 oZ/acy.  ALL RIGHTS RESERVED.
+ *  (c) 2002-2016 oZ/acy.  ALL RIGHTS RESERVED.
  *
- *  WINdow class
+ *  ウィンドウ
  *
- *  last update: 25 Jan MMXIV
+ *  履歴
+ *    2016.2.28  修正
  */
 #ifndef INC_URANIA_WINDOW_H___
 #define INC_URANIA_WINDOW_H___
 
+#include <map>
 #include "bwin.h"
 #include "menu.h"
-#include <map>
 
 
 namespace urania
@@ -87,14 +88,8 @@ class urania::Window : public urania::BasicWindow
 {
   friend class urania::WindowFactory;
 
-private:
-  typedef urania::WndMessage Msg_;
-
 public:
-  typedef urania::Window W_;
-  typedef W_* PW_;
-  typedef LRESULT (*H_)(PW_ pw, UINT msg, WPARAM wp, LPARAM lp);
-
+  typedef LRESULT (*H_)(urania::Window* pw, UINT msg, WPARAM wp, LPARAM lp);
 
 protected:
   urania::WMHandler* msgHandler_;
@@ -103,7 +98,7 @@ protected:
 
 
 protected:
-  Window() : dad_(false), msgHandler_(nullptr) {}
+  Window() : msgHandler_(nullptr), dad_(false) {}
 
   void init__(HWND hw);
   void uninit__();
@@ -159,8 +154,8 @@ public:
 
 public:
   WindowFactory()
-    : icon(DEFAULT_RC), cursor(DEFAULT_RC), bkcolor(BG_WHITE),
-      x(CW_USEDEFAULT), w(CW_USEDEFAULT),
+    : x(CW_USEDEFAULT), w(CW_USEDEFAULT),
+      icon(DEFAULT_RC), cursor(DEFAULT_RC), bkcolor(BG_WHITE),
       drag_and_drop(false), maxbox(false), minbox(false),
       h_scrollbar(false), v_scrollbar(false), popup(false),
       border_only(false), resizeable(false)

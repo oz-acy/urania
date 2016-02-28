@@ -2,16 +2,17 @@
  *
  *  win.cpp
  *  by oZ/acy
- *  (c) 2002-2014 oZ/acy. ALL RIGHTS RESERVED.
+ *  (c) 2002-2016 oZ/acy. ALL RIGHTS RESERVED.
  *
- *  last update: 25 Jan MMXIV
+ *  óöó
+ *    2016.2.28  èCê≥
  *************************************************************************/
 
-#include "win.h"
 #include <cstdlib>
 #include <algorithm>
 #include <functional>
 #include <windowsx.h>
+#include "win.h"
 
 /*====================================
  *  WindowFactory::factory__()
@@ -72,7 +73,7 @@ LRESULT urania::Window::wproc__(UINT msg, WPARAM wp, LPARAM lp)
 {
   if (msgHandler_)
   {
-    Msg_ m;
+    urania::WndMessage m;
     m.window = this;
     m.id = msg;
     m.wparam = wp;

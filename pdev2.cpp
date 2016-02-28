@@ -2,14 +2,16 @@
  *
  *  pdev2.cpp
  *  by oZ/acy
- *  (c) 2002-2011 oZ/acy.  ALL RIGHTS RESERVED.
+ *  (c) 2002-2016 oZ/acy.  ALL RIGHTS RESERVED.
  *
  *  class urania::PaintDevice の実装定義その弐
  *  圖形文字描畫及びそのヘルパ
  *
- *  last update: 8 Sep 2011
+ *  履歴
+ *    2016.2.27  修正
  *************************************************************************/
-#include "pdev.h"
+
+#include "paintdev.h"
 #include <cstring>
 
 
@@ -18,7 +20,7 @@
  *  描画用ブラシの交換
  *   引数 :  col : 新たに指定するブラシの色
  */
-void urania::PaintDevice::changeBrush__(const C_& col)
+void urania::PaintDevice::changeBrush__(const urania::Color& col)
 {
   HBRUSH br = CreateSolidBrush(col.getColorref());
   HBRUSH ob = (HBRUSH)SelectObject(hdc_, br);
@@ -31,7 +33,7 @@ void urania::PaintDevice::changeBrush__(const C_& col)
  *  描画用ペンの交換
  *   引数 :  col : 新たに指定するペンの色
  */
-void urania::PaintDevice::changePen__(const C_& col)
+void urania::PaintDevice::changePen__(const urania::Color& col)
 {
   HPEN tp = CreatePen(PS_SOLID, 0, col.getColorref());
   HPEN op = (HPEN)SelectObject(hdc_, tp);
@@ -43,8 +45,9 @@ void urania::PaintDevice::changePen__(const C_& col)
  *  PaintDevice::box()
  *  長方形を描画
  */
-void urania::PaintDevice::box
-(int x1, int y1, int x2, int y2, const C_& col, bool f)
+void
+urania::PaintDevice::box(
+  int x1, int y1, int x2, int y2, const urania::Color& col, bool f)
 {
   if (f)
   {
@@ -76,7 +79,9 @@ void urania::PaintDevice::box
  *  PaintDevice::line()
  *  直線を描画
  */
-void urania::PaintDevice::line(int x1, int y1, int x2, int y2, const C_& col)
+void
+urania::PaintDevice::line(
+  int x1, int y1, int x2, int y2, const urania::Color& col)
 {
   changePen__(col);
   MoveToEx(hdc_, x1, y1, nullptr);
@@ -88,8 +93,9 @@ void urania::PaintDevice::line(int x1, int y1, int x2, int y2, const C_& col)
  *  PaintDevice::ellipse()
  *  楕円を描画
  */
-void urania::PaintDevice::ellipse
-(int x, int y, int a, int b, const C_& col, bool f)
+void
+urania::PaintDevice::ellipse(
+  int x, int y, int a, int b, const urania::Color& col, bool f)
 {
   changePen__(col);
 
@@ -110,7 +116,7 @@ void urania::PaintDevice::ellipse
  *  PaintDevice::dotset()
  *  点を描画
  */
-void urania::PaintDevice::dotset(int x, int y, const C_& col)
+void urania::PaintDevice::dotset(int x, int y, const urania::Color& col)
 {
   ::SetPixelV(hdc_, x, y, col.getColorref());
 }
@@ -122,7 +128,8 @@ void urania::PaintDevice::dotset(int x, int y, const C_& col)
  *   返値 : 描画長方形の右下角座標
  */
 polymnia::Point
-urania::PaintDevice::text(int x, int y, const std::wstring& str, const C_& col)
+urania::PaintDevice::text(
+  int x, int y, const std::wstring& str, const urania::Color& col)
 {
   ::SetTextColor(hdc_, col.getColorref());
   wchar_t *ptxt = new wchar_t[str.length()];
@@ -152,8 +159,9 @@ urania::PaintDevice::text(int x, int y, const std::wstring& str, const C_& col)
  *  テキストを描画(幅指定バージョン)
  *   返値 : 描画長方形の右下角座標
  */
-polymnia::Point urania::PaintDevice::text
-(int x, int y, int ww, const std::wstring& str, const C_& col)
+polymnia::Point
+urania::PaintDevice::text(
+  int x, int y, int ww, const std::wstring& str, const urania::Color& col)
 {
   ::SetTextColor(hdc_, col.getColorref());
   wchar_t *ptxt = new wchar_t[str.length()];
@@ -187,8 +195,8 @@ polymnia::Point urania::PaintDevice::text
  */
 void
 urania::PaintDevice::changeFont(
-  int size, const std::wstring& fn, bool ro, bool fx, bool bo, bool itl, bool ul,
-  bool sk)
+  int size, const std::wstring& fn,
+  bool ro, bool fx, bool bo, bool itl, bool ul, bool sk)
 {
   const wchar_t *face = fn.length() ? fn.c_str() : nullptr;
   DWORD paf = fx ? FIXED_PITCH : DEFAULT_PITCH;

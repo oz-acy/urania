@@ -2,16 +2,17 @@
  *
  *  cmndlg.cpp
  *  by oZ/acy
- *  (c) 2002-2009 oZ/acy.  ALL RIGHTS RESERVED.
+ *  (c) 2002-2016 oZ/acy.  ALL RIGHTS RESERVED.
  *
  *  コモンダイアログラッパークラス定義
  *
- *  last update : 4 Apr 2009
- *
+ *  履歴
+ *    2016.2.28  修正
  *************************************************************************/
-#include "cmndlg.h"
+
 #include <cstring>
 #include <sstream>
+#include "cmndlg.h"
 
 
 /*===========================================
@@ -19,55 +20,37 @@
  *=========================================*/
 urania::FileDialogBase::FileDialogBase(
   const std::wstring& flt, const std::wstring& ext)
+: name_(L""), initDir_(L""), filter_(flt), defExt_(ext)
 {
-  using namespace std;
-
-  int len = ext.size() >= 3 ? 3 : ext.size();
-  wcsncpy(def_ext_, ext.c_str(), 3);
-  def_ext_[3] = '\0';
-
-  wcsncpy(filter_, flt.c_str(), 255);
-  filter_[255] = '\0';
-
-  name_[0] = '\0';
-
-  for (int i=0; filter_[i]; i++)
-    if (filter_[i]=='|' || filter_[i]=='/')
-      filter_[i] = '\0';
-
   ZeroMemory(&ofn_, sizeof(OPENFILENAME));
-
   ofn_.lStructSize = sizeof(OPENFILENAME);
-
-  ofn_.lpstrFilter = filter_;
-  ofn_.nFilterIndex = 0;
-
   ofn_.lpstrFile = name_;
-  ofn_.nMaxFile = 256;
-  ofn_.lpstrDefExt = def_ext_;
+  ofn_.nMaxFile = MAX_PATH;
 }
 
 
 /*===========================================
- *  FileDialogBase::getPath()
+ *  FileDialogBase::getFilePath()
  *=========================================*/
-std::wstring urania::FileDialogBase::getPath() const
+std::wstring urania::FileDialogBase::getFilePath() const
 {
   return name_;
 }
 
+
 /*===========================================
- *  FileDialogBase::getTitle()
+ *  FileDialogBase::getFileName()
  *=========================================*/
-std::wstring urania::FileDialogBase::getTitle() const
+std::wstring urania::FileDialogBase::getFileName() const
 {
   return name_ + ofn_.nFileOffset;
 }
 
+
 /*===========================================
- *  FileDialogBase::getExt()
+ *  FileDialogBase::getFileExt()
  *=========================================*/
-std::wstring urania::FileDialogBase::getExt() const
+std::wstring urania::FileDialogBase::getFileExt() const
 {
   if (!ofn_.nFileExtension)
     return L"";
@@ -75,16 +58,38 @@ std::wstring urania::FileDialogBase::getExt() const
     return name_ + ofn_.nFileExtension;
 }
 
-/*===========================================
- *  FileDialogBase::setPath()
- *=========================================*/
-void urania::FileDialogBase::setPath(const std::wstring& path)
-{
-  using namespace std;
 
-  wcsncpy(name_, path.c_str(), 255);
-  name_[255] = '\0';
+/*===========================================
+ *  FileDialogBase::getFileDir()
+ *=========================================*/
+std::wstring urania::FileDialogBase::getFileDir() const
+{
+  wchar_t tmp[MAX_PATH];
+  wcsncpy(tmp, name_, ofn_.nFileOffset);
+  tmp[ofn_.nFileOffset] = L'\0';
+  return tmp;
 }
+
+
+/*===========================================
+ *  FileDialogBase::setFilePath()
+ *=========================================*/
+void urania::FileDialogBase::setFilePath(const std::wstring& path)
+{
+  wcsncpy(name_, path.c_str(), MAX_PATH);
+  name_[MAX_PATH - 1] = L'\0';
+}
+
+
+/*===========================================
+ *  FileDialogBase::setInitDir()
+ *=========================================*/
+void urania::FileDialogBase::setInitDir(const std::wstring& path)
+{
+  wcsncpy(initDir_, path.c_str(), MAX_PATH);
+  initDir_[MAX_PATH - 1] = L'\0';
+}
+
 
 
 
@@ -97,6 +102,15 @@ bool urania::OpenFileDialog::doModal(const urania::WndBase* win)
     ofn_.hwndOwner = NULL;
   else
     ofn_.hwndOwner = getHW__(win);
+
+  if (initDir_[0])
+    ofn_.lpstrInitialDir = initDir_;
+  else
+    ofn_.lpstrInitialDir = nullptr;
+
+
+  ofn_.lpstrFilter = filter_.c_str();
+  ofn_.lpstrDefExt = defExt_.c_str();
 
   if (::GetOpenFileName(&ofn_))
     return true;
@@ -114,6 +128,14 @@ bool urania::SaveFileDialog::doModal(const urania::WndBase* win)
     ofn_.hwndOwner = NULL;
   else
     ofn_.hwndOwner = getHW__(win);
+
+  if (initDir_[0])
+    ofn_.lpstrInitialDir = initDir_;
+  else
+    ofn_.lpstrInitialDir = nullptr;
+
+  ofn_.lpstrFilter = filter_.c_str();
+  ofn_.lpstrDefExt = defExt_.c_str();
 
   if (::GetSaveFileName(&ofn_))
     return true;

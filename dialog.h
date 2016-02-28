@@ -2,12 +2,12 @@
  *
  *  dialog.h
  *  by oZ/acy
- *  (c) 2002-2011, ALL RIGHTS RESERVED.
+ *  (c) 2002-2016, ALL RIGHTS RESERVED.
  *
  *  DialogÉNÉâÉX
  *
- *  last update : 8 Sep 2011
- *
+ *  óöó
+ *    2016.2.28  èCê≥
  *************************************************************************/
 
 #ifndef INC_URANIA_DIALOG_H___
@@ -26,10 +26,10 @@ class urania::Dialog : public urania::WndBase
   friend class urania::Window;
 
 private:
-  typedef urania::Dialog Dl_;
-  typedef Dl_* PD_;
-  typedef BOOL (*H_)(PD_, UINT, WPARAM, LPARAM);
-  typedef void (*Ini_)(PD_);
+  //typedef urania::Dialog Dl_;
+  //typedef Dl_* PD_;
+  typedef BOOL (*H_)(urania::Dialog*, UINT, WPARAM, LPARAM);
+  typedef void (*Ini_)(urania::Dialog*);
 
  protected:
   Ini_ init_;
@@ -50,13 +50,15 @@ private:
   ~Dialog() { deleting__(); }
 
   static int doModal(int rid, Ini_ ini, Ini_ ui, H_ hnd, void* app =nullptr);
-  static PD_ doModeless(int rid, Ini_ ini, Ini_ ui, H_ hnd, void* app =nullptr);
+
+  static urania::Dialog* doModeless(
+    int rid, Ini_ ini, Ini_ ui, H_ hnd, void* app =nullptr);
 
   static int doOwnedModal(
     int rid, urania::WndBase* par, Ini_ ini, Ini_ ui, H_ hnd,
     void* app =nullptr);
 
-  static PD_ doOwnedModeless(
+  static urania::Dialog* doOwnedModeless(
     int rid, urania::WndBase* par, Ini_ ini, Ini_ ui, H_ hnd,
     void* app =nullptr);
 

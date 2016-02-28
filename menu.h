@@ -2,24 +2,23 @@
  *
  *  menu.h
  *  by oZ/acy
- *  (c) 2002-2011 oZ/acy.  ALL RIGHTS RESERVED.
+ *  (c) 2002-2016 oZ/acy.  ALL RIGHTS RESERVED.
  *
  *  メニュー記述・操作系クラス定義
  *
- *  last update: 2011.9.8
- *
+ *  履歴
+ *    2016.2.28  修正
  *************************************************************************/
 
 #ifndef INC_URANIA_MENU_H___
 #define INC_URANIA_MENU_H___
 
-#include <windows.h>
 #include <vector>
 #include <string>
 #include <boost/utility.hpp>
-//#include <boost/shared_ptr.hpp>
 #include <memory>
-#include "dec.h"
+#include <windows.h>
+#include "decl.h"
 
 
 /*----------------------------
@@ -38,14 +37,14 @@ public:
   public:
     enum
     {
-      MN_BRANCH =0,
-      MN_SEPARATOR =-1
+      MN_BRANCH = 0,
+      MN_SEPARATOR = -1
     };
 
   private:
     std::vector<Node_> ary_;
-    int id_;
     std::wstring name_;
+    int id_;
 
     Node_() : id_(MN_SEPARATOR) {}
     Node_(const std::wstring& s) : name_(s), id_(MN_BRANCH) {}
