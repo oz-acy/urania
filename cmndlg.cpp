@@ -26,6 +26,11 @@ urania::FileDialog::FileDialog(
   ofn_.lStructSize = sizeof(OPENFILENAME);
   ofn_.lpstrFile = name_;
   ofn_.nMaxFile = MAX_PATH;
+
+  for(auto it = filter_.begin(); it != filter_.end(); ++it) {
+    if (*it == L'|')
+      *it = L'\0';
+  }
 }
 
 
