@@ -8,7 +8,7 @@
  *  Window用基底クラス
  *
  *  履歴
- *    2016.2.28  修正
+ *    2016.2.29  修正
  *************************************************************************/
 
 #ifndef INC_URANIA_BASICWINDOW_H___
@@ -175,7 +175,7 @@ public:
   }
 
   urania::PaintDevice* getPaintDevice();
-  template<class PT_> LRESULT onPaint(PT_ proc, WPARAM wp, LPARAM lp);
+  template<class PT_> LRESULT onPaint(PT_&& proc, WPARAM wp, LPARAM lp);
 
   int getClientWidth()
   {
@@ -258,7 +258,7 @@ public:
  *  ユーザ定義のハンドラから必要に応じて明示的に呼び出すこと
  *===============================================================*/
 template<class PT_>
-inline LRESULT urania::BasicWindow::onPaint(PT_ proc, WPARAM wp, LPARAM lp)
+inline LRESULT urania::BasicWindow::onPaint(PT_&& proc, WPARAM wp, LPARAM lp)
 {
   (void)wp;
   (void)lp;

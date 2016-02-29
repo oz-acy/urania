@@ -5,7 +5,7 @@
  *  (c) 2002-2016 oZ/acy. ALL RIGHTS RESERVED.
  *
  *  履歴
- *    2016.2.28  修正
+ *    2016.2.29  修正 (クロージャの實裝をbindから[this](){}に變更)
  *************************************************************************/
 
 #include <cstdlib>
@@ -169,7 +169,8 @@ LRESULT urania::WMHandler::operator()(urania::WndMessage* msg)
 
   case WM_PAINT:
     return msg->window->onPaint(
-             bind(&WMHandler::onPaint, this, _1, _2),
+             [this](BasicWindow* bw, PaintDevice* pd){ onPaint(bw, pd); },
+             //bind(&WMHandler::onPaint, this, _1, _2),
              msg->wparam, msg->lparam);
     break;
 
