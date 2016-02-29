@@ -49,8 +49,10 @@ private:
   std::wstring filter_;
   std::wstring defExt_;
 
-public:
+protected:
   FileDialog(const std::wstring& flt, const std::wstring& ext);
+
+public:
   virtual ~FileDialog() {}
 
   bool doModalOpenFile(const urania::WndBase* win);
@@ -68,6 +70,12 @@ public:
 
   void setFilePath(const std::wstring& path);
   void setInitDir(const std::wstring& path);
+
+  static urania::FileDialog* create(
+    const std::wstring& flt, const std::wstring& ext =L"")
+  {
+    return new FileDialog(flt, ext);
+  }
 };
 
 
