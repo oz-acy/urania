@@ -7,7 +7,7 @@
  *  コモンダイアログラッパークラス定義
  *
  *  履歴
- *    2016.2.28  修正
+ *    2016.2.29  FileDialogクラスに一本化
  *************************************************************************/
 
 #include <cstring>
@@ -16,9 +16,9 @@
 
 
 /*===========================================
- *  FileDialogBase::FileDialogBase()
+ *  FileDialog::FileDialog()
  *=========================================*/
-urania::FileDialogBase::FileDialogBase(
+urania::FileDialog::FileDialog(
   const std::wstring& flt, const std::wstring& ext)
 : name_(L""), initDir_(L""), filter_(flt), defExt_(ext)
 {
@@ -30,27 +30,27 @@ urania::FileDialogBase::FileDialogBase(
 
 
 /*===========================================
- *  FileDialogBase::getFilePath()
+ *  FileDialog::getFilePath()
  *=========================================*/
-std::wstring urania::FileDialogBase::getFilePath() const
+std::wstring urania::FileDialog::getFilePath() const
 {
   return name_;
 }
 
 
 /*===========================================
- *  FileDialogBase::getFileName()
+ *  FileDialog::getFileName()
  *=========================================*/
-std::wstring urania::FileDialogBase::getFileName() const
+std::wstring urania::FileDialog::getFileName() const
 {
   return name_ + ofn_.nFileOffset;
 }
 
 
 /*===========================================
- *  FileDialogBase::getFileExt()
+ *  FileDialog::getFileExt()
  *=========================================*/
-std::wstring urania::FileDialogBase::getFileExt() const
+std::wstring urania::FileDialog::getFileExt() const
 {
   if (!ofn_.nFileExtension)
     return L"";
@@ -60,9 +60,9 @@ std::wstring urania::FileDialogBase::getFileExt() const
 
 
 /*===========================================
- *  FileDialogBase::getFileDir()
+ *  FileDialog::getFileDir()
  *=========================================*/
-std::wstring urania::FileDialogBase::getFileDir() const
+std::wstring urania::FileDialog::getFileDir() const
 {
   wchar_t tmp[MAX_PATH];
   wcsncpy(tmp, name_, ofn_.nFileOffset);
@@ -74,7 +74,7 @@ std::wstring urania::FileDialogBase::getFileDir() const
 /*===========================================
  *  FileDialogBase::setFilePath()
  *=========================================*/
-void urania::FileDialogBase::setFilePath(const std::wstring& path)
+void urania::FileDialog::setFilePath(const std::wstring& path)
 {
   wcsncpy(name_, path.c_str(), MAX_PATH);
   name_[MAX_PATH - 1] = L'\0';
@@ -84,7 +84,7 @@ void urania::FileDialogBase::setFilePath(const std::wstring& path)
 /*===========================================
  *  FileDialogBase::setInitDir()
  *=========================================*/
-void urania::FileDialogBase::setInitDir(const std::wstring& path)
+void urania::FileDialog::setInitDir(const std::wstring& path)
 {
   wcsncpy(initDir_, path.c_str(), MAX_PATH);
   initDir_[MAX_PATH - 1] = L'\0';
@@ -94,9 +94,9 @@ void urania::FileDialogBase::setInitDir(const std::wstring& path)
 
 
 /*===========================================
- *  OpenFileDialog::doModal()
+ *  FileDialog::doModalOpenFile()
  *=========================================*/
-bool urania::OpenFileDialog::doModal(const urania::WndBase* win)
+bool urania::FileDialog::doModalOpenFile(const urania::WndBase* win)
 {
   if (!win)
     ofn_.hwndOwner = NULL;
@@ -108,7 +108,7 @@ bool urania::OpenFileDialog::doModal(const urania::WndBase* win)
   else
     ofn_.lpstrInitialDir = nullptr;
 
-
+  ofn_.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
   ofn_.lpstrFilter = filter_.c_str();
   ofn_.lpstrDefExt = defExt_.c_str();
 
@@ -120,9 +120,9 @@ bool urania::OpenFileDialog::doModal(const urania::WndBase* win)
 
 
 /*===========================================
- *  SaveFileDialog::doModal()
+ *  FileDialog::doModalSaveFile()
  *=========================================*/
-bool urania::SaveFileDialog::doModal(const urania::WndBase* win)
+bool urania::FileDialog::doModalSaveFile(const urania::WndBase* win)
 {
   if (!win)
     ofn_.hwndOwner = NULL;
@@ -134,6 +134,7 @@ bool urania::SaveFileDialog::doModal(const urania::WndBase* win)
   else
     ofn_.lpstrInitialDir = nullptr;
 
+  ofn_.Flags = OFN_OVERWRITEPROMPT;
   ofn_.lpstrFilter = filter_.c_str();
   ofn_.lpstrDefExt = defExt_.c_str();
 
@@ -142,6 +143,8 @@ bool urania::SaveFileDialog::doModal(const urania::WndBase* win)
   else
     return false;
 }
+
+
 
 
 //eof

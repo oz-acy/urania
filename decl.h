@@ -7,6 +7,7 @@
  *
  *  履歴
  *    2016.2.27  ファイル名變更
+ *    2016.2.29  ファイルダイアログ關係の變更
  */
 #ifndef INC_URANIA_DECL_H___
 #define INC_URANIA_DECL_H___
@@ -23,9 +24,10 @@ namespace urania
       class Dialog;
 
   class CommonDialogBase;
-    class FileDialogBase;
-      class OpenFileDialog;
-      class SaveFileDialog;
+    class FileDialog;
+//    class FileDialogBase;
+//      class OpenFileDialog;
+//      class SaveFileDialog;
 
   class Menu;
   class MenuDesc;

@@ -629,6 +629,87 @@ pmdidx.cpp.s:
 	$(MAKE) -f CMakeFiles/urania.dir/build.make CMakeFiles/urania.dir/pmdidx.cpp.s
 .PHONY : pmdidx.cpp.s
 
+registry.o: registry.cpp.o
+
+.PHONY : registry.o
+
+# target to build an object file
+registry.cpp.o:
+	$(MAKE) -f CMakeFiles/urania.dir/build.make CMakeFiles/urania.dir/registry.cpp.o
+.PHONY : registry.cpp.o
+
+registry.i: registry.cpp.i
+
+.PHONY : registry.i
+
+# target to preprocess a source file
+registry.cpp.i:
+	$(MAKE) -f CMakeFiles/urania.dir/build.make CMakeFiles/urania.dir/registry.cpp.i
+.PHONY : registry.cpp.i
+
+registry.s: registry.cpp.s
+
+.PHONY : registry.s
+
+# target to generate assembly for a file
+registry.cpp.s:
+	$(MAKE) -f CMakeFiles/urania.dir/build.make CMakeFiles/urania.dir/registry.cpp.s
+.PHONY : registry.cpp.s
+
+regread.o: regread.cpp.o
+
+.PHONY : regread.o
+
+# target to build an object file
+regread.cpp.o:
+	$(MAKE) -f CMakeFiles/urania.dir/build.make CMakeFiles/urania.dir/regread.cpp.o
+.PHONY : regread.cpp.o
+
+regread.i: regread.cpp.i
+
+.PHONY : regread.i
+
+# target to preprocess a source file
+regread.cpp.i:
+	$(MAKE) -f CMakeFiles/urania.dir/build.make CMakeFiles/urania.dir/regread.cpp.i
+.PHONY : regread.cpp.i
+
+regread.s: regread.cpp.s
+
+.PHONY : regread.s
+
+# target to generate assembly for a file
+regread.cpp.s:
+	$(MAKE) -f CMakeFiles/urania.dir/build.make CMakeFiles/urania.dir/regread.cpp.s
+.PHONY : regread.cpp.s
+
+regwrite.o: regwrite.cpp.o
+
+.PHONY : regwrite.o
+
+# target to build an object file
+regwrite.cpp.o:
+	$(MAKE) -f CMakeFiles/urania.dir/build.make CMakeFiles/urania.dir/regwrite.cpp.o
+.PHONY : regwrite.cpp.o
+
+regwrite.i: regwrite.cpp.i
+
+.PHONY : regwrite.i
+
+# target to preprocess a source file
+regwrite.cpp.i:
+	$(MAKE) -f CMakeFiles/urania.dir/build.make CMakeFiles/urania.dir/regwrite.cpp.i
+.PHONY : regwrite.cpp.i
+
+regwrite.s: regwrite.cpp.s
+
+.PHONY : regwrite.s
+
+# target to generate assembly for a file
+regwrite.cpp.s:
+	$(MAKE) -f CMakeFiles/urania.dir/build.make CMakeFiles/urania.dir/regwrite.cpp.s
+.PHONY : regwrite.cpp.s
+
 scroll-h.o: scroll-h.cpp.o
 
 .PHONY : scroll-h.o
@@ -828,6 +909,15 @@ help:
 	@echo "... pmdidx.o"
 	@echo "... pmdidx.i"
 	@echo "... pmdidx.s"
+	@echo "... registry.o"
+	@echo "... registry.i"
+	@echo "... registry.s"
+	@echo "... regread.o"
+	@echo "... regread.i"
+	@echo "... regread.s"
+	@echo "... regwrite.o"
+	@echo "... regwrite.i"
+	@echo "... regwrite.s"
 	@echo "... scroll-h.o"
 	@echo "... scroll-h.i"
 	@echo "... scroll-h.s"

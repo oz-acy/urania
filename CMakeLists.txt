@@ -10,10 +10,6 @@ SET(CMAKE_CXX_FLAGS "-Wall -std=c++14 -O3 -DWINVER=0x500 -D_UNICODE -DUNICODE")
 
 include_directories("${CMAKE_INSTALL_PREFIX}/include")
 
-#SET(CMAKE_RC_COMPILER /usr/bin/x86_64-w64-mingw32-windres) # ‚±‚ê‚¾‚¯‚Å—Ç‚¢‚Ý‚½‚¢
-#SET(CMAKE_RC_COMPILE_OBJECT
-#  "<CMAKE_RC_COMPILER> <FLAGS> -O coff <DEFINES> -i <SOURCE> -o <OBJECT>")
-
 ADD_LIBRARY(urania STATIC
   system.cpp
   msgloop.cpp
@@ -28,8 +24,8 @@ ADD_LIBRARY(urania STATIC
   win.cpp scroll-h.cpp drop-h.cpp
   clkpanel.cpp
   cmndlg.cpp
+  registry.cpp regread.cpp regwrite.cpp
 )
-
 
 INSTALL(TARGETS urania DESTINATION lib)
 INSTALL(FILES
@@ -42,6 +38,7 @@ INSTALL(FILES
     win.h
     clkpanel.h
     cmndlg.h
+    registry.h
   DESTINATION
     include/urania
 )
