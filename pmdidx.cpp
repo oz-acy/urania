@@ -4,10 +4,10 @@
  *  by oZ/acy
  *  (c) 2002-2016 oZ/acy.  ALL RIGHTS RESERVED.
  *
- *  class urania::PaintMemDeviceIndexed ‚Ì›‰åä’è‹`
+ *  class urania::PaintMemDeviceIndexed ã®å¯¦è£å®šç¾©
  *
- *  —š—ğ
- *    2016.2.27  C³
+ *  å±¥æ­´
+ *    2016.03.02  ä¿®æ­£
  *************************************************************************/
 
 #include <cstring>
@@ -21,11 +21,11 @@ namespace
 
 /*===================================================================
  *  createPalHandle_()
- *  ƒpƒŒƒbƒgƒnƒ“ƒhƒ‹‚Ì¶¬
- *  ˆøÉ : col[] : ƒpƒŒƒbƒg‚Åw’è‚·‚é256F‚Ì”z—ñ
- *  •Ô’l : ƒpƒŒƒbƒg‚Ìƒnƒ“ƒhƒ‹(HPALETTE)
- *  ”õl : “n‚·”z—ñ‚ª 256 ŒÂ‚Ì—v‘f‚ğ‚½‚È‚¢ê‡‚Í
- *         •s³ƒƒ‚ƒŠƒAƒNƒZƒX‚ªo‚Ä‚àÓ‚É”C‚º‚¸
+ *  ãƒ‘ãƒ¬ãƒƒãƒˆãƒãƒ³ãƒ‰ãƒ«ã®ç”Ÿæˆ
+ *  å¼•æ•¸ : col[] : ãƒ‘ãƒ¬ãƒƒãƒˆã§æŒ‡å®šã™ã‚‹256è‰²ã®é…åˆ—
+ *  è¿”å€¤ : ãƒ‘ãƒ¬ãƒƒãƒˆã®ãƒãƒ³ãƒ‰ãƒ«(HPALETTE)
+ *  å‚™è€ƒ : æ¸¡ã™é…åˆ—ãŒ 256 å€‹ã®è¦ç´ ã‚’æŒãŸãªã„å ´åˆã¯
+ *         ä¸æ­£ãƒ¡ãƒ¢ãƒªã‚¢ã‚¯ã‚»ã‚¹ãŒå‡ºã¦ã‚‚è²¬ã«ä»»ãœãš
  */
 HPALETTE createPalHandle_(const urania::Color col[])
 {
@@ -55,7 +55,7 @@ HPALETTE createPalHandle_(const urania::Color col[])
 
 /*==============================================================
  *  PaintMemDeviceIndexed::PaintMemDeviceIndexed()
- *  DIBSection,ƒpƒŒƒbƒgƒnƒ“ƒhƒ‹¶¬‘¼‰Šú‰»
+ *  DIBSection,ãƒ‘ãƒ¬ãƒƒãƒˆãƒãƒ³ãƒ‰ãƒ«ç”Ÿæˆä»–åˆæœŸåŒ–
  *============================================================*/
 urania::PaintMemDeviceIndexed::PaintMemDeviceIndexed(unsigned w, unsigned h)
   : polymnia::ImageBuffer<themis::UByte>(w, h, 0), hdc_(NULL), oldbmp_(NULL),
@@ -66,11 +66,10 @@ urania::PaintMemDeviceIndexed::PaintMemDeviceIndexed(unsigned w, unsigned h)
   using namespace std;
 
   int oo = w_ * sizeof(UByte);
-  offset_ = (oo%4) ? (oo/4+1)*4/sizeof(UByte) : oo/sizeof(UByte);
+  offset_ = (oo % 4) ? (oo / 4 + 1) * 4 / sizeof(UByte) : oo / sizeof(UByte);
 
   HBITMAP hBitmapNew;
   HDC hTmpDC;
-  int i;
   struct
   {
     BITMAPINFOHEADER Header;
@@ -78,8 +77,8 @@ urania::PaintMemDeviceIndexed::PaintMemDeviceIndexed(unsigned w, unsigned h)
   }BmpInfo;
 
 
-  //ƒpƒŒƒbƒg‚Ì‰Šú‰»
-  for (i=0; i<256; i++)
+  //ãƒ‘ãƒ¬ãƒƒãƒˆã®åˆæœŸåŒ–
+  for (int i = 0; i < 256; i++)
   {
     pal_[i].r = (UByte)( ((i>>5) & 7)*255/7 );
     pal_[i].g = (UByte)( ((i>>2) & 7)*255/7 );
@@ -100,8 +99,8 @@ urania::PaintMemDeviceIndexed::PaintMemDeviceIndexed(unsigned w, unsigned h)
   BmpInfo.Header.biClrUsed = 0;
   BmpInfo.Header.biClrImportant = 0;
 
-  //ƒpƒŒƒbƒg‚ğƒJƒ‰[ƒe[ƒuƒ‹‚ÉƒRƒs[
-  for (i=0; i<256; i++)
+  //ãƒ‘ãƒ¬ãƒƒãƒˆã‚’ã‚«ãƒ©ãƒ¼ãƒ†ãƒ¼ãƒ–ãƒ«ã«ã‚³ãƒ”ãƒ¼
+  for (int i=0; i < 256; i++)
   {
     BmpInfo.ColorTable[i].rgbRed = pal_[i].r;
     BmpInfo.ColorTable[i].rgbGreen = pal_[i].g;
@@ -119,7 +118,7 @@ urania::PaintMemDeviceIndexed::PaintMemDeviceIndexed(unsigned w, unsigned h)
 
   if (!hBitmapNew || !buf_)
   {
-    //‰Šú‰»‚É¸”s  ƒpƒŒƒbƒg‚ğ‰ğ•ú
+    //åˆæœŸåŒ–ã«å¤±æ•—  ãƒ‘ãƒ¬ãƒƒãƒˆã‚’è§£æ”¾
     if (hpal_)
       DeleteObject(hpal_);
     hpal_ = NULL;
@@ -132,14 +131,14 @@ urania::PaintMemDeviceIndexed::PaintMemDeviceIndexed(unsigned w, unsigned h)
 
   oldbmp_ = (HBITMAP)SelectObject(hdc_, hBitmapNew);
 
-  //ƒƒ‚ƒŠ—Ìˆæ‚ÌƒNƒŠƒA
-  memset(buf_, 0, sizeof(UByte)*offset_*h_);
+  //ãƒ¡ãƒ¢ãƒªé ˜åŸŸã®ã‚¯ãƒªã‚¢
+  memset(buf_, 0, sizeof(UByte) * offset_ * h_);
 }
 
 
 /*==============================================================
  *  PaintMemDeviceIndexed::~PaintMemDevicePal()
- *  Š„‚è“–‚Äƒnƒ“ƒhƒ‹‚Ì‰ğ•ú
+ *  å‰²ã‚Šå½“ã¦ãƒãƒ³ãƒ‰ãƒ«ã®è§£æ”¾
  *============================================================*/
 urania::PaintMemDeviceIndexed::~PaintMemDeviceIndexed()
 {
@@ -147,13 +146,13 @@ urania::PaintMemDeviceIndexed::~PaintMemDeviceIndexed()
 
   if (hdc_ && oldbmp_)
   {
-    // hdc‚ªŠm•Û‚³‚ê‚Ä‚¢‚éê‡‚¾‚¯ŠJ•ú‚·‚é
+    // hdcãŒç¢ºä¿ã•ã‚Œã¦ã„ã‚‹å ´åˆã ã‘é–‹æ”¾ã™ã‚‹
     hbmp = (HBITMAP)SelectObject(hdc_, oldbmp_);
     DeleteObject(hbmp);
     DeleteDC(hdc_);
   }
 
-  // ƒpƒŒƒbƒg‚Ì‰ğ•ú
+  // ãƒ‘ãƒ¬ãƒƒãƒˆã®è§£æ”¾
   if (hpal_)
     DeleteObject(hpal_);
 }
@@ -161,7 +160,7 @@ urania::PaintMemDeviceIndexed::~PaintMemDeviceIndexed()
 
 /*============================================================
  *  PaintMemDeviceIndexed::updatePalette()
- *  ƒpƒŒƒbƒgƒnƒ“ƒhƒ‹‚ÌXV
+ *  ãƒ‘ãƒ¬ãƒƒãƒˆãƒãƒ³ãƒ‰ãƒ«ã®æ›´æ–°
  *==========================================================*/
 void urania::PaintMemDeviceIndexed::updatePalette()
 {
@@ -180,7 +179,7 @@ void urania::PaintMemDeviceIndexed::updatePalette()
     DeleteObject(h_old);
 
   RGBQUAD rgbq[256];
-  for (int i=0; i<256; i++)
+  for (int i = 0; i < 256; i++)
   {
     rgbq[i].rgbRed = pal_[i].r;
     rgbq[i].rgbGreen = pal_[i].g;
@@ -195,13 +194,13 @@ void urania::PaintMemDeviceIndexed::updatePalette()
 
 /*======================================================
  *  PaintMemDeviceIndexed::create()
- *  Object¶¬
- *  ˆøÉ: unsigned w : ƒfƒoƒCƒX•
- *        unsigned h : ƒfƒoƒCƒX‚‚³
- *  •Ô’l: ¶¬‚³‚ê‚½ƒIƒuƒWƒFƒNƒg‚Ö‚Ìƒ|ƒCƒ“ƒ^
+ *  Objectç”Ÿæˆ
+ *  å¼•æ•¸: unsigned w : ãƒ‡ãƒã‚¤ã‚¹å¹…
+ *        unsigned h : ãƒ‡ãƒã‚¤ã‚¹é«˜ã•
+ *  è¿”å€¤: ç”Ÿæˆã•ã‚ŒãŸã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã¸ã®ãƒã‚¤ãƒ³ã‚¿
  *====================================================*/
-urania::PaintMemDeviceIndexed* urania::PaintMemDeviceIndexed::create(
-  unsigned w, unsigned h) throw()
+urania::PaintMemDeviceIndexed*
+urania::PaintMemDeviceIndexed::create(unsigned w, unsigned h)
 {
   try
   {
@@ -209,8 +208,10 @@ urania::PaintMemDeviceIndexed* urania::PaintMemDeviceIndexed::create(
 
     if (pvd->buf_)
       return pvd;
-    else
+    else {
+      delete pvd;
       return nullptr;
+    }
   }
   catch (std::bad_alloc)
   {
@@ -221,9 +222,9 @@ urania::PaintMemDeviceIndexed* urania::PaintMemDeviceIndexed::create(
 
 /*===============================================================
  *  PaintMemDeviceIndexed::create()
- *  Object¶¬ (Šù‘¶ PictureIndexed ƒCƒ“ƒXƒ^ƒ“ƒX‚Ì "•¡»")
- *  ˆøÉ:  PicturePal* pct : ƒRƒs[Œ³ PictureIndexed
- *  •Ô’l:  ƒIƒuƒWƒFƒNƒg‚Ìƒ|ƒCƒ“ƒ^
+ *  Objectç”Ÿæˆ (æ—¢å­˜ PictureIndexed ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã® "è¤‡è£½")
+ *  å¼•æ•¸:  PicturePal* pct : ã‚³ãƒ”ãƒ¼å…ƒ PictureIndexed
+ *  è¿”å€¤:  ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ãƒã‚¤ãƒ³ã‚¿
  *=============================================================*/
 urania::PaintMemDeviceIndexed*
 urania::PaintMemDeviceIndexed::create(const polymnia::PictureIndexed* pct)
@@ -242,12 +243,9 @@ urania::PaintMemDeviceIndexed::create(const polymnia::PictureIndexed* pct)
   const UByte* src = pct->buffer();
   UByte* res = vd->buffer();
 
-  int i;
-  int p = 0;
-  int q = 0;
   int o = pct->offset();
   int oo = vd->offset_;
-  for (i=0; i<hh; i++, p+=o, q+=oo)
+  for (int i=0, p = 0, q = 0; i < hh; i++, p+=o, q+=oo)
     copy(src + p, src + p + ww, res + q);
 
   const RgbColor* sp = pct->paletteBuffer();
@@ -261,8 +259,8 @@ urania::PaintMemDeviceIndexed::create(const polymnia::PictureIndexed* pct)
 
 /*=====================================================
  *  PaintMemDeviceIndexed::createPicture()
- *  “¯“à—e‚Ì PictureIndexed ƒCƒ“ƒXƒ^ƒ“ƒX‚Ì¶¬
- *  •Ô’l: ƒIƒuƒWƒFƒNƒg‚Ìƒ|ƒCƒ“ƒ^
+ *  åŒå†…å®¹ã® PictureIndexed ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®ç”Ÿæˆ
+ *  è¿”å€¤: ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ãƒã‚¤ãƒ³ã‚¿
  *===================================================*/
 polymnia::PictureIndexed*
 urania::PaintMemDeviceIndexed::createPicture() const
@@ -276,11 +274,8 @@ urania::PaintMemDeviceIndexed::createPicture() const
     return nullptr;
 
   UByte* res = pct->buffer();
-  int i;
-  int p=0;
-  int q=0;
   int oo = pct->offset();
-  for (i=0; i<h_; i++, p+=offset_, q+=oo)
+  for (int i = 0, p = 0, q = 0; i < h_; i++, p += offset_, q += oo)
     copy(buf_ + p, buf_ + p + w_, res + q);
 
   RgbColor* rp = pct->paletteBuffer();
@@ -292,8 +287,8 @@ urania::PaintMemDeviceIndexed::createPicture() const
 
 /*===========================================
  *  PaintMemDeviceIndexed::clone()
- *  “¯“à—e‚Ì Object ‚Ì¶¬
- *  •Ô’l: ƒIƒuƒWƒFƒNƒg‚Ìƒ|ƒCƒ“ƒ^
+ *  åŒå†…å®¹ã® Object ã®ç”Ÿæˆ
+ *  è¿”å€¤: ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ãƒã‚¤ãƒ³ã‚¿
  *=========================================*/
 urania::PaintMemDeviceIndexed* urania::PaintMemDeviceIndexed::clone() const
 {

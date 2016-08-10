@@ -4,10 +4,10 @@
  *  by oZ/acy
  *  (C) 2002-2016 oZ/acy.  ALL RIGHTS RESERVED.
  *
- *  Windows DC •`á`—pƒNƒ‰ƒX
+ *  Windows DC æç•«ç”¨ã‚¯ãƒ©ã‚¹
  *
- *  —š—ğ
- *    2016.2.28  C³
+ *  å±¥æ­´
+ *    2016.03.02  ä¿®æ­£
  *
  *************************************************************************/
 #ifndef INC_URANIA_PAINTDEVICE_H___
@@ -21,7 +21,7 @@ namespace urania
 {
   //-------------------------------
   //  Color
-  //  Windows—pBGRƒJƒ‰[\‘¢‘Ì
+  //  Windowsç”¨BGRã‚«ãƒ©ãƒ¼æ§‹é€ ä½“
   //-------------------------------
   class Color
   {
@@ -63,7 +63,7 @@ namespace urania
   };
 
 
-  // classéŒ¾
+  // classå®£è¨€
   class PaintDevice;
   class PaintMemDevice;
   class PaintMemDeviceIndexed;
@@ -74,7 +74,7 @@ namespace urania
 
 /*=====================================================
  *  PaintMemDevice
- *  PaintDeviceŒİŠ·ƒƒ‚ƒŠã‰¼‘zƒfƒoƒCƒX(24bit color)
+ *  PaintDeviceäº’æ›ãƒ¡ãƒ¢ãƒªä¸Šä»®æƒ³ãƒ‡ãƒã‚¤ã‚¹(24bit color)
  */
 class urania::PaintMemDevice : public polymnia::ImageBuffer<urania::Color>
 {
@@ -91,7 +91,7 @@ protected:
 public:
   ~PaintMemDevice();
 
-  static urania::PaintMemDevice* create(unsigned w, unsigned h) throw();
+  static urania::PaintMemDevice* create(unsigned w, unsigned h);
   static urania::PaintMemDevice* create(const polymnia::Picture* pct);
 
   polymnia::Picture* createPicture() const;
@@ -102,7 +102,7 @@ public:
 
 /*===============================================================
  *  PaintMemDeviceIndexed
- *  PaintDeviceŒİŠ·ƒƒ‚ƒŠã‰¼‘zƒfƒoƒCƒX(256 palette color)
+ *  PaintDeviceäº’æ›ãƒ¡ãƒ¢ãƒªä¸Šä»®æƒ³ãƒ‡ãƒã‚¤ã‚¹(256 palette color)
  */
 class urania::PaintMemDeviceIndexed
   : public polymnia::ImageBuffer<themis::UByte>
@@ -121,7 +121,7 @@ protected:
  public:
   ~PaintMemDeviceIndexed();
 
-  static PaintMemDeviceIndexed* create(unsigned w, unsigned h) throw();
+  static PaintMemDeviceIndexed* create(unsigned w, unsigned h);
   static PaintMemDeviceIndexed* create(const polymnia::PictureIndexed* pct);
 
   polymnia::PictureIndexed* createPicture() const;
@@ -139,7 +139,7 @@ protected:
 
 /*================================================
  *  PaintDevice
- *  Windows ƒfƒoƒCƒXƒRƒ“ƒeƒLƒXƒg‚Ìƒ‰ƒbƒp[
+ *  Windows ãƒ‡ãƒã‚¤ã‚¹ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆã®ãƒ©ãƒƒãƒ‘ãƒ¼
  */
 class urania::PaintDevice : boost::noncopyable
 {
@@ -168,50 +168,50 @@ public:
 
   //=============================================================
   //  static create()
-  //  Object¶¬
-  //   ˆøÉ:  HDC dc      : ƒfƒoƒCƒXƒRƒ“ƒeƒLƒXƒgƒnƒ“ƒhƒ‹
-  //          DestProc dp : DC‰ğ•ú—pƒR[ƒ‹ƒoƒbƒN(•s—v‚È‚çnullptr)
-  //          void* a     : ƒR[ƒ‹ƒoƒbƒN‚É“n‚·ƒpƒ‰ƒ[ƒ^
-  //          unsigned w  : ƒfƒoƒCƒX•
-  //          unsigned h  : ƒfƒoƒCƒX‚‚³
-  //   •Ô’l:  ƒIƒuƒWƒFƒNƒg‚ÌƒXƒ}[ƒgƒ|ƒCƒ“ƒ^(RCPtr)
+  //  Objectç”Ÿæˆ
+  //   å¼•æ•¸:  HDC dc      : ãƒ‡ãƒã‚¤ã‚¹ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆãƒãƒ³ãƒ‰ãƒ«
+  //          DestProc dp : DCè§£æ”¾ç”¨ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯(ä¸è¦ãªã‚‰nullptr)
+  //          void* a     : ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ã«æ¸¡ã™ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
+  //          unsigned w  : ãƒ‡ãƒã‚¤ã‚¹å¹…
+  //          unsigned h  : ãƒ‡ãƒã‚¤ã‚¹é«˜ã•
+  //   è¿”å€¤:  ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ã‚¹ãƒãƒ¼ãƒˆãƒã‚¤ãƒ³ã‚¿(RCPtr)
   //=============================================================
   static urania::PaintDevice*
-  create(HDC dc, DestProc dp, void* a, int w, int h) throw();
+  create(HDC dc, DestProc dp, void* a, int w, int h);
 
 
   //========================================================
   //  clear()
-  //  •`á`—Ìˆæ‚Ì‘S“h‚è’×‚µ(ƒNƒŠƒA)
-  //   ˆøÉ : const Color_PD& col : “h‚è’×‚µF
+  //  æç•«é ˜åŸŸã®å…¨å¡—ã‚Šæ½°ã—(ã‚¯ãƒªã‚¢)
+  //   å¼•æ•¸ : const Color_PD& col : å¡—ã‚Šæ½°ã—è‰²
   //========================================================
   void clear(const urania::Color& col);
 
 
   //====================================
   //  dotset()
-  //  êy‚ğ•`á`
-  //   ˆøÉ  x,y : À•W
-  //         col : •`á`F
+  //  é»ã‚’æç•«
+  //   å¼•æ•¸  x,y : åº§æ¨™
+  //         col : æç•«è‰²
   //====================================
   void dotset(int x, int y, const urania::Color& col);
 
 
   //==================================================================
   //  line()
-  //  ’¼ü‚ğ•`á`
-  //   ˆøÉ  x1, y1, x2, y2 : À•W (x1, y1)-(x2, y2)ŠÔ‚É’¼ü‚ğˆø‚­
-  //         col            : •`á`F
+  //  ç›´ç·šã‚’æç•«
+  //   å¼•æ•¸  x1, y1, x2, y2 : åº§æ¨™ (x1, y1)-(x2, y2)é–“ã«ç›´ç·šã‚’å¼•ã
+  //         col            : æç•«è‰²
   //==================================================================
   void line(int x1, int y1, int x2, int y2, const urania::Color& col);
 
 
   //=============================================================
   //  box()
-  //  ’·•ûŒ`‚ğ•`á`
-  //   ˆøÉ  x1, y1, x2, y2 : ›”Šp’¸“_‚ÌÀ•W (x1, y1), (x2, y2)
-  //         col            : •`á`F
-  //         f              : true‚Å“h‚è’×‚µAfalse‚Å˜gü‚Ì‚İ
+  //  é•·æ–¹å½¢ã‚’æç•«
+  //   å¼•æ•¸  x1, y1, x2, y2 : å°è§’é ‚ç‚¹ã®åº§æ¨™ (x1, y1), (x2, y2)
+  //         col            : æç•«è‰²
+  //         f              : trueã§å¡—ã‚Šæ½°ã—ã€falseã§æ ç·šã®ã¿
   //=============================================================
   void box
   (int x1, int y1, int x2, int y2, const urania::Color& col, bool f =false);
@@ -219,11 +219,11 @@ public:
 
   //===================================================
   //  ellipse()
-  //  ‘È‰~‚ğ•`á`
-  //   ˆøÉ  x,y : ’†SÀ•W
-  //         a,b : x”¼Œa‹y‚Ñy”¼Œa
-  //         col : •`á`F
-  //         f   : true‚Å“h‚è’×‚µAfalse‚Å˜gü‚Ì‚İ
+  //  æ¥•å††ã‚’æç•«
+  //   å¼•æ•¸  x,y : ä¸­å¿ƒåº§æ¨™
+  //         a,b : xåŠå¾„åŠã³yåŠå¾„
+  //         col : æç•«è‰²
+  //         f   : trueã§å¡—ã‚Šæ½°ã—ã€falseã§æ ç·šã®ã¿
   //===================================================
   void ellipse
   (int x, int y, int a, int b, const urania::Color& col, bool f =false);
@@ -231,11 +231,11 @@ public:
 
   //===================================================
   //  circle()
-  //  ‰~‚ğ•`á`
-  //   ˆøÉ  x,y : ’†SÀ•W
-  //         r   : ”¼Œa
-  //         col : •`á`F
-  //         f   : true‚Å“h‚è’×‚µAfalse‚Å˜gü‚Ì‚İ
+  //  å††ã‚’æç•«
+  //   å¼•æ•¸  x,y : ä¸­å¿ƒåº§æ¨™
+  //         r   : åŠå¾„
+  //         col : æç•«è‰²
+  //         f   : trueã§å¡—ã‚Šæ½°ã—ã€falseã§æ ç·šã®ã¿
   //===================================================
   void circle(int x, int y, int r, const urania::Color& col, bool f =false)
   {
@@ -246,11 +246,11 @@ public:
 
   //===================================================
   //  text()
-  //  ƒeƒLƒXƒg‚ğ•`á`
-  //   ˆøÉ  x,y : ¶ãŠpÀ•W
-  //         str : •`á`‚·‚é•¶š—ñ
-  //         col : š‚ÌF
-  //   •Ô’l  •`á`’·•ûŒ`‚Ì‰E‰ºŠpÀ•W
+  //  ãƒ†ã‚­ã‚¹ãƒˆã‚’æç•«
+  //   å¼•æ•¸  x,y : å·¦ä¸Šè§’åº§æ¨™
+  //         str : æç•«ã™ã‚‹æ–‡å­—åˆ—
+  //         col : å­—ã®è‰²
+  //   è¿”å€¤  æç•«é•·æ–¹å½¢ã®å³ä¸‹è§’åº§æ¨™
   //===================================================
   polymnia::Point text
   (int x, int y, const std::wstring& str, const urania::Color& col);
@@ -258,12 +258,12 @@ public:
 
   //==============================================
   //  text()
-  //  ƒeƒLƒXƒg‚ğ•`á` (•w’èƒo[ƒWƒ‡ƒ“)
-  //   ˆøÉ  x,y : ¶ãŠpÀ•W
-  //         w   : •
-  //         str : •`á`‚·‚é•¶š—ñ
-  //         col : š‚ÌF
-  //   •Ô’l  •`á`’·•ûŒ`‚Ì‰E‰ºŠpÀ•W
+  //  ãƒ†ã‚­ã‚¹ãƒˆã‚’æç•« (å¹…æŒ‡å®šãƒãƒ¼ã‚¸ãƒ§ãƒ³)
+  //   å¼•æ•¸  x,y : å·¦ä¸Šè§’åº§æ¨™
+  //         w   : å¹…
+  //         str : æç•«ã™ã‚‹æ–‡å­—åˆ—
+  //         col : å­—ã®è‰²
+  //   è¿”å€¤  æç•«é•·æ–¹å½¢ã®å³ä¸‹è§’åº§æ¨™
   //==============================================
   polymnia::Point
   text(int x, int y, int w, const std::wstring& str, const urania::Color& col);
@@ -271,15 +271,15 @@ public:
 
   //==================================================================
   //  changeFont()
-  //  ƒtƒHƒ“ƒg‚Ì•ÏX
-  //   ˆøÉ  size : ƒtƒHƒ“ƒgƒTƒCƒY
-  //         fn   : ƒtƒHƒ“ƒg–¼(L""‚à‰Â”\A‚»‚Ì‚Æ‚«‚ÍƒfƒtƒHƒ‹ƒg)
-  //         ro   : true‚È‚çƒƒ}[ƒ“ƒ^ƒCƒv(å‚ÉƒfƒtƒHƒ‹ƒg‚É‰e‹¿)
-  //         fx   : true‚È‚ç“™•ƒtƒHƒ“ƒgAfalse‚È‚çƒvƒƒ|[ƒVƒ‡ƒiƒ‹
-  //         bo   : true‚È‚çƒ{[ƒ‹ƒh‘Ì
-  //         itl  : true‚È‚çÎ‘Ì
-  //         ul   : true‚È‚ç‰ºü•t‚«
-  //         sk   : true‚È‚ç‘Å‚¿Á‚µü•t‚«
+  //  ãƒ•ã‚©ãƒ³ãƒˆã®å¤‰æ›´
+  //   å¼•æ•¸  size : ãƒ•ã‚©ãƒ³ãƒˆã‚µã‚¤ã‚º
+  //         fn   : ãƒ•ã‚©ãƒ³ãƒˆå(L""ã‚‚å¯èƒ½ã€ãã®ã¨ãã¯ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆ)
+  //         ro   : trueãªã‚‰ãƒ­ãƒãƒ¼ãƒ³ã‚¿ã‚¤ãƒ—(ä¸»ã«ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆæ™‚ã«å½±éŸ¿)
+  //         fx   : trueãªã‚‰ç­‰å¹…ãƒ•ã‚©ãƒ³ãƒˆã€falseãªã‚‰ãƒ—ãƒ­ãƒãƒ¼ã‚·ãƒ§ãƒŠãƒ«
+  //         bo   : trueãªã‚‰ãƒœãƒ¼ãƒ«ãƒ‰ä½“
+  //         itl  : trueãªã‚‰æ–œä½“
+  //         ul   : trueãªã‚‰ä¸‹ç·šä»˜ã
+  //         sk   : trueãªã‚‰æ‰“ã¡æ¶ˆã—ç·šä»˜ã
   //==================================================================
   void
   changeFont(
@@ -289,21 +289,21 @@ public:
 
   //===============================
   //  width(), height()
-  //  •`á`—Ìˆæ‚Ì•‚Æ‚‚³‚Ìæ“¾
+  //  æç•«é ˜åŸŸã®å¹…ã¨é«˜ã•ã®å–å¾—
   //===============================
   int width() const { return width_; }
   int height() const { return height_; }
 
 
   //==============================================
-  //  blt()  ~ 4
-  //  •`á`“à—e‚Ìçz‘—
+  //  blt()  Ã— 4
+  //  æç•«å†…å®¹ã®è½‰é€
   //
-  //   ˆøÉ  dx, dy  : çz‘—›”Û¶ãŠpÀ•W
-  //         src     : çz‘—Œ³Object
-  //         sx, sy  : çz‘—Œ³¶ãŠpÀ•W
-  //         w, h    : çz‘—•E‚‚³
-  //         mask    : çz‘—›”Û‚Ìçz‘—‰Â”\—Ìˆæ
+  //   å¼•æ•¸  dx, dy  : è½‰é€å°è±¡å·¦ä¸Šè§’åº§æ¨™
+  //         src     : è½‰é€å…ƒObject
+  //         sx, sy  : è½‰é€å…ƒå·¦ä¸Šè§’åº§æ¨™
+  //         w, h    : è½‰é€å¹…ãƒ»é«˜ã•
+  //         mask    : è½‰é€å°è±¡ã®è½‰é€å¯èƒ½é ˜åŸŸ
   //==============================================
   void blt(
     int dx, int dy, const urania::PaintMemDevice* src, int sx, int sy,
@@ -323,10 +323,10 @@ public:
 
 
   //===================================================
-  //  blt()  ~ 2
-  //  •`á`“à—e‚Ìçz‘—A’A‚µ°‘åk¬•‚«‚Å‘S—Ìˆæ“¯m
+  //  blt()  Ã— 2
+  //  æç•«å†…å®¹ã®è½‰é€ã€ä½†ã—æ“´å¤§ç¸®å°é™„ãã§å…¨é ˜åŸŸåŒå£«
   //
-  //   ˆø”  src    : “]‘—Œ³Object
+  //   å¼•æ•°  src    : è»¢é€å…ƒObject
   //===================================================
   void blt(const urania::PaintMemDevice* src);
   void blt(urania::PaintMemDeviceIndexed* src);
@@ -334,9 +334,9 @@ public:
 
   //=============================================================
   //  static getSysColor()
-  //  ƒVƒXƒeƒ€ƒJƒ‰[æ“¾
-  //   ˆøÉ : int id : ƒVƒXƒeƒ€ƒJƒ‰[‚ÌID (decl.h‚Å’è‹`)
-  //   •Ô’l : w’è‚µ‚½ƒVƒXƒeƒ€ƒJƒ‰[‚ÌF
+  //  ã‚·ã‚¹ãƒ†ãƒ ã‚«ãƒ©ãƒ¼å–å¾—
+  //   å¼•æ•¸ : int id : ã‚·ã‚¹ãƒ†ãƒ ã‚«ãƒ©ãƒ¼ã®ID (decl.hã§å®šç¾©)
+  //   è¿”å€¤ : æŒ‡å®šã—ãŸã‚·ã‚¹ãƒ†ãƒ ã‚«ãƒ©ãƒ¼ã®è‰²
   //=============================================================
   static urania::Color getSysColor(int id)
   {
@@ -346,9 +346,9 @@ public:
 
   //=======================================================================
   //  static setSysColor()
-  //  ƒVƒXƒeƒ€ƒJƒ‰[İ’è
-  //   ˆøÉ : int id                   : ƒVƒXƒeƒ€ƒJƒ‰[ID (decl.h‚Å’è‹`)
-  //          const urania::Color& col : İ’è‚·‚éF
+  //  ã‚·ã‚¹ãƒ†ãƒ ã‚«ãƒ©ãƒ¼è¨­å®š
+  //   å¼•æ•¸ : int id                   : ã‚·ã‚¹ãƒ†ãƒ ã‚«ãƒ©ãƒ¼ID (decl.hã§å®šç¾©)
+  //          const urania::Color& col : è¨­å®šã™ã‚‹è‰²
   //=======================================================================
   static void setSysColor(int id, const urania::Color& col);
 

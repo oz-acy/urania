@@ -8,6 +8,7 @@
  *
  *  —š—ğ
  *    2016.2.29  OpenFileDialog‚ÆSaveFileDialog‚ğFileDialog‚Éˆê–{‰»
+ *    2016.8.10  FileDialog::crearFilePath()‚ÌŒ^‚ğC³
  *************************************************************************/
 
 #ifndef INC_URANIA_COMMONDLG_H___
@@ -63,7 +64,7 @@ public:
   std::wstring getFileDir() const;
   std::wstring getFileExt() const;
 
-  std::wstring clearFilePath()
+  void clearFilePath()
   { 
     name_[0] = L'\0';
   }

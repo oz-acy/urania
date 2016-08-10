@@ -4,11 +4,11 @@
  *  by oZ/acy
  *  (C) 2002-2016 oZ/acy.  ALL RIGHTS RESERVED.
  *
- *  class urania::PaintDevice ‚ÌÀ‘•’è‹`‚»‚Ìˆë
- *   ƒRƒ“ƒXƒgƒ‰ƒNƒ^AƒfƒXƒgƒ‰ƒNƒ^AƒVƒXƒeƒ€ƒJƒ‰[ŒnAƒNƒŠƒA‹y‚ÑBLTˆ—
+ *  class urania::PaintDevice ã®å®Ÿè£…å®šç¾©ãã®å£±
+ *   ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã€ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã€ã‚·ã‚¹ãƒ†ãƒ ã‚«ãƒ©ãƒ¼ç³»ã€ã‚¯ãƒªã‚¢åŠã³BLTå‡¦ç†
  *
- *  —š—ğ
- *    2016.2.27  C³
+ *  å±¥æ­´
+ *    2016.03.02  ä¿®æ­£
  *************************************************************************/
 
 #include "paintdev.h"
@@ -17,7 +17,7 @@
 
 /*==========================================================
  *  PaintDevice::PaintDevice()
- *  DC‚ÌŠeƒIƒuƒWƒFƒNƒg‚ÌŒ´ó•Û‘¶‚ÆV‹KŠ„‚è“–‚Ä
+ *  DCã®å„ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®åŸçŠ¶ä¿å­˜ã¨æ–°è¦å‰²ã‚Šå½“ã¦
  */
 urania::PaintDevice::PaintDevice(HDC dc, DestProc dp, void* ap, int w, int h)
   : hdc_(dc), dst_(dp), app_(ap), width_(w), height_(h)
@@ -38,7 +38,7 @@ urania::PaintDevice::PaintDevice(HDC dc, DestProc dp, void* ap, int w, int h)
 
 /*===============================================================
  *  PaintDevice::~PaintDevice()
- *  DC‚ÌŠeƒIƒuƒWƒFƒNƒg‚ÌŒ´ó•œ‹AEDC‰ğ•úƒR[ƒ‹ƒoƒbƒNŒÄ‚Ño‚µ
+ *  DCã®å„ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®åŸçŠ¶å¾©å¸°ãƒ»DCè§£æ”¾ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯å‘¼ã³å‡ºã—
  */
 urania::PaintDevice::~PaintDevice()
 {
@@ -58,16 +58,16 @@ urania::PaintDevice::~PaintDevice()
 
 /*===============================================================
  *  PaintDevice::create()
- *  Object¶¬
- *   ˆø”:  HDC dc      : ƒfƒoƒCƒXƒRƒ“ƒeƒLƒXƒgƒnƒ“ƒhƒ‹
- *          DestProc dp : DC‰ğ•ú—pƒR[ƒ‹ƒoƒbƒN
- *          void* a     : ƒR[ƒ‹ƒoƒbƒN‚É“n‚·ƒpƒ‰ƒ[ƒ^
- *          unsigned w  : ƒfƒoƒCƒX•
- *          unsigned h  : ƒfƒoƒCƒX‚‚³
- *   •Ô’l:  ƒIƒuƒWƒFƒNƒg‚ÌƒXƒ}[ƒgƒ|ƒCƒ“ƒ^(Qointer)
+ *  Objectç”Ÿæˆ
+ *   å¼•æ•°:  HDC dc      : ãƒ‡ãƒã‚¤ã‚¹ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆãƒãƒ³ãƒ‰ãƒ«
+ *          DestProc dp : DCè§£æ”¾ç”¨ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯
+ *          void* a     : ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ã«æ¸¡ã™ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
+ *          unsigned w  : ãƒ‡ãƒã‚¤ã‚¹å¹…
+ *          unsigned h  : ãƒ‡ãƒã‚¤ã‚¹é«˜ã•
+ *   è¿”å€¤:  ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ã‚¹ãƒãƒ¼ãƒˆãƒã‚¤ãƒ³ã‚¿(Qointer)
  */
-urania::PaintDevice* urania::PaintDevice::create(
-  HDC dc, DestProc dp, void* a, int w, int h) throw()
+urania::PaintDevice*
+urania::PaintDevice::create(HDC dc, DestProc dp, void* a, int w, int h)
 {
   try
   {
@@ -82,26 +82,22 @@ urania::PaintDevice* urania::PaintDevice::create(
 
 /*====================================================================
  *  PaintDevice::setSysColor()
- *  ƒVƒXƒeƒ€ƒJƒ‰[İ’è
- *   ˆø” : int id        : ƒVƒXƒeƒ€ƒJƒ‰[‚ÌID(gpGuiDef.h‚Åenum’è‹`)
- *          const C_& col : İ’è‚·‚éF(BGR)
+ *  ã‚·ã‚¹ãƒ†ãƒ ã‚«ãƒ©ãƒ¼è¨­å®š
+ *   å¼•æ•° : int id  ã‚·ã‚¹ãƒ†ãƒ ã‚«ãƒ©ãƒ¼ã®ID(gpGuiDef.hã§enumå®šç¾©)
+ *          const urania::Color& col  è¨­å®šã™ã‚‹è‰²(BGR)
  */
 void urania::PaintDevice::setSysColor(int id, const urania::Color& col)
 {
   int i[1] = { id };
   COLORREF c[1] = { col.getColorref() };
-
-//  i[0] = id;
-//  c[0] = col.getColorref();
-
   SetSysColors(1, i, c);
 }
 
 
 /*=====================================================
  *  PaintDevice::clear()
- *  •`‰æ—Ìˆæ‚ÌƒNƒŠƒA
- *   ˆø” : const C_& col : ƒNƒŠƒA‚·‚é‚Æ‚«‚ÌF
+ *  æç”»é ˜åŸŸã®ã‚¯ãƒªã‚¢
+ *   å¼•æ•° : const C_& col : ã‚¯ãƒªã‚¢ã™ã‚‹ã¨ãã®è‰²
  */
 void urania::PaintDevice::clear(const urania::Color& col)
 {
@@ -113,21 +109,21 @@ void urania::PaintDevice::clear(const urania::Color& col)
 
 
 /*=====================================================
- *  PaintDevice::blt()  ~ 4
- *  •`‰æ“à—e‚Ì“]‘—
+ *  PaintDevice::blt()  Ã— 4
+ *  æç”»å†…å®¹ã®è»¢é€
  *
- *   ˆø” : dx,dy  : “]‘—æ¶ãŠpÀ•W
- *          src    : “]‘—Œ³Object
- *          sx,sy  : “]‘—Œ³¶ãŠpÀ•W
- *          w,h    : “]‘—•E‚‚³
- *          mask   : ƒ}ƒXƒN‚·‚é—Ìˆæ
+ *   å¼•æ•° : dx,dy  : è»¢é€å…ˆå·¦ä¸Šè§’åº§æ¨™
+ *          src    : è»¢é€å…ƒObject
+ *          sx,sy  : è»¢é€å…ƒå·¦ä¸Šè§’åº§æ¨™
+ *          w,h    : è»¢é€å¹…ãƒ»é«˜ã•
+ *          mask   : ãƒã‚¹ã‚¯ã™ã‚‹é ˜åŸŸ
  */
 void
 urania::PaintDevice::blt(
   int dx, int dy, const urania::PaintMemDevice* src, int sx, int sy,
   int w, int h, const polymnia::Rect& mask)
 {
-  polymnia::imp_::Clip_ clip(sx,sy,w,h,dx,dy,mask);
+  polymnia::imp_::Clip_ clip(sx, sy, w, h, dx, dy, mask);
   if (clip)
     BitBlt(
       hdc_, clip.dx, clip.dy, clip.w, clip.h, src->hdc_, clip.sx, clip.sy,
@@ -169,10 +165,10 @@ urania::PaintDevice::blt(
 
 
 /*=====================================================
- *  PaintDevice::blt()  ~ 2
- *  •`‰æ“à—e‚Ì“]‘—A’A‚µŠg‘åk¬•t‚«‚Å‘S—Ìˆæ“¯m
+ *  PaintDevice::blt()  Ã— 2
+ *  æç”»å†…å®¹ã®è»¢é€ã€ä½†ã—æ‹¡å¤§ç¸®å°ä»˜ãã§å…¨é ˜åŸŸåŒå£«
  *
- *   ˆø” : src    : “]‘—Œ³Object
+ *   å¼•æ•° : src    : è»¢é€å…ƒObject
  */
 void urania::PaintDevice::blt(const urania::PaintMemDevice* src)
 {

@@ -4,10 +4,11 @@
  *  by oZ/acy
  *  (c) 2002-2016 oZ/acy.  ALL RIGHTS RESERVED.
  *
- *  class urania::PaintMemDevice ‚ÌÀ‘•’è‹`
+ *  class urania::PaintMemDevice ã®å®Ÿè£…å®šç¾©
  *
- *  —š—ğ
- *    2016.2.27  C³
+ *  å±¥æ­´
+ *    2016.02.27  ä¿®æ­£
+ *    2016.03.02  ä¿®æ­£
  **************************************************************************/
 
 #include <algorithm>
@@ -15,7 +16,7 @@
 
 /*================================================
  *  PaintMemDevice::PaintMemDevice()
- *  DIBSection¶¬‘¼‰Šú‰»
+ *  DIBSectionç”Ÿæˆä»–åˆæœŸåŒ–
  *==============================================*/
 urania::PaintMemDevice::PaintMemDevice(unsigned w, unsigned h)
   : polymnia::ImageBuffer<urania::Color>(w, h, 0), hdc_(NULL), oldbmp_(NULL)
@@ -56,7 +57,7 @@ urania::PaintMemDevice::PaintMemDevice(unsigned w, unsigned h)
 
   if (!hBitmapNew || !buf_)
   {
-    //‰Šú‰»‚É¸”s
+    //åˆæœŸåŒ–ã«å¤±æ•—
     ReleaseDC(NULL, hTmpDC);
     return;
   }
@@ -66,21 +67,21 @@ urania::PaintMemDevice::PaintMemDevice(unsigned w, unsigned h)
 
   oldbmp_ = (HBITMAP)SelectObject(hdc_, hBitmapNew);
 
-  //ƒƒ‚ƒŠ—Ìˆæ‚ÌƒNƒŠƒA
+  //ãƒ¡ãƒ¢ãƒªé ˜åŸŸã®ã‚¯ãƒªã‚¢
   memset(buf_, 0, sizeof(polymnia::RgbColor) * offset_ * h_);
 }
 
 
 /*===================================================
  *  PaintMemDevice::~PaintMemDevice()
- *  Š„‚è“–‚ÄƒfƒoƒCƒX‚Ì‰ğ•ú
+ *  å‰²ã‚Šå½“ã¦ãƒ‡ãƒã‚¤ã‚¹ã®è§£æ”¾
  *=================================================*/
 urania::PaintMemDevice::~PaintMemDevice()
 {
   HBITMAP hbmp;
   if (hdc_ && oldbmp_)
   {
-    //hdc‚ªŠm•Û‚³‚ê‚Ä‚¢‚éê‡‚¾‚¯ŠJ•ú‚·‚é
+    //hdcãŒç¢ºä¿ã•ã‚Œã¦ã„ã‚‹å ´åˆã ã‘é–‹æ”¾ã™ã‚‹
     hbmp = (HBITMAP)SelectObject(hdc_, oldbmp_);
     DeleteObject(hbmp);
     DeleteDC(hdc_);
@@ -90,21 +91,23 @@ urania::PaintMemDevice::~PaintMemDevice()
 
 /*===============================================================
  *  PaintMemDevice::create()
- *  Object¶¬
- *  ˆøÉ:  unsigned w : ƒfƒoƒCƒX•
- *         unsigned h : ƒfƒoƒCƒX‚‚³
- *  •Ô’l:  ¶¬‚µ‚½ƒIƒuƒWƒFƒNƒg‚Ö‚Ìƒ|ƒCƒ“ƒ^
+ *  Objectç”Ÿæˆ
+ *  å¼•æ•¸:  unsigned w : ãƒ‡ãƒã‚¤ã‚¹å¹…
+ *         unsigned h : ãƒ‡ãƒã‚¤ã‚¹é«˜ã•
+ *  è¿”å€¤:  ç”Ÿæˆã—ãŸã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã¸ã®ãƒã‚¤ãƒ³ã‚¿
  *=============================================================*/
 urania::PaintMemDevice* urania::PaintMemDevice::create(
-  unsigned w, unsigned h) throw()
+  unsigned w, unsigned h)
 {
   try
   {
     PaintMemDevice* dv = new PaintMemDevice(w, h);
     if (dv->buf_)
       return dv;
-    else
+    else {
+      delete dv;
       return nullptr;
+    }
   }
   catch (std::bad_alloc)
   {
@@ -115,9 +118,9 @@ urania::PaintMemDevice* urania::PaintMemDevice::create(
 
 /*=========================================================
  *  PaintMemDevice::create()
- *  Object¶¬ (Šù‘¶ Picture Object ‚Ì "•¡»")
- *  ˆøÉ: Picture* pct : ƒRƒs[Œ³ Picture
- *  •Ô’l: ƒIƒuƒWƒFƒNƒg‚Ö‚Ìƒ|ƒCƒ“ƒ^
+ *  Objectç”Ÿæˆ (æ—¢å­˜ Picture Object ã® "è¤‡è£½")
+ *  å¼•æ•¸: Picture* pct : ã‚³ãƒ”ãƒ¼å…ƒ Picture
+ *  è¿”å€¤: ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã¸ã®ãƒã‚¤ãƒ³ã‚¿
  *=======================================================*/
 urania::PaintMemDevice*
 urania::PaintMemDevice::create(const polymnia::Picture* pct)
@@ -132,11 +135,9 @@ urania::PaintMemDevice::create(const polymnia::Picture* pct)
   const polymnia::RgbColor* src = pct->buffer();
   Color* res = vd->buffer();
 
-  int p = 0;
-  int q = 0;
   int o = pct->offset();
   int oo = vd->offset_;
-  for (int j = 0; j < hh; j++, p += o, q += oo)
+  for (int j = 0, p = 0, q = 0; j < hh; j++, p += o, q += oo)
     for (int i = 0; i < ww; i++)
       res[q + i] = src[p + i];
 
@@ -146,8 +147,8 @@ urania::PaintMemDevice::create(const polymnia::Picture* pct)
 
 /*====================================================================
  *  PaintMemDevice::createPicture()
- *  “¯“à—e‚Ì Picture ƒCƒ“ƒXƒ^ƒ“ƒX‚Ì¶¬
- *  •Ô’l: ¶¬‚³‚ê‚½ƒCƒ“ƒXƒ^ƒ“ƒX‚Ö‚Ìƒ|ƒCƒ“ƒ^
+ *  åŒå†…å®¹ã® Picture ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®ç”Ÿæˆ
+ *  è¿”å€¤: ç”Ÿæˆã•ã‚ŒãŸã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã¸ã®ãƒã‚¤ãƒ³ã‚¿
  *==================================================================*/
 polymnia::Picture* urania::PaintMemDevice::createPicture() const
 {
@@ -159,10 +160,8 @@ polymnia::Picture* urania::PaintMemDevice::createPicture() const
 
   RgbColor* res = pct->buffer();
 
-  int p = 0;
-  int q = 0;
   int oo = pct->offset();
-  for (int j = 0; j < h_; j++, p += offset_, q += oo)
+  for (int j = 0, p = 0, q = 0; j < h_; j++, p += offset_, q += oo)
     for (int i = 0; i < w_; i++)
       res[q + i] = buf_[p + i];
 
@@ -172,8 +171,8 @@ polymnia::Picture* urania::PaintMemDevice::createPicture() const
 
 /*=====================================================
  *  PaintMemDevice::clone()
- *  “¯“à—e‚Ì Object ‚Ì¶¬
- *  •Ô’l: ¶¬‚³‚ê‚½ƒIƒuƒWƒFƒNƒg‚Ö‚Ìƒ|ƒCƒ“ƒ^
+ *  åŒå†…å®¹ã® Object ã®ç”Ÿæˆ
+ *  è¿”å€¤: ç”Ÿæˆã•ã‚ŒãŸã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã¸ã®ãƒã‚¤ãƒ³ã‚¿
  *===================================================*/
 urania::PaintMemDevice* urania::PaintMemDevice::clone() const
 {
