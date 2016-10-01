@@ -1,28 +1,23 @@
-/**************************************************************************
+/**
+ * @file dialog.h
+ * @brief 繝繧､繧｢繝ｭ繧ｰ繧ｯ繝ｩ繧ｹ
+ * @author oZ/acy
  *
- *  dialog.h
- *  by oZ/acy
- *  (c) 2002-2016, ALL RIGHTS RESERVED.
- *
- *  Dialogクラス
- *
- *  履歴
- *    2016.2.28  修正
- *************************************************************************/
-
+ * @date 2016.2.28  菫ｮ豁｣
+ * @date 2016.10.1  菫ｮ豁｣: friend class 繧貞炎髯､
+ */
 #ifndef INC_URANIA_DIALOG_H___
 #define INC_URANIA_DIALOG_H___
 
 #include "wbase.h"
 
 
-/*---------------------------
- *  class Dialog
- *  ダイアログボックス
- *-------------------------*/
+/**
+ * @brief 繝繧､繧｢繝ｭ繧ｰ
+ */
 class urania::Dialog : public urania::WndBase
 {
-  friend class urania::System;
+//  friend class urania::System;
   friend class urania::Window;
 
 private:

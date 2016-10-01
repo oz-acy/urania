@@ -1,21 +1,18 @@
-/**************************************************************************
+/**
+ * @file system.h
+ * @brief ã‚·ã‚¹ãƒ†ãƒ å‘¨ã‚Š
+ * @author oZ/acy
  *
- *  system.h
- *  by oZ/acy
- *  (c) 2001-2016 oZ/acy. ALL RIGHTS RESERVED.
- *
- *  SYStem manage
- *
- *  —š—ğ
- *    14 Feb 2004  System::getLongPathName() ‚ğ’Ç‰Á
- *    27 Feb 2008  System::getDesktopWidth() ‚ğ’Ç‰Á
- *                 System::getDesktopHeight() ‚ğ’Ç‰Á
- *     4 Apr 2009  UNICODE›”œä
- *     7 Nov 2009  System::cnvWStr2MBStr() ‚ğ’Ç‰Á
- *     2 Sep 2010  taskŒníœEstartŒn’Ç‰Á
- *    13 May 2012  C++11›”œä
- *    27 Feb 2016  ƒtƒ@ƒCƒ‹–¼ÌXAƒƒ\ƒbƒh–¼ÌX
- *************************************************************************/
+ * @date 14 Feb 2004  System::getLongPathName() ã‚’è¿½åŠ 
+ * @date 27 Feb 2008  System::getDesktopWidth() ã‚’è¿½åŠ 
+ *                    System::getDesktopHeight() ã‚’è¿½åŠ 
+ * @date 4 Apr 2009  UNICODEå°æ‡‰
+ * @date 7 Nov 2009  System::cnvWStr2MBStr() ã‚’è¿½åŠ 
+ * @date 2 Sep 2010  taskç³»å‰Šé™¤ãƒ»startç³»è¿½åŠ 
+ * @date 13 May 2012  C++11å°æ‡‰
+ * @date 27 Feb 2016  ãƒ•ã‚¡ã‚¤ãƒ«åè®Šæ›´ã€ãƒ¡ã‚½ãƒƒãƒ‰åè®Šæ›´
+ * @date 1 Oct 2016  ä¸è¦ãªfriend classã‚’å‰Šé™¤
+ */
 
 #ifndef INC_GP_GUI_SYSTEM_H__
 #define INC_GP_GUI_SYSTEM_H__
@@ -26,80 +23,76 @@
 #include "decl.h"
 
 
-//int PASCAL WinMain(HINSTANCE hi, HINSTANCE pv, LPSTR cl, int cs);
-
-
-/*---------------------
- *  class System
- *-------------------*/
+/**
+ * @brief ã‚·ã‚¹ãƒ†ãƒ å‘¨ã‚Š
+ */
 class urania::System
 {
   friend class urania::WndBase;
-  friend class urania::Window;
-  friend class urania::Dialog;
+//  friend class urania::Window;
+//  friend class urania::Dialog;
   friend class urania::Menu;
-  friend int PASCAL ::WinMain(HINSTANCE hi, HINSTANCE pv, LPSTR cl, int cs);
+//  friend int PASCAL ::WinMain(HINSTANCE hi, HINSTANCE pv, LPSTR cl, int cs);
 
 private:
   static HINSTANCE hi_S;
 
 private:
-  System() =delete; //ƒCƒ“ƒXƒ^ƒ“ƒX¶¬‹Ö~
+  System() =delete; //ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ç”Ÿæˆç¦æ­¢
 
 public:
-  //=============================================================
-  //  void start()
-  //  ŠJn
-  //  ‹ïé““I‚É‚ÍƒVƒXƒeƒ€‚©‚ç“n‚³‚ê‚½HINSTANCE’l‚ğŠi”[‚µ‚Ä‚¨‚­
-  //=============================================================
+  /// @brief åˆ©ç”¨é–‹å§‹ åˆã‚ã«ä¸€åº¦ã ã‘å‘¼ã¶
+  /// @param[in] hi HINSTANCEå€¤ã€‚WinMain()ã®1ã¤ç›®ã®å¼•æ•¸ã‚’æ¸¡ã™ã€‚
   static void start(HINSTANCE hi)
   {
     hi_S = hi;
   }
 
-  //=======================================================
-  //  void quit()
-  //  ƒƒbƒZ[ƒWƒLƒ…[‚ÉI—¹‚ğ“Š‚°‚é
-  //=======================================================
+  /// @brief ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚­ãƒ¥ãƒ¼ã«çµ‚äº†ã‚’æŠ•ã’ã‚‹
   static void quit(int r)
   {
     ::PostQuitMessage(r);
   }
 
+  /// @brief ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãƒ«ãƒ¼ãƒ—
   static void messageLoop();
+
+  // ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãƒ«ãƒ¼ãƒ—(ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ä»˜)
   template<class Func_> static void messageLoop(Func_ f);
   //static void startRT();
 
 
-  // ƒƒbƒZ[ƒWƒ{ƒbƒNƒXŒn
+  // ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãƒœãƒƒã‚¯ã‚¹ç³»
 
-  //=======================================================
-  //  static void alert()
-  //  Œx—pƒƒbƒZ[ƒWƒ{ƒbƒNƒX‚ğ•\¦
-  //=======================================================
-  static void alert(const std::wstring& ttl, const std::wstring& msg)
+  /// @brief è­¦å‘Šç”¨ã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãƒœãƒƒã‚¯ã‚¹ã‚’è¡¨ç¤ºã™ã‚‹
+  /// @param[in] title ã‚¿ã‚¤ãƒˆãƒ«
+  /// @param[in] msg ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸
+  static void alert(const std::wstring& title, const std::wstring& msg)
   {
-    ::MessageBox(NULL, msg.c_str(), ttl.c_str(), MB_OK | MB_ICONEXCLAMATION);
+    ::MessageBox(NULL, msg.c_str(), title.c_str(), MB_OK | MB_ICONEXCLAMATION);
   }
 
-  //=======================================================
-  //  static void notify()
-  //  ’Ê’m—p‚ÌƒƒbƒZ[ƒWƒ{ƒbƒNƒX‚ğ•\¦
-  //=======================================================
-  static void notify(const std::wstring& ttl, const std::wstring& msg)
+  /// @brief é€šçŸ¥ç”¨ã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãƒœãƒƒã‚¯ã‚¹ã‚’è¡¨ç¤ºã™ã‚‹
+  /// @param[in] title ã‚¿ã‚¤ãƒˆãƒ«
+  /// @param[in] msg ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸
+  static void notify(const std::wstring& title, const std::wstring& msg)
   {
-    ::MessageBox(NULL, msg.c_str(), ttl.c_str(), MB_OK);
+    ::MessageBox(NULL, msg.c_str(), title.c_str(), MB_OK);
   }
 
   //=======================================================
   //  static askYesNoCancel()
-  //  Yes, No, ƒLƒƒƒ“ƒZƒ‹O¢‚ÌƒƒbƒZ[ƒWƒ{ƒbƒNƒX‚ğ•\¦ 
+  //  Yes, No, ã‚­ãƒ£ãƒ³ã‚»ãƒ«ä¸‰æ“‡ã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãƒœãƒƒã‚¯ã‚¹ã‚’è¡¨ç¤º 
   //
-  //  –ß‚è’l: 1: OK, 2: NO, 3: CANCEL ‚Ì‚¢‚Ã‚ê‚©
+  //  æˆ»ã‚Šå€¤: 1: OK, 2: NO, 3: CANCEL ã®ã„ã¥ã‚Œã‹
   //=======================================================
-  static int askYesNoCancel(const std::wstring& ttl, const std::wstring& msg)
+  /// @brief Yes, No, ã‚­ãƒ£ãƒ³ã‚»ãƒ«ä¸‰æ“‡ã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãƒœãƒƒã‚¯ã‚¹ã‚’è¡¨ç¤º
+  /// @param[in] title ã‚¿ã‚¤ãƒˆãƒ«
+  /// @param[in] msg ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸
+  /// @rerutn 1: OK, 2: NO, 3: CANCEL ã®ã„ã¥ã‚Œã‹
+  static int askYesNoCancel(const std::wstring& title, const std::wstring& msg)
   {
-    int res = ::MessageBox(NULL, msg.c_str(), ttl.c_str(), MB_YESNOCANCEL);
+    int res = ::MessageBox(NULL, msg.c_str(), title.c_str(), MB_YESNOCANCEL);
     switch(res)
     {
     case IDYES:
@@ -109,19 +102,17 @@ public:
     case IDCANCEL:
       return 2;
     default:
-      return 2;  // ƒLƒƒƒ“ƒZƒ‹
+      return 2;  // ã‚­ãƒ£ãƒ³ã‚»ãƒ«
     }
   }
 
-  //=======================================================
-  //  static askYNBox()
-  //  ‚Í‚¢A‚¢‚¢‚¦“ñ¢‚ÌƒƒbƒZ[ƒWƒ{ƒbƒNƒX‚ğ•\¦
-  //
-  //  –ß‚è’l: true: Yes, false: No ‚Ì‚¢‚Ã‚ê‚©
-  //=======================================================
-  static bool askYesNo(const std::wstring& ttl, const std::wstring& msg)
+  /// @brief ã¯ã„ã€ã„ã„ãˆäºŒæ“‡ã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãƒœãƒƒã‚¯ã‚¹ã‚’è¡¨ç¤º
+  /// @param[in] title ã‚¿ã‚¤ãƒˆãƒ«
+  /// @param[in] msg ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸
+  /// @return true: Yes, false: No ã®ã„ã¥ã‚Œã‹
+  static bool askYesNo(const std::wstring& title, const std::wstring& msg)
   {
-    int res = ::MessageBox(NULL, msg.c_str(), ttl.c_str(), MB_YESNO);
+    int res = ::MessageBox(NULL, msg.c_str(), title.c_str(), MB_YESNO);
     if (res == IDYES)
       return true;
     else
@@ -130,29 +121,37 @@ public:
 
 
 
-  // ƒJ[ƒ\ƒ‹Œn
+  // ã‚«ãƒ¼ã‚½ãƒ«ç³»
+  /// @brief ã‚«ãƒ¼ã‚½ãƒ«ã‚’è¡¨ç¤ºã™ã‚‹
   static void showCursor()
     { 
       ::ShowCursor(TRUE);
     }
+  /// @brief ã‚«ãƒ¼ã‚½ãƒ«ã‚’éè¡¨ç¤ºã«ã™ã‚‹
   static void hideCursor()
     {
       ::ShowCursor(FALSE);
     }
 
-  // ƒtƒ@ƒCƒ‹–¼è—ü
+  // ãƒ•ã‚¡ã‚¤ãƒ«åé—œè¯
+  /// @brief ã€Œé•·ã„ãƒ•ã‚¡ã‚¤ãƒ«åã€ã‚’å–å¾—ã™ã‚‹
   static std::wstring getLongPathName(const std::wstring& path);
 
-  // ƒRƒ}ƒ“ƒhƒ‰ƒCƒ“ˆøÉæ“¾
+  // ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³å¼•æ•¸å–å¾—
+  /// @brief ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³å¼•æ•¸ã‚’å–å¾—ã™ã‚‹
   static std::vector<std::string> getCmdLineArgs();
+  /// @brief ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³å¼•æ•¸ã‚’å–å¾—ã™ã‚‹
   static std::vector<std::wstring> getCmdLineArgsW();
 
-  // ƒƒCƒh•¶š—ñEƒ}ƒ‹ƒ`•¶š—ñÌŠ· (Win32APIg—p)
+  // ãƒ¯ã‚¤ãƒ‰æ–‡å­—åˆ—ãƒ»ãƒãƒ«ãƒãƒã‚¤ãƒˆæ–‡å­—åˆ—è®Šæ› (Win32APIä½¿ç”¨)
+  /// @brief ãƒ¯ã‚¤ãƒ‰æ–‡å­—åˆ—ã‚’ãƒãƒ«ãƒãƒã‚¤ãƒˆæ–‡å­—åˆ—ã«è®Šæ›ã™ã‚‹
   static std::string strcpyWideToMultiByte(const std::wstring& ws);
+  /// @brief ãƒãƒ«ãƒãƒã‚¤ãƒˆæ–‡å­—åˆ—ã‚’ãƒ¯ã‚¤ãƒ‰æ–‡å­—åˆ—ã«è®Šæ›ã™ã‚‹
   static std::wstring strcpyMultiByteToWide(const std::string& ws);
 
 
-  // ƒfƒXƒNƒgƒbƒvî•ñæ“¾
+  // ãƒ‡ã‚¹ã‚¯ãƒˆãƒƒãƒ—æƒ…å ±å–å¾—
+  /// @brief ãƒ‡ã‚¹ã‚¯ãƒˆãƒƒãƒ—ã®å¹…ã‚’å–å¾—ã™ã‚‹
   static int getDesktopWidth()
   {
     RECT rc;
@@ -160,6 +159,7 @@ public:
     return rc.right - rc.left;
   }
 
+  /// ãƒ‡ã‚¹ã‚¯ãƒˆãƒƒãƒ—ã®é«˜ã•ã‚’å–å¾—ã™ã‚‹
   static int getDesktopHeight()
   {
     RECT rc;
@@ -170,12 +170,12 @@ public:
 };
 
 
-/*===============================================================
- *  System::messageLoop(f)
- *  Windows Application ‚ÌƒƒbƒZ[ƒWƒ‹[ƒv
- *  ƒEƒBƒ“ƒhƒEƒƒbƒZ[ƒW‚ª‚È‚¢ê‡‚ÉƒR[ƒ‹ƒoƒbƒN‚ğŒÄ‚Ño‚·B
- *  ƒR[ƒ‹ƒoƒbƒN‚Íbool‚ğ•Ô‚µAfalse‚ğ•Ô‚µ‚½ê‡‚ÍA
- *  Ÿ‚ÉƒEƒBƒ“ƒhƒEƒƒbƒZ[ƒW‚ğ™|—‚µ‚½Œã‚Ü‚ÅƒR[ƒ‹ƒoƒbƒN‚µ‚È‚¢B
+/**
+ * @brief ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãƒ«ãƒ¼ãƒ—(ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ä»˜)
+ * @param f
+ * ã‚¢ã‚¤ãƒ‰ãƒ«çŠ¶æ…‹ã®æ™‚ã«å‘¼ã³å‡ºã•ã‚Œã‚‹ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯å‡½æ•¸ã€‚
+ * boolå€¤ã‚’è¿”ã™ã€‚
+ * falseã‚’è¿”ã—ãŸå ´åˆã€æ¬¡ã«ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’è™•ç†ã™ã‚‹ã¾ã§ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ã—ãªã„ã€‚
  */
 template<class Func_>
 void urania::System::messageLoop(Func_ f)
