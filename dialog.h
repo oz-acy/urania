@@ -21,9 +21,9 @@ class urania::Dialog : public urania::WndBase
   friend class urania::Window;
 
 private:
-  //typedef urania::Dialog Dl_;
-  //typedef Dl_* PD_;
+  /** @brief メッセージハンドラの型 */
   typedef BOOL (*H_)(urania::Dialog*, UINT, WPARAM, LPARAM);
+  /** @brief 初期化函數の型 */
   typedef void (*Ini_)(urania::Dialog*);
 
  protected:
@@ -59,6 +59,10 @@ private:
 
   void endModal(int i);
 
+  /**
+   * @brief 作成時に設定されたポインタを返す
+   * @return 作成時に設定されたポインタ(void*)。
+   */
   void* getAppData() { return app_; }
 
  protected:
