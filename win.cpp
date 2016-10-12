@@ -167,6 +167,48 @@ LRESULT urania::WMHandler::operator()(urania::WndMessage* msg)
     }
     break;
 
+  case WM_LBUTTONDOWN:
+    {
+      int x = GET_X_LPARAM(msg->lparam);
+      int y = GET_Y_LPARAM(msg->lparam);
+      bool ctrl = msg->wparam & MK_CONTROL;
+      bool shft = msg->wparam & MK_SHIFT;
+      bool lb = msg->wparam & MK_LBUTTON;
+      bool mb = msg->wparam & MK_MBUTTON;
+      bool rb = msg->wparam & MK_RBUTTON;
+      if (onLButtonDown(msg->window, x, y, ctrl, shft, lb, mb, rb))
+        return 0;
+    }
+    break;
+
+  case WM_MBUTTONDOWN:
+    {
+      int x = GET_X_LPARAM(msg->lparam);
+      int y = GET_Y_LPARAM(msg->lparam);
+      bool ctrl = msg->wparam & MK_CONTROL;
+      bool shft = msg->wparam & MK_SHIFT;
+      bool lb = msg->wparam & MK_LBUTTON;
+      bool mb = msg->wparam & MK_MBUTTON;
+      bool rb = msg->wparam & MK_RBUTTON;
+      if (onMButtonDown(msg->window, x, y, ctrl, shft, lb, mb, rb))
+        return 0;
+    }
+    break;
+
+  case WM_RBUTTONDOWN:
+    {
+      int x = GET_X_LPARAM(msg->lparam);
+      int y = GET_Y_LPARAM(msg->lparam);
+      bool ctrl = msg->wparam & MK_CONTROL;
+      bool shft = msg->wparam & MK_SHIFT;
+      bool lb = msg->wparam & MK_LBUTTON;
+      bool mb = msg->wparam & MK_MBUTTON;
+      bool rb = msg->wparam & MK_RBUTTON;
+      if (onRButtonDown(msg->window, x, y, ctrl, shft, lb, mb, rb))
+        return 0;
+    }
+    break;
+
   case WM_PAINT:
     return msg->window->onPaint(
              [this](BasicWindow* bw, PaintDevice* pd){ onPaint(bw, pd); },

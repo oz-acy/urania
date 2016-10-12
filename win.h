@@ -1,13 +1,10 @@
-/**************************************************************************
- *
- *  win.h
- *  by oZ/acy
- *  (c) 2002-2016 oZ/acy.  ALL RIGHTS RESERVED.
- *
- *  �E�B���h�E
- *
- *  ����
- *    2016.2.28  �C��
+/**
+ * @file win.h
+ * @author oZ/acy
+ * @brief ウィンドウ
+ * @date 2016.2.28  修正
+ * @date 2016.10.11 修正
+ *   WMsgHandlerクラスにonLButtonDown()、onMButtonDown()、onRButtonDown()を追加
  */
 #ifndef INC_URANIA_WINDOW_H___
 #define INC_URANIA_WINDOW_H___
@@ -28,9 +25,8 @@ class WindowFactory;
 } // end of namesace urania
 
 
-/*--------------------------------------
- *  WndMessage
- *  ���b�Z�[�W�����n���p�\���
+/**
+ * @brief メッセージ引き渡し用の構造體
  */
 struct urania::WndMessage
 {
@@ -41,12 +37,13 @@ struct urania::WndMessage
 };
 
 
-/*------------------------------------------------
- * WMsgHandler
+/**
+ * @brief メッセージハンドラ基底
  */
 class urania::WMHandler : boost::noncopyable
 {
 public:
+  /// @brief コマンドハンドラ
   typedef void (*CmdHandler)(Window*);
 
 private:
@@ -55,21 +52,123 @@ private:
 public:
   virtual ~WMHandler() {}
 
+  /// ウィンドウが破棄されたときに呼び出されるハンドラ。
+  /// ライブラリのユーザは適宜オーバーライドして必要な處理を實裝する。
+  /// @brief ウィンドウ破棄時のハンドラ
   virtual bool onDestroy() { return false; }
-  virtual bool onSize(Window*, int typ, int w, int h) { return false; }
-  virtual bool onKeyDown(Window*, int code, int rep, bool prev)
+
+  /// ウィンドウの大きさが變化したときに呼び出されるハンドラ。
+  /// ライブラリのユーザは適宜オーバーライドして必要な處理を實裝する。
+  /// @brief ウィンドウサイズ變化時のハンドラ
+  /// @param win ウィンドウ
+  /// @param typ サイズ變更のタイプ
+  /// @param w 幅
+  /// @param h 高さ
+  virtual bool onSize(Window* win, int typ, int w, int h) { return false; }
+
+  /// キーが押下されたときに呼び出されるハンドラ。
+  /// ライブラリのユーザは適宜オーバーライドして必要な處理を實裝する。
+  /// @brief キー押下時のハンドラ
+  /// @param win ウィンドウ
+  /// @param code キーのコード
+  /// @param rep リピート回數
+  /// @param prev メッセージが送られる前、キーが押されてゐたならtrue
+  virtual bool onKeyDown(Window* win, int code, int rep, bool prev)
     { return false; }
 
-  virtual void onPaint(BasicWindow*, PaintDevice*) {}
-  virtual void onScroll(Window*, int id, int pos) {}
+  /// マウス左ボタンが押下されたときに呼び出されるハンドラ。
+  /// ライブラリのユーザは適宜オーバーライドして必要な處理を實裝する。
+  /// @brief マウス左ボタン押下時のハンドラ
+  /// @param w ウィンドウ
+  /// @param x X座標
+  /// @param y Y座標
+  /// @param ctrl Ctrlキーが押されてゐるかどうか
+  /// @param shft Shiftキーが押されてゐるかどうか
+  /// @param lb 左ボタンが押されてゐるかどうか
+  /// @param mb 中ボタンが押されてゐるかどうか
+  /// @param rb 右ボタンが押されてゐるかどうか
+  virtual bool onLButtonDown(
+    Window* w, int x, int y, bool ctrl, bool shft, bool lb, bool mb, bool rb)
+    { return false; }
+
+  /// マウス中ボタンが押下されたときに呼び出されるハンドラ。
+  /// ライブラリのユーザは適宜オーバーライドして必要な處理を實裝する。
+  /// @brief マウス中ボタン押下時のハンドラ
+  /// @param w ウィンドウ
+  /// @param x X座標
+  /// @param y Y座標
+  /// @param ctrl Ctrlキーが押されてゐるかどうか
+  /// @param shft Shiftキーが押されてゐるかどうか
+  /// @param lb 左ボタンが押されてゐるかどうか
+  /// @param mb 中ボタンが押されてゐるかどうか
+  /// @param rb 右ボタンが押されてゐるかどうか
+  virtual bool onMButtonDown(
+    Window*, int x, int y, bool ctrl, bool shft, bool lb, bool mb, bool rb)
+    { return false; }
+
+  /// マウス右ボタンが押下されたときに呼び出されるハンドラ。
+  /// ライブラリのユーザは適宜オーバーライドして必要な處理を實裝する。
+  /// @brief マウス右ボタン押下時のハンドラ
+  /// @param w ウィンドウ
+  /// @param x X座標
+  /// @param y Y座標
+  /// @param ctrl Ctrlキーが押されてゐるかどうか
+  /// @param shft Shiftキーが押されてゐるかどうか
+  /// @param lb 左ボタンが押されてゐるかどうか
+  /// @param mb 中ボタンが押されてゐるかどうか
+  /// @param rb 右ボタンが押されてゐるかどうか
+  virtual bool onRButtonDown(
+    Window*, int x, int y, bool ctrl, bool shft, bool lb, bool mb, bool rb)
+    { return false; }
+
+  /// 再描畫が要求されたときに呼び出されるハンドラ。
+  /// ライブラリのユーザは適宜オーバーライドして必要な處理を實裝する。
+  /// @brief 再描畫要求時のハンドラ
+  /// @param win ウィンドウ
+  /// @param pd 對象となるPaintDevice
+  virtual void onPaint(BasicWindow* win, PaintDevice* pd) {}
+
+  /// スクロールバーが操作されたときに呼び出されるハンドラ。
+  /// ライブラリのユーザは適宜オーバーライドして必要な處理を實裝する。
+  /// @brief スクロールバー操作時のハンドラ
+  /// @param win ウィンドウ
+  /// @param id スクロールバーのID
+  ///    水平スクロールバーはurania::ID_SBH
+  ///    垂直スクロールバーはurania::ID_SBV
+  ///    他の値(2以上の整數値)の場合はスクロールバーコントロール
+  /// @param pos スクロールバーの位置
+  virtual void onScroll(Window* win, int id, int pos) {}
+
+  /// マウスホイールを操作したときに呼び出されるハンドラ。
+  /// ライブラリのユーザは適宜オーバーライドして必要な處理を實裝する。
+  /// @brief マウスホイール操作時のハンドラ
+  /// @param w ウィンドウ
+  /// @param delta 廻轉量
+  /// @param keys 押下されてゐるキー
+  ///   MK_CONTROL, MK_LBUTTON, MK_MBUTTON, MK_RBUTTON, MK_SHIFT, 
+  ///   MK_XBUTTON1, MK_XBUTTON2 の論理和
+  /// @param x マウスカーソルのX座標
+  /// @param y マウスカーソルのY座標
   virtual void onMouseWheel(Window* w, int delta, int keys, int x, int y) {}
 
+  /// ファイルをドロップしたときに呼び出されるハンドラ。
+  /// ライブラリのユーザは適宜オーバーライドして必要な處理を實裝する。
+  /// @brief ファイルドロップ時のハンドラ
+  /// @param w ウィンドウ
+  /// @param fa ファイル名のベクタ
+  /// @param x ドロップ位置のX座標
+  /// @param y ドロップ位置のY座標
   virtual void onDropFiles(
     Window* w, std::vector<std::wstring>& fa, int x, int y)
     {}
 
-
+  /// @brief コマンドに對するハンドラを登録する
+  /// @param cmdid コマンドのID
+  /// @param c ハンドラ
   void set(int cmdid, CmdHandler c) { cmap_[cmdid] = c; }
+
+  /// @brief メッセージを受け取つたときに適當なハンドラを呼び出す
+  /// @param msg 受け取つたメッセージ
   LRESULT operator()(urania::WndMessage* msg);
 
 private:
@@ -80,9 +179,8 @@ private:
 
 
 
-/*--------------------------------------
- *  Window
- *  Window�N���X
+/**
+ * @brief ウィンドウ
  */
 class urania::Window : public urania::BasicWindow
 {
@@ -93,8 +191,8 @@ public:
 
 protected:
   urania::WMHandler* msgHandler_;
-  urania::RCP_Menu menu_; // �֘A�Â���ꂽ���j���[
-  bool dad_;  // true�Ȃ� Drag&Drop�󂯕t����
+  urania::RCP_Menu menu_; // 関連づけられたメニュー
+  bool dad_;  // trueなら Drag&Drop受け付ける
 
 
 protected:
@@ -129,10 +227,9 @@ protected:
 
 
 
-/*-------------------------
- *  class WindowFactory
- *  Window������
- *-----------------------*/
+/**
+ *  @brief ウィンドウのファクトリ
+ */
 class urania::WindowFactory
 {
 public:

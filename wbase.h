@@ -134,7 +134,10 @@ protected:
 
   static HWND getHW__(urania::WndBase* wb)
   {
-    return wb->hw_;
+    if (wb)
+      return wb->hw_;
+    else
+      return NULL;
   }
 
 public:
