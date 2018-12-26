@@ -1,13 +1,12 @@
-/*******************************************************************************
- *  decl.h
+/************************************************************************//**
+ * @file decl.h
+ * @author oZ/acy (åè³€æœˆæ™ƒå—£)
  *
- *  by oZ/acy
- *
+ * @date 2016.2.27  ãƒ•ã‚¡ã‚¤ãƒ«åè®Šæ›´
+ * @date 2016.2.29  ãƒ•ã‚¡ã‚¤ãƒ«ãƒ€ã‚¤ã‚¢ãƒ­ã‚°é—œä¿‚ã®è®Šæ›´
+ */
+/*
  *  DECLaration classes  for part "URANIA"
- *
- *  —š—ğ
- *    2016.2.27  ƒtƒ@ƒCƒ‹–¼ÌX
- *    2016.2.29  ƒtƒ@ƒCƒ‹ƒ_ƒCƒAƒƒOèŒW‚ÌÌX
  */
 #ifndef INC_URANIA_DECL_H___
 #define INC_URANIA_DECL_H___
@@ -25,9 +24,6 @@ namespace urania
 
   class CommonDialogBase;
     class FileDialog;
-//    class FileDialogBase;
-//      class OpenFileDialog;
-//      class SaveFileDialog;
 
   class Menu;
   class MenuDesc;
@@ -37,67 +33,73 @@ namespace urania
   class PaintMemDevicePal;
 
 
+  /// @brief ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ«ã®ä½ç½®ã€å¹…ã€é«˜ã•ã‚’æŒ‡å®šã™ã‚‹æ§‹é€ é«”
   struct CtrlDesc
   {
-    int x, y, w, h;
+    int x; ///< ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ«ã®xåº§æ¨™
+    int y; ///< ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ«ã®yåº§æ¨™
+    int w; ///< ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ«ã®å¹…
+    int h; ///< ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ«ã®é«˜ã•
   };
 
   enum // window style
   {
     WST_NORMAL  = 0,
-    WST_POPUP   = 1,        // ˜g‚È‚µƒEƒBƒ“ƒhƒE
-    WST_BORDER  = 1<<1,     // ˜g‚Ì‚İ‚ÌƒEƒBƒ“ƒhƒE
-    WST_THICK   = 1<<2,     // ƒTƒCƒY•ÏX‰Â”\ƒEƒBƒ“ƒhƒE
-    WST_VSCROLL = 1<<3,     // cƒXƒNƒ[ƒ‹ƒo[•t‚«
-    WST_HSCROLL = 1<<4,     // ‰¡ƒXƒNƒ[ƒ‹ƒo[•t‚«
-    WST_MAXBOX  = 1<<5,     // Å‘å‰»ƒ{ƒ^ƒ“•t‚«
-    WST_MINBOX  = 1<<6,     // Å¬‰»ƒ{ƒ^ƒ“•t‚«
-    WST_DRAGANDDROP = 1<<7  // Drag&Dropó‚¯•t‚¯
+    WST_POPUP   = 1,        // æ ãªã—ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦
+    WST_BORDER  = 1<<1,     // æ ã®ã¿ã®ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦
+    WST_THICK   = 1<<2,     // ã‚µã‚¤ã‚ºå¤‰æ›´å¯èƒ½ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦
+    WST_VSCROLL = 1<<3,     // ç¸¦ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ãƒãƒ¼ä»˜ã
+    WST_HSCROLL = 1<<4,     // æ¨ªã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ãƒãƒ¼ä»˜ã
+    WST_MAXBOX  = 1<<5,     // æœ€å¤§åŒ–ãƒœã‚¿ãƒ³ä»˜ã
+    WST_MINBOX  = 1<<6,     // æœ€å°åŒ–ãƒœã‚¿ãƒ³ä»˜ã
+    WST_DRAGANDDROP = 1<<7  // Drag&Dropå—ã‘ä»˜ã‘
   };
 
   enum //system color
   {
-    SYSC_SCROLLBAR =0,        // ƒXƒNƒ[ƒ‹ƒo[ŠDF—Ìˆæ
-    SYSC_BACKGROUND,          // ƒfƒXƒNƒgƒbƒv
-    SYSC_ACTIVECAPTION,       // ƒAƒNƒeƒBƒuƒEƒBƒ“ƒhƒE‚ÌƒLƒƒƒvƒVƒ‡ƒ“
-    SYSC_INACTIVECAPTION,     // ”ñƒAƒNƒeƒBƒuƒEƒBƒ“ƒhƒEƒLƒƒƒvƒVƒ‡ƒ“
-    SYSC_MENU,                // ƒƒjƒ…[”wŒi
-    SYSC_WINDOW,              // ƒEƒBƒ“ƒhƒE”wŒi
-    SYSC_WINDOWFRAME,         // ƒEƒBƒ“ƒhƒE˜g
-    SYSC_MENUTEXT,            // ƒƒjƒ…[‚ÌƒeƒLƒXƒg
-    SYSC_WINDOWTEXT,          // ƒEƒBƒ“ƒhƒE‚ÌƒeƒLƒXƒg
-    SYSC_CAPTIONTEXT,         // ƒLƒƒƒvƒVƒ‡ƒ“‚ÌƒeƒLƒXƒg
-    SYSC_ACTIVEBORDER,        // ƒAƒNƒeƒBƒuƒEƒBƒ“ƒhƒE‹«ŠE
-    SYSC_INACTIVEBORDER,      // ”ñƒAƒNƒeƒBƒuƒEƒBƒ“ƒhƒE‹«ŠE
-    SYSC_APPWORKSPACE,        // MDI”wŒi
-    SYSC_HIGHLIGHT,           // ‘I‘ğ€–Ú”wŒi
-    SYSC_HIGHLIGHTTEXT,       // ‘I‘ğ€–Ú•¶š
-    SYSC_BTNFACE,             // ƒ{ƒ^ƒ“•\–Ê‚Ì‰e
-    SYSC_BTNSHADOW,           // ƒ{ƒ^ƒ“‰‚Ì‰e
-    SYSC_GRAYTEXT,            // ’WFƒeƒLƒXƒg
-    SYSC_BTNTEXT,             // ƒ{ƒ^ƒ“ƒeƒLƒXƒg
-    SYSC_INACTIVECAPTIONTEXT, // ”ñƒAƒNƒeƒBƒuƒLƒƒƒvƒVƒ‡ƒ“‚ÌƒeƒLƒXƒg
-    SYSC_BTNHIGHLIGHT,        // ‘I‘ğ‚³‚ê‚½ƒ{ƒ^ƒ“
+    SYSC_SCROLLBAR =0,        // ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ãƒãƒ¼ç°è‰²é ˜åŸŸ
+    SYSC_BACKGROUND,          // ãƒ‡ã‚¹ã‚¯ãƒˆãƒƒãƒ—
+    SYSC_ACTIVECAPTION,       // ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ã‚­ãƒ£ãƒ—ã‚·ãƒ§ãƒ³
+    SYSC_INACTIVECAPTION,     // éã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚­ãƒ£ãƒ—ã‚·ãƒ§ãƒ³
+    SYSC_MENU,                // ãƒ¡ãƒ‹ãƒ¥ãƒ¼èƒŒæ™¯
+    SYSC_WINDOW,              // ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦èƒŒæ™¯
+    SYSC_WINDOWFRAME,         // ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦æ 
+    SYSC_MENUTEXT,            // ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã®ãƒ†ã‚­ã‚¹ãƒˆ
+    SYSC_WINDOWTEXT,          // ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ãƒ†ã‚­ã‚¹ãƒˆ
+    SYSC_CAPTIONTEXT,         // ã‚­ãƒ£ãƒ—ã‚·ãƒ§ãƒ³ã®ãƒ†ã‚­ã‚¹ãƒˆ
+    SYSC_ACTIVEBORDER,        // ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦å¢ƒç•Œ
+    SYSC_INACTIVEBORDER,      // éã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦å¢ƒç•Œ
+    SYSC_APPWORKSPACE,        // MDIèƒŒæ™¯
+    SYSC_HIGHLIGHT,           // é¸æŠé …ç›®èƒŒæ™¯
+    SYSC_HIGHLIGHTTEXT,       // é¸æŠé …ç›®æ–‡å­—
+    SYSC_BTNFACE,             // ãƒœã‚¿ãƒ³è¡¨é¢ã®å½±
+    SYSC_BTNSHADOW,           // ãƒœã‚¿ãƒ³ç¸ã®å½±
+    SYSC_GRAYTEXT,            // æ·¡è‰²ãƒ†ã‚­ã‚¹ãƒˆ
+    SYSC_BTNTEXT,             // ãƒœã‚¿ãƒ³ãƒ†ã‚­ã‚¹ãƒˆ
+    SYSC_INACTIVECAPTIONTEXT, // éã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã‚­ãƒ£ãƒ—ã‚·ãƒ§ãƒ³ã®ãƒ†ã‚­ã‚¹ãƒˆ
+    SYSC_BTNHIGHLIGHT,        // é¸æŠã•ã‚ŒãŸãƒœã‚¿ãƒ³
   };
 
+/*å»¢æ£„ Win32 API ã® DDL_hogehogeã‚’ç›´æ¥ç”¨ã‚ã‚‹ã¹ã—
   enum //ComboBox & ListBox   DIR OPTION
   {
-    CTD_READWRITE = 0x0100, //“Ç‚İ‘‚«—¼—p
-    CTD_READONRY = 0x0001,  //“Ç‚İæ‚èê—p
-    CTD_HIDDEN = 0x0002,    //‰B‚µƒtƒ@ƒCƒ‹
-    CTD_SYSTEM = 0x0004,    //ƒVƒXƒeƒ€ƒtƒ@ƒCƒ‹
-    CTD_DIRECTORY = 0x0010, //ƒfƒBƒŒƒNƒgƒŠ
-    CTD_ARCHIVE = 0x0020,   //ƒA[ƒJƒCƒuƒtƒ@ƒCƒ‹
-    CTD_DRIVE = 0x4000,     //ƒhƒ‰ƒCƒu
-    CTD_EXCLUSIVE = 0x8000  //w’èƒ^ƒCƒvˆÈŠO‚ğ”rœ
+    CTD_READWRITE = 0x0100, //èª­ã¿æ›¸ãä¸¡ç”¨
+    CTD_READONRY = 0x0001,  //èª­ã¿å–ã‚Šå°‚ç”¨
+    CTD_HIDDEN = 0x0002,    //éš ã—ãƒ•ã‚¡ã‚¤ãƒ«
+    CTD_SYSTEM = 0x0004,    //ã‚·ã‚¹ãƒ†ãƒ ãƒ•ã‚¡ã‚¤ãƒ«
+    CTD_DIRECTORY = 0x0010, //ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒª
+    CTD_ARCHIVE = 0x0020,   //ã‚¢ãƒ¼ã‚«ã‚¤ãƒ–ãƒ•ã‚¡ã‚¤ãƒ«
+    CTD_DRIVE = 0x4000,     //ãƒ‰ãƒ©ã‚¤ãƒ–
+    CTD_EXCLUSIVE = 0x8000  //æŒ‡å®šã‚¿ã‚¤ãƒ—ä»¥å¤–ã‚’æ’é™¤
   };
+*/
 
-  enum //WC_ & WCIN_ —p’è”’è‹`  for Icon&CursorƒŠƒ\[ƒX
+  enum //WC_ & WCIN_ ç”¨å®šæ•°å®šç¾©  for Icon&Cursorãƒªã‚½ãƒ¼ã‚¹
   {
      DEFAULT_RC =0
   };
 
-  enum //WC_ & WCIN_ —p’è”’è‹`  for BackGroundColor
+  enum //WC_ & WCIN_ ç”¨å®šæ•°å®šç¾©  for BackGroundColor
   {
      BG_WHITE =0,
      BG_BLACK,
@@ -108,7 +110,7 @@ namespace urania
      BG_BKWINDOW
   };
 
-  enum // Scroll Bar ‚Ì ˜ï‘zID (‰º“ñ‚ÂˆÈŠO‚ÍqƒEƒBƒ“ƒhƒEID‚Å¯•Ê)
+  enum // Scroll Bar ã® å‡æƒ³ID (ä¸‹äºŒã¤ä»¥å¤–ã¯å­ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦IDã§è­˜åˆ¥)
   {
     ID_SBV =0,
     ID_SBH =1

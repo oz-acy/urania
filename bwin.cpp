@@ -203,7 +203,7 @@ LRESULT CALLBACK urania::BasicWindow::winproc__(
     return 0;
   }
 
-  if (msg==WM_DESTROY)
+  if (msg == WM_DESTROY)
   {
     pw->wproc__(msg, wp, lp);
     pw->destroyed__();

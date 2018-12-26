@@ -1,15 +1,16 @@
-/**************************************************************************
+/**********************************************************************//**
  *
- *  wbase.h
- *  by oZ/acy
- *  (c) 2002-2016 oZ/acy.  ALL RIGHTS RESERVED.
+ * @file wbase.h
+ * @author oZ/acy (名賀月晃嗣)
+ * @brief class WndBase: Window、Dialog共通基底クラス
  *
- *  Window & Dialog BASE class
- *  Window, Dialog ���ʂ� HWND �Ǘ��p���N���X
+ * HWND管理用の基底クラス
  *
- *  ����
- *    2016.2.27  �C��
- *************************************************************************/
+ * @date 2018.2.27 修正
+ * @date 2018.12.24 修正
+ *//*
+ * (c) 2002-2018 oZ/acy.  ALL RIGHTS RESERVED.
+ */
 #ifndef INC_URANIA_WINDOW_BASE_H___
 #define INC_URANIA_WINDOW_BASE_H___
 
@@ -18,24 +19,21 @@
 #include "system.h"
 
 
-/*-------------------------------------------
- *  class WndBase
- *  Window �� Dialog �̊��N���X
- *  HWND �̊Ǘ��E���쓙���s��
- *-----------------------------------------*/
+/*--------------------------------------*//**
+ *  @brief Window、Dialog共通基底クラス
+ *
+ *  HWNDの管理・操作等を行う。
+ */
 class urania::WndBase : boost::noncopyable
 {
   friend class urania::System;
   friend class urania::CommonDialogBase;
 
-//private:
-//  typedef urania::WndBase* P_;
-
 protected:
   HWND hw_;
 
 private:
-  bool dst_;  // true�Ȃ�j������Window��Destroy
+  bool dst_;  // trueならオブジェクト破棄時にHWNDを破棄する
 
 public:
   WndBase() : hw_(NULL), dst_(false) {}
@@ -43,11 +41,11 @@ public:
 
 
 protected:
-  //==============================================
-  //  link__()
-  //  Object �� HWND �����łɘA��
-  //  Object �j������ HWND ���j������悤�ɂ���
-  //==============================================
+  /// @brief HWNDを強固に連結
+  ///
+  /// WndBaseオブジェクトとHWNDを強固に結び附け、
+  /// オブジェクト破棄時にHWNDを同時に破棄する。
+  /// @param h 連結するHWND
   void link__(HWND h)
   {
     attach__(h);
@@ -55,11 +53,10 @@ protected:
       dst_ = true;
   }
 
-  //=============================================
-  //  kill__()
-  //  HWND��Object��؂藣��
-  //  ����link__()����Ă����HWND��j������
-  //=============================================
+  /// @brief HWNDの切り離しと破棄
+  ///
+  /// WndBaseオブジェクトとHWNDを切り離す。
+  /// もしもlink__()されてゐるならHWNDを破棄する。
   void kill__()
   {
     if (dst_ && hw_)
@@ -67,21 +64,20 @@ protected:
     detach__();
   }
 
-  //==========================================
-  //  attach__()
-  //  Object �� HWND ���ꎞ�I��(?)�A��
-  //  Object �j������ HWND �͔j�����Ȃ�
-  //==========================================
+  /// @brief HWNDを連結
+  ///
+  /// WndBaseオブジェクトとHWNDを結び附ける。
+  /// オブジェクト破棄時にHWNDを破棄しない。
   void attach__(HWND h)
   {
     kill__();
     hw_ = h;
   }
 
-  //========================================
-  //  detach__()
-  //  �A����؂� HWND�̔j���͂��Ȃ�
-  //========================================
+  /// @brief HWNDの切り離し
+  ///
+  /// WndBaseオブジェクトとHWNDを切り離す。
+  /// HWNDを破棄しない。
   void detach__()
   {
     hw_ = NULL;
@@ -89,49 +85,64 @@ protected:
   }
 
 
-
-  //////////////////////////////////////
-  //  �h���N���X�Œ�`����n���h��
-  //////////////////////////////////////
+  /// @brief メッセージ處理系初期化
+  ///
+  /// ウィンドウが作成されたときに呼び出され、
+  /// オブジェクトとHWNDを結合し、
+  /// その他の處理を行ふ。
+  /// 派生クラスで實裝する。
   virtual void init__(HWND) =0;
+
+  /// @brief メッセージ處理系初期化解除
+  ///
+  /// ウィンドウが破棄されたときに呼び出され、
+  /// HWNDからオブジェクトへの結合を切斷し、
+  /// その他の處理を行ふ。
+  /// 派生クラスで實裝する。
   virtual void uninit__() =0;
+
+  /// @brief ウィンドウ破棄の實處理
+  /// destroy()から呼び出される下請け。
+  /// ウィンドウを破棄するための處理を、派生クラスで實裝する。
   virtual void destroyWindow__() =0;
 
-  //========================================
-  //  deleting__()
-  //  �A�v�������� HWND ��j������
-  //========================================
+  /// @brief オブジェクト側からHWNDを破棄
+  ///
+  /// (オブジェクト破棄時に)連結してゐるHWNDを破棄する。
+  /// インスタンス生成可能な派生クラスの
+  /// デストラクタは、
+  /// 先祖クラスのデストラクタが
+  /// deleting__()を呼び出す場合を除き、
+  /// deleting__()を呼び出すべし。
   void deleting__()
   {
-    if (hw_)
-    {
+    if (hw_) {
       uninit__();
       destroyWindow__();
     }
   }
 
-  //==================================================
-  //  destroyed__()
-  //  �V�X�e������ HWND ��j�������Ƃ��̌㏈��
-  //==================================================
+  /// @brief HWNDが破棄された時の後處理
+  ///
+  /// HWNDが破棄されたときに呼び出され、
+  /// オブジェクトとHWNDの間の結合を切斷する。
   void destroyed__()
   {
-    if (hw_)
-    {
+    if (hw_) {
       uninit__();
       detach__();
     }
   }
 
-
   //===========================================
-  //  �h���N���X�Ŏg�� "�J�v�Z���j��"
+  //  派生クラスで使う "カプセル破り"
   //===========================================
+  /// @brief 派生クラスがHINSTANCEを取得するための"カプセル破り"
   static HINSTANCE getHI__()
   {
     return System::hi_S;
   }
-
+  /// @brief 派生クラスがHWNDを取得するための"カプセル破り"
   static HWND getHW__(urania::WndBase* wb)
   {
     if (wb)
@@ -141,9 +152,13 @@ protected:
   }
 
 public:
-  /////////////////////////////////////
-  //  HWND�擾
-  /////////////////////////////////////
+  //////////////////////////////////////////////////////
+  /// @brief HWNDを取得
+  ///
+  /// WndBaseオブジェクトに結び附いたHWNDを取得する。
+  /// @param wb 對象のWndBaseオブジェクトへのポインタ
+  /// @return wbに結び附いたHWND
+  //////////////////////////////////////////////////////
   static HWND getHWND(urania::WndBase* wb)
   {
     return wb->hw_;
@@ -151,76 +166,81 @@ public:
 
 public:
   ///////////////////////////////////
-  //  Window�{�̑���n
+  //  Window本体操作系
   ///////////////////////////////////
 
-  // �j��
+  /// @brief ウィンドウの破棄
   void destroy() { destroyWindow__(); }
 
-  // �^�C�g���ύX
+  /// @brief ウィンドウタイトルの變更
+  /// @param ttl 新しいタイトル
   void resetTitle(const std::wstring& ttl)
   {
     if (hw_)
       ::SendMessage(hw_, WM_SETTEXT, 0, (ULONG_PTR)(ttl.c_str()));
   }
 
-  // �������
+  /// @brief ウィンドウを閉ぢる
   void close()
   {
     if (hw_)
       ::PostMessage(hw_, WM_CLOSE, 0, 0);
   }
 
-  // ����\��
+  /// @brief ウィンドウを表示
   void show()
   {
     if (hw_)
       ::ShowWindow(hw_, SW_SHOW);
   }
 
-  // ����誂�
+  /// @brief ウィンドウを隱す
   void hide()
   {
     if (hw_)
       ::ShowWindow(hw_, SW_HIDE);
   }
 
-  // �����ő剻
+  /// @brief ウィンドウ最大化
   void maximize()
   {
     if (hw_)
       ::ShowWindow(hw_, SW_MAXIMIZE);
   }
 
-  // �����ŏ���
+  /// @brief ウィンドウ最小化
   void minimize()
   {
     if (hw_)
       ::ShowWindow(hw_, SW_MINIMIZE);
   }
 
-  // �����u���ɖ߁v��
+  /// @brief ウィンドウを「元に戻」す
   void normalize()
   {
     if (hw_)
       ::ShowWindow(hw_, SW_RESTORE);
   }
 
-  //======================================
-  //  move()
-  //  �����ړ�
-  // (x, y) �͍���̈ʒu
-  //======================================
+  //========================================================
+  /// @brief ウィンドウの移動
+  ///
+  /// 移動先はウィンドウの左上の位置(x, y)で指定する。
+  /// @param x 移動先のx座標
+  /// @param y 移動先のy座標
+  //========================================================
   void move(int x, int y)
   {
     if (hw_)
       ::SetWindowPos(hw_, NULL, x, y, 0, 0, SWP_NOSIZE|SWP_NOZORDER);
   }
 
-  //=======================
-  // postMessage()
-  // ���b�Z�[�W�𓊂���
-  //=======================
+  //==============================================
+  /// @brief メッセージを投げる
+  /// @param msg メッセージ
+  /// @param wp メッセージのパラメータ(WPARAM)
+  /// @param lp メッセージのパラメータ(LPARAM)
+  //==============================================
   void postMessage(UINT msg, WPARAM wp, LPARAM lp)
   {
     if (hw_)
@@ -229,9 +249,9 @@ public:
 
 
   /////////////////////////////////////////
-  //  Window�{�̏��擾�n
+  //  Window本体情報取得系
   /////////////////////////////////////////
-
+  /// @brief ウィンドウ幅を取得
   int getWidth()
   {
     if (!hw_)
@@ -240,9 +260,10 @@ public:
     ::GetWindowRect(hw_, &rc);
     return rc.right - rc.left;
   }
-
+  /// @brief ウィンドウ幅を取得
   int width() { return getWidth(); }
 
+  /// @brief ウィンドウの高さを取得
   int getHeight()
   {
     if (!hw_)
@@ -251,20 +272,25 @@ public:
     ::GetWindowRect(hw_, &rc);
     return rc.bottom - rc.top;
   }
-
+  /// @brief ウィンドウの高さを取得
   int height() { return getHeight(); }
 
-  bool getWidthAndHeight(int* w, int* h)
+  /// @brief ウィンドウの幅と高さを取得
+  /// @param[out] w 幅
+  /// @param[out] h 高さ
+  /// @return 成功時はtrue、失敗時はfalse
+  bool getWidthAndHeight(int& w, int& h)
   {
     if (!hw_)
       return false;
     RECT rc;
     ::GetWindowRect(hw_, &rc);
-    *w = rc.right - rc.left;
-    *h = rc.bottom - rc.top;
+    w = rc.right - rc.left;
+    h = rc.bottom - rc.top;
     return true;
   }
 
+  /* 仕樣に疑問有り 一端削除
   polymnia::Rect getRect()
   {
     polymnia::Rect re(0, 0, 0, 0);
@@ -277,17 +303,21 @@ public:
     }
     return re;
   }
+  */
 
 
   ///////////////////////////////////////
-  //  �R���g���[���̗L����/������
+  //  コントロールの有效化/無效化
   ///////////////////////////////////////
+  /// @brief コントロールの有效化
+  /// @param id コントロールID
   void enableCtrl(int id)
   {
     HWND w = GetDlgItem(hw_, id);
     ::EnableWindow(w, TRUE);
   }
-
+  /// @brief コントロールの無效化
+  /// @param id コントロールID
   void disableCtrl(int id)
   {
     HWND w = GetDlgItem(hw_, id);
@@ -295,14 +325,20 @@ public:
   }
 
   //////////////////////////////////////////////
-  //  �R���g���[�������n
+  //  コントロール生成系
   //////////////////////////////////////////////
+  /// @brief エディットボックスを生成
+  /// @param id コントロールID
+  /// @param de コントロールの位置、幅、高さの指定
   void createEditBox(int id, const urania::CtrlDesc& de)
   {
     CreateWindow(L"EDIT", L"", WS_CHILD | WS_VISIBLE | WS_BORDER,
       de.x, de.y, de.w, de.h, hw_, (HMENU)id, getHI__(), nullptr);
   }
 
+  /// @brief 複數行エディットボックスを生成
+  /// @param id コントロールID
+  /// @param de コントロールの位置、幅、高さの指定
   void createMultiLineEditBox(int id, const urania::CtrlDesc& de)
   {
     CreateWindow(L"EDIT", L"",
@@ -311,6 +347,9 @@ public:
       de.x, de.y, de.w, de.h, hw_, (HMENU)id, getHI__(), nullptr);
   }
 
+  /// @brief リストボックスを生成
+  /// @param id コントロールID
+  /// @param de コントロールの位置、幅、高さの指定
   void createListBox(int id, const urania::CtrlDesc& de)
   {
     CreateWindow(
@@ -319,6 +358,9 @@ public:
       de.x, de.y, de.w, de.h, hw_, (HMENU)id, getHI__(), nullptr);
   }
 
+  /// @brief コンボボックスを生成
+  /// @param id コントロールID
+  /// @param de コントロールの位置、幅、高さの指定
   void createComboBox(int id, const urania::CtrlDesc& de)
   {
     CreateWindow(L"COMBOBOX", L"",
@@ -327,6 +369,9 @@ public:
       (HMENU)id, getHI__(), nullptr);
   }
 
+  /// @brief ボタンを生成
+  /// @param id コントロールID
+  /// @param de コントロールの位置、幅、高さの指定
   void createPushButton(
     int id, const std::wstring& str, const urania::CtrlDesc& de)
   {
@@ -335,6 +380,9 @@ public:
       de.x, de.y, de.w, de.h, hw_, (HMENU)id, getHI__(), nullptr);
   }
 
+  /// @brief ラベルを生成
+  /// @param id コントロールID
+  /// @param de コントロールの位置、幅、高さの指定
   void createLabel(int id, const std::wstring& str, const urania::CtrlDesc& de)
   {
     CreateWindow(
@@ -342,6 +390,9 @@ public:
       de.x, de.y, de.w, de.h, hw_, (HMENU)id, getHI__(), nullptr);
   }
   
+  /// @brief チェックボックスを生成
+  /// @param id コントロールID
+  /// @param de コントロールの位置、幅、高さの指定
   void createCheckBox(
     int id, const std::wstring& str, const urania::CtrlDesc& de)
   {
@@ -350,46 +401,64 @@ public:
       de.x, de.y, de.w, de.h, hw_, (HMENU)id, getHI__(), nullptr);
   }
 
-  void createActiveButton(
-    int id, const std::wstring& str, const urania::CtrlDesc& de);
+  // 2018.12.24 定義意圖不明によりコメントアウト
+  //void createActiveButton(
+  //  int id, const std::wstring& str, const urania::CtrlDesc& de);
 
 
 
   ///////////////////////////////
-  //  EditBox����n
+  //  EditBox操作系
   ///////////////////////////////
+  /// @brief エディットボックスの内容を取得
+  /// @param id コントロールID
+  /// @return 内容
   std::wstring getTextEB(int id);
 
+  /// @brief エディットボックスの内容を設定
+  /// @param id コントロールID
+  /// @param txt 設定する内容
   void setEBText(int id, const std::wstring& txt)
   {
     HWND w = ::GetDlgItem(hw_, id);
     ::SendMessage(w, WM_SETTEXT, 0, (LPARAM)(txt.c_str()));
   }
 
+  /// @brief エディットボックスの内容を消去
+  /// @param id コントロールID
   void clearEB(int id)
   {
     HWND w = ::GetDlgItem(hw_, id);
     ::SendMessage(w, WM_CLEAR, 0, 0);
   }
 
+  /// @brief 選擇文字列をクリップボードにコピー
+  /// @param id コントロールID
   void copyEB(int id)
   {
     HWND w = ::GetDlgItem(hw_, id);
     ::SendMessage(w, WM_COPY, 0, 0);
   }
 
+  /// @brief 選擇文字列をクリップボードにコピーし削除
+  /// @param id コントロールID
   void cutEB(int id)
   {
     HWND w = ::GetDlgItem(hw_, id);
     ::SendMessage(w, WM_CUT, 0, 0);
   }
 
+  /// @brief クリップボードから文字列をペースト
+  /// @param id コントロールID
   void pasteEB(int id)
   {
     HWND w = ::GetDlgItem(hw_, id);
     ::SendMessage(w, WM_PASTE, 0, 0);
   }
 
+  /// @brief 直前の動作を取り消し可能かどうか確認する
+  /// @param id コントロールID
+  /// @return trueなら取り消し可能、falseなら不可能
   bool canUndoEB(int id)
   {
     HWND w = ::GetDlgItem(hw_, id);
@@ -399,14 +468,23 @@ public:
       return false;
   }
 
+  /// @brief 直前の動作を取り消す
+  /// @param id コントロールID
   void undoEB(int id)
   {
     HWND w = ::GetDlgItem(hw_, id);
     ::SendMessage(w, EM_UNDO, 0, 0);
   }
 
+  /// @brief 複數行エディットボックスの一行を取得
+  /// @param id コントロールID
+  /// @param li 取得する行の番號(0-based)
+  /// @return 指定した行の文字列
   std::wstring getLineTextEB(int id, int li);
 
+  /// @brief 複數行エディットボックスの行數を取得
+  /// @param id コントロールID
+  /// @return 行數
   int countLineEB(int id)
   {
     HWND w = ::GetDlgItem(hw_, id);
@@ -415,34 +493,53 @@ public:
 
 
   ///////////////////////////////////
-  //  ListBox����n
+  //  ListBox操作系
   ///////////////////////////////////
+  /// @brief リストボックスの項目を取得
+  /// @param id コントロールID
+  /// @param no 項目番號(0-based)
+  /// @return 項目の文字列
   std::wstring getItemLB(int id, int no);
 
+  /// @brief リストボックスに項目を追加
+  /// @param id コントロールID
+  /// @param txt 插入する項目の文字列
   void addItemLB(int id, const std::wstring& txt)
   {
     HWND w = ::GetDlgItem(hw_, id);
     ::SendMessage(w, LB_ADDSTRING, 0, (LPARAM)(txt.c_str()));
   }
 
+  /// @brief リストボックスに項目を插入
+  /// @param id コントロールID
+  /// @param no 插入位置
+  /// @param txt 插入する項目の文字列
   void insertItemLB(int id, int no, const std::wstring& txt)
   {
     HWND w = ::GetDlgItem(hw_, id);
     ::SendMessage(w, LB_INSERTSTRING, no, (LPARAM)(txt.c_str()));
   }
 
+  /// @brief リストボックスの項目を削除
+  /// @param id コントロールID
+  /// @param no 削除位置
   void deleteItemLB(int id, int no)
   {
     HWND w = ::GetDlgItem(hw_, id);
     ::SendMessage(w, LB_DELETESTRING, no, 0);
   }
 
+  /// @brief リストボックスの項目数を取得
+  /// @param id コントロールID
   int countItemLB(int id)
   {
     HWND w = ::GetDlgItem(hw_, id);
     return ::SendMessage(w, LB_GETCOUNT, 0, 0);
   }
 
+  /// @brief 選擇中のリストボックスの項目番號を取得
+  /// @param id コントロールID
+  /// @return 選擇中の項目の番號(0-based)、但し失敗時は-1
   int getCurrentLB(int id)
   {
     HWND w = ::GetDlgItem(hw_, id);
@@ -453,49 +550,88 @@ public:
       return r;
   }
 
+  /// @brief リストボックスの選擇項目を設定
+  /// @param id コントロールID
+  /// @param no 選擇する項目の番號(0-based)
   void setCurrentLB(int id, int no)
   {
     HWND w = ::GetDlgItem(hw_, id);
     ::SendMessage(w, LB_SETCURSEL, no, 0);
   }
 
+  /// @brief リストボックスの内容を消去
+  /// @param id コントロールID
   void clearLB(int id)
   {
     HWND w = ::GetDlgItem(hw_, id);
     ::SendMessage(w, LB_RESETCONTENT, 0, 0);
   }
 
+  /// @brief リストボックスの内容を指定ディレクトリの内容に設定
+  /// @param id コントロールID
+  /// @param path ディレクトリのパス
+  /// @param flag 列擧するファイルの屬性を指定
+  ///
+  /// flagに指定するのは以下の値の組み合はせ。
+  ///   - DDL_ARCHIVE
+  ///   - DDL_DDL_DIRECTORY
+  ///   - DDL_DRIVES
+  ///   - DDL_EXCLUSIVE
+  ///   - DDL_HIDDEN
+  ///   - DDL_READONLY
+  ///   - DDL_READWRITE
+  ///   - DDL_SYSTEM 
   void dirLB(int id, const std::wstring& path, int flag);
 
+
   ////////////////////////////
-  //  ComboBox����n
+  //  ComboBox操作系
   ////////////////////////////
+  /// @brief コンボボックスの項目を取得
+  /// @param id コントロールID
+  /// @param no 項目番號(0-based)
+  /// @return 項目の文字列
   std::wstring getItemCB(int id, int no);
 
+  /// @brief コンボボックスに項目を追加
+  /// @param id コントロールID
+  /// @param txt 插入する項目の文字列
   void addItemCB(int id, const std::wstring& txt)
   {
     HWND w = ::GetDlgItem(hw_,id);
     ::SendMessage(w,CB_ADDSTRING, 0, (LPARAM)(txt.c_str()));
   }
 
+  /// @brief コンボボックスに項目を插入
+  /// @param id コントロールID
+  /// @param no 插入位置
+  /// @param txt 插入する項目の文字列
   void insertItemCB(int id, int no, const std::wstring& txt)
   {
     HWND w = ::GetDlgItem(hw_,id);
     ::SendMessage(w,CB_INSERTSTRING,no,(LPARAM)(txt.c_str()));
   }
 
+  /// @brief コンボボックスの項目を削除
+  /// @param id コントロールID
+  /// @param no 削除位置
   void deleteItemCB(int id, int no)
   {
     HWND w = ::GetDlgItem(hw_,id);
     ::SendMessage(w,CB_DELETESTRING,no,0);
   }
 
+  /// @brief コンボボックスの項目数を取得
+  /// @param id コントロールID
   int countItemCB(int id)
   {
     HWND w = ::GetDlgItem(hw_,id);
     return ::SendMessage(w,CB_GETCOUNT,0,0);
   }
 
+  /// @brief 選擇中のコンボボックスの項目番號を取得
+  /// @param id コントロールID
+  /// @return 選擇中の項目の番號(0-based)、但し失敗時は-1
   int getCurrentCB(int id)
   {
     HWND w = ::GetDlgItem(hw_, id);
@@ -506,24 +642,46 @@ public:
       return r;
   }
 
+  /// @brief コンボボックスの選擇項目を設定
+  /// @param id コントロールID
+  /// @param no 選擇する項目の番號(0-based)
   void setCurrentCB(int id, int no)
   {
     HWND w = ::GetDlgItem(hw_, id);
     ::SendMessage(w, CB_SETCURSEL, no, 0);
   }
 
+  /// @brief コンボボックスの内容を消去
+  /// @param id コントロールID
   void clearCB(int id)
   {
     HWND w = ::GetDlgItem(hw_,id);
     ::SendMessage(w, CB_RESETCONTENT, 0, 0);
   }
 
+  /// @brief コンボボックスの内容を指定ディレクトリの内容に設定
+  /// @param id コントロールID
+  /// @param path ディレクトリのパス
+  /// @param flag 列擧するファイルの屬性を指定
+  ///
+  /// flagに指定するのは以下の値の組み合はせ。
+  ///   - DDL_ARCHIVE
+  ///   - DDL_DDL_DIRECTORY
+  ///   - DDL_DRIVES
+  ///   - DDL_EXCLUSIVE
+  ///   - DDL_HIDDEN
+  ///   - DDL_READONLY
+  ///   - DDL_READWRITE
+  ///   - DDL_SYSTEM 
   void dirCB(int id, const std::wstring& path, int flag);
 
 
   //================================
-  //  CheckBox ���̏�Ԏ擾
+  //  CheckBox 等の状態取得
   //================================
+  /// @brief チェックボックスなどのチェックの有無を取得
+  /// @param id コントロールID
+  /// @return チェックされてゐればtrue、さもなくばfalse
   bool isChecked(int id)
   {
     return IsDlgButtonChecked(hw_, id);
@@ -531,128 +689,160 @@ public:
 
 
   ////////////////////////////////////////
-  //  ���X�N���[���o�[����n
+  //  横スクロールバー操作系
   ////////////////////////////////////////
+  /// @brief 水平スクロールバーの位置を取得
   int getPosHSB()
   {
     return getPosSB(ID_SBH);
   }
-
+  /// @brief 水平スクロールバーの位置を設定
   void setPosHSB(int pos)
   {
     setPosSB(ID_SBH, pos);
   }
 
-  void setRangeHSB(int min, int max)
+  /// @brief 水平スクロールバーの範圍を取得
+  /// @param[out] min 最小値
+  /// @param[out] max 最大値
+  /// @param[out] page ページサイズ
+  void getRangeHSB(int& min, int& max, int& page)
   {
-    if (hw_)
-      ::SetScrollRange(hw_, SB_HORZ, min, max, TRUE);
+    getRangeSB(ID_SBH, min, max, page);
+    //if (hw_)
+    //  ::GetScrollRange(hw_, SB_HORZ, &min, &max);
   }
 
-  void getRangeHSB(int& min, int& max)
+  /// @brief 水平スクロールバーの範圍を設定
+  /// @param min 最小値
+  /// @param max 最大値
+  /// @param page ページサイズ
+  void setRangeHSB(int min, int max, int page)
   {
-    if (hw_)
-      ::GetScrollRange(hw_, SB_HORZ, &min, &max);
+    setRangeSB(ID_SBH, min, max, page);
   }
 
+  /// @brief 水平スクロールバーを有效化
   void enableHSB()
   {
-    if (hw_)
-      ::EnableScrollBar(hw_, SB_HORZ, ESB_ENABLE_BOTH);
+    enableSB(ID_SBH);
   }
 
+  /// @brief 水平スクロールバーを無效化
   void disableHSB()
   {
-    if (hw_)
-      ::EnableScrollBar(hw_, SB_HORZ, ESB_DISABLE_BOTH);
+    disableSB(ID_SBH);
   }
 
 
   ///////////////////////////////////////////////
-  //  �c�X�N���[���o�[����n
+  //  縦スクロールバー操作系
   ///////////////////////////////////////////////
+  /// @brief 垂直スクロールバーの位置を取得
   int getPosVSB()
   {
     return getPosSB(ID_SBV);
   }
 
+  /// @brief 垂直スクロールバーの位置を設定
   void setPosVSB(int pos)
   {
     setPosSB(ID_SBV, pos);
   }
 
-  void setRangeVSB(int min, int max)
+  /// @brief 垂直スクロールバーの範圍を取得
+  /// @param[out] min 最小値
+  /// @param[out] max 最大値
+  /// @param[out] page ページサイズ
+  void getRangeVSB(int& min, int& max, int& page)
   {
-    if (hw_)
-      ::SetScrollRange(hw_, SB_VERT, min, max, TRUE);
+    getRangeSB(ID_SBV, min, max, page);
   }
 
-  void getRangeVSB(int& min, int& max)
+  /// @brief 垂直スクロールバーの範圍を設定
+  /// @param min 最小値
+  /// @param max 最大値
+  /// @param page ページサイズ
+  void setRangeVSB(int min, int max, int page)
   {
-    if (hw_)
-      ::GetScrollRange(hw_, SB_VERT, &min, &max);
+    setRangeSB(ID_SBV, min, max, page);
   }
 
+  /// @brief 垂直スクロールバーを有效化
   void enableVSB()
   {
-    if (hw_)
-      ::EnableScrollBar(hw_, SB_VERT, ESB_ENABLE_BOTH);
+    enableSB(ID_SBV);
   }
 
+  /// @brief 垂直スクロールバーを無效化
   void disableVSB()
   {
-    if (hw_)
-      ::EnableScrollBar(hw_, SB_VERT, ESB_DISABLE_BOTH);
+    disableSB(ID_SBV);
   }
 
   /////////////////////////////////////////////////////
-  //  ���� (2012.5.13�ȍ~�ǉ�; 2016.2.27����)
+  //  共通 (2012.5.13以降追加; 2016.2.27改名)
   /////////////////////////////////////////////////////
+  /// @brief スクロールバーの位置を取得
+  /// @param id コントロールID
   int getPosSB(int id);
+
+  /// @brief スクロールバーの位置を設定
+  /// @param id コントロールID
+  /// @param pos 位置
   void setPosSB(int id, int pos);
+
+  /// @brief スクロールバーの範圍を取得
+  /// @param[in] id コントロールID
+  /// @param[out] min 最小値
+  /// @param[out] max 最大値
+  /// @param[out] page ページサイズ
+  void getRangeSB(int id, int& min, int& max, int& page);
+
+  /// @brief スクロールバーの範圍を設定
+  /// @param id コントロールID
+  /// @param min 最小値
+  /// @param max 最大値
+  /// @param page ページサイズ
   void setRangeSB(int id, int min, int max, int page);
 
   ////////////////////////////////////////////////
-  // ID�t�X�N���[���o�[�p (2016.2.27�ě���)
+  // ID付スクロールバー用 (2016.2.27再實裝)
   ////////////////////////////////////////////////
+  /// @brief スクロールバーを有效化
+  /// @param id コントロールID
   void enableSB(int id)
   {
     if (!hw_)
       return;
-    HWND w = ::GetDlgItem(hw_, id);
-    ::EnableScrollBar(w, SB_CTL, ESB_ENABLE_BOTH);
+
+    if (id == ID_SBH)
+      ::EnableScrollBar(hw_, SB_HORZ, ESB_ENABLE_BOTH);
+    else if (id == ID_SBV)
+      ::EnableScrollBar(hw_, SB_VERT, ESB_ENABLE_BOTH);
+    else {
+      HWND w = ::GetDlgItem(hw_, id);
+      ::EnableScrollBar(w, SB_CTL, ESB_ENABLE_BOTH);
+    }
   }
 
+  /// @brief スクロールバーを無效化
+  /// @param id コントロールID
   void disableSB(int id)
   {
     if (!hw_)
       return;
-    HWND w = ::GetDlgItem(hw_, id);
-    ::EnableScrollBar(w, SB_CTL, ESB_DISABLE_BOTH);
+
+    if (id == ID_SBH)
+      ::EnableScrollBar(hw_, SB_HORZ, ESB_DISABLE_BOTH);
+    else if (id == ID_SBV)
+      ::EnableScrollBar(hw_, SB_VERT, ESB_DISABLE_BOTH);
+    else {
+      HWND w = ::GetDlgItem(hw_, id);
+      ::EnableScrollBar(w, SB_CTL, ESB_DISABLE_BOTH);
+    }
   }
 
-
-  /////////////////////////////////////////////
-  //  ID�t���X�N���[���o�[����n
-  //  (2012.5.13�ȍ~�폜)
-  /////////////////////////////////////////////
-  /*
-  void setIDSBarRange(int id, int min, int max)
-  {
-    if (!hw_)
-      return;
-    HWND w = ::GetDlgItem(hw_, id);
-    ::SetScrollRange(w, SB_CTL, min, max, TRUE);
-  }
-
-  void getIDSBarRange(int id, int& min, int& max)
-  {
-    if (!hw_)
-      return;
-    HWND w = ::GetDlgItem(hw_, id);
-    ::GetScrollRange(w, SB_CTL, &min, &max);
-  }
-  */
 };
 
 

@@ -13,7 +13,6 @@
  * @date 27 Feb 2016  ファイル名變更、メソッド名變更
  * @date 1 Oct 2016  不要なfriend classを削除
  */
-
 #ifndef INC_GP_GUI_SYSTEM_H__
 #define INC_GP_GUI_SYSTEM_H__
 
@@ -29,10 +28,7 @@
 class urania::System
 {
   friend class urania::WndBase;
-//  friend class urania::Window;
-//  friend class urania::Dialog;
   friend class urania::Menu;
-//  friend int PASCAL ::WinMain(HINSTANCE hi, HINSTANCE pv, LPSTR cl, int cs);
 
 private:
   static HINSTANCE hi_S;
@@ -41,7 +37,9 @@ private:
   System() =delete; //インスタンス生成禁止
 
 public:
-  /// @brief 利用開始 初めに一度だけ呼ぶ
+  /// @brief 開始
+  ///
+  /// 最初に一度だけ呼ぶ。
   /// @param[in] hi HINSTANCE値。WinMain()の1つ目の引數を渡す。
   static void start(HINSTANCE hi)
   {
@@ -89,7 +87,7 @@ public:
   /// @brief Yes, No, キャンセル三擇のメッセージボックスを表示
   /// @param[in] title タイトル
   /// @param[in] msg メッセージ
-  /// @rerutn 1: OK, 2: NO, 3: CANCEL のいづれか
+  /// @return 1: OK, 2: NO, 3: CANCEL のいづれか
   static int askYesNoCancel(const std::wstring& title, const std::wstring& msg)
   {
     int res = ::MessageBox(NULL, msg.c_str(), title.c_str(), MB_YESNOCANCEL);
@@ -173,9 +171,9 @@ public:
 /**
  * @brief メッセージループ(コールバック付)
  * @param f
- * アイドル状態の時に呼び出されるコールバック函數。
- * bool値を返す。
- * falseを返した場合、次にメッセージを處理するまでコールバックしない。
+ *   アイドル状態の時に呼び出されるコールバック函數。
+ *   bool値を返す。
+ *   falseを返した場合、次にメッセージを處理するまでコールバックしない。
  */
 template<class Func_>
 void urania::System::messageLoop(Func_ f)
@@ -184,10 +182,8 @@ void urania::System::messageLoop(Func_ f)
   static bool idle = true;
 
   for (;;) {
-    if (::PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-    {
-      if (msg.message==WM_QUIT)
-      {
+    if (::PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
+      if (msg.message==WM_QUIT) {
         ::PostQuitMessage(0);
         return;
       }
@@ -197,13 +193,11 @@ void urania::System::messageLoop(Func_ f)
 
       idle = true;
     }
-    else if (idle)
-    {
+    else if (idle) {
       if (!f())
         idle = false;
     }
-    else
-    {
+    else {
       ::WaitMessage();
     }
   }

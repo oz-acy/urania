@@ -2,12 +2,12 @@
  *
  *  ctrl.cpp
  *  by oZ/acy
- *  (c) 2002-2016 oZ/acy.  ALL RIGHTS RESERVED.
+ *  (c) 2002-2018 oZ/acy.  ALL RIGHTS RESERVED.
  *
  *  履歴
- *    2016.2.27  修正
- *************************************************************************/
-
+ *    2016.2.27   修正
+ *    2018.12.24  修正
+ */
 #include <memory>
 #include "wbase.h"
 
@@ -77,26 +77,7 @@ std::wstring urania::WndBase::getItemLB(int id, int no)
 void urania::WndBase::dirLB(int id, const std::wstring& path, int flag)
 {
   HWND w = ::GetDlgItem(hw_, id);
-
-  WPARAM wf = 0;
-  if (flag & CTD_READONRY)
-    wf |= DDL_READONLY;
-  if (flag & CTD_HIDDEN)
-    wf |= DDL_HIDDEN;
-  if (flag & CTD_SYSTEM)
-    wf |= DDL_SYSTEM;
-  if (flag & CTD_DIRECTORY)
-    wf |= DDL_DIRECTORY;
-  if (flag & CTD_ARCHIVE)
-    wf |= DDL_ARCHIVE;
-  if (flag & CTD_DRIVE)
-    wf |= DDL_DRIVES;
-  if (flag & CTD_EXCLUSIVE)
-    wf |= DDL_EXCLUSIVE;
-  if (flag & CTD_READWRITE)
-    wf |= DDL_READWRITE;
-
-  ::SendMessage(w, LB_DIR, wf, (LPARAM)(path.c_str()));
+  ::SendMessage(w, LB_DIR, flag, (LPARAM)(path.c_str()));
 }
 
 
@@ -121,27 +102,10 @@ std::wstring urania::WndBase::getItemCB(int id, int no)
  *  WndBase::dirCB()
  *  コンボボックスの内容を指定ディレクトリのファイル名にする
  */
-void urania::WndBase::dirCB(int id,const std::wstring& path,int flag)
+void urania::WndBase::dirCB(int id, const std::wstring& path, int flag)
 {
    HWND w = ::GetDlgItem(hw_,id);
-   WPARAM wf = 0;
-   if (flag & CTD_READONRY)
-     wf |= DDL_READONLY;
-   if (flag & CTD_HIDDEN)
-     wf |= DDL_HIDDEN;
-   if (flag & CTD_SYSTEM)
-     wf |= DDL_SYSTEM;
-   if (flag & CTD_DIRECTORY)
-     wf |= DDL_DIRECTORY;
-   if (flag & CTD_ARCHIVE)
-     wf |= DDL_ARCHIVE;
-   if (flag & CTD_DRIVE)
-     wf |= DDL_DRIVES;
-   if (flag & CTD_EXCLUSIVE)
-     wf |= DDL_EXCLUSIVE;
-   if (flag & CTD_READWRITE)
-     wf |= DDL_READWRITE;
-   ::SendMessage(w, CB_DIR, wf,(LPARAM)(path.c_str()));
+   ::SendMessage(w, CB_DIR, flag,(LPARAM)(path.c_str()));
 }
 
 

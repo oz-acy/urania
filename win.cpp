@@ -4,8 +4,8 @@
  *  by oZ/acy
  *  (c) 2002-2016 oZ/acy. ALL RIGHTS RESERVED.
  *
- *  —љ—р
- *    2016.2.29  ЏCђі (ѓNѓЌЃ[ѓWѓѓ‚М›‰ед‚рbind‚©‚з[this](){}‚ЙќМЌX)
+ *  е±Ґж­ґ
+ *    2016.2.29  дї®ж­Ј (г‚Їгѓ­гѓјг‚ёгѓЈгЃ®еЇ¦иЈќг‚’bindгЃ‹г‚‰[this](){}гЃ«и®Љж›ґ)
  *************************************************************************/
 
 #include <cstdlib>
@@ -16,7 +16,7 @@
 
 /*====================================
  *  WindowFactory::factory__()
- *  ѓEѓBѓ“ѓhѓEђ¶ђ¬‚М‰єђї‚Ї
+ *  г‚¦г‚Јгѓігѓ‰г‚¦з”џж€ђгЃ®дё‹и«‹гЃ‘
  *==================================*/
 urania::Window*
 urania::WindowFactory::factory__(
@@ -24,11 +24,11 @@ urania::WindowFactory::factory__(
 {
   Window* res = new Window;
 
-  // ѓnѓ“ѓhѓ‰ѓ}ѓlЃ[ѓWѓѓ‚ЖD&D‚МђЭ’и
-  res->msgHandler_ = mh;
+  // гѓЏгѓігѓ‰гѓ©гѓћгѓЌгѓјг‚ёгѓЈгЃЁD&DгЃ®иЁ­е®љ
+  res->msgHandler_.reset(mh);
   res->dad_ = drag_and_drop;
 
-  // BasicWindow‹LЏqЌ\‘ў‘М‚МЌ\’z
+  // BasicWindowиЁиї°ж§‹йЂ дЅ“гЃ®ж§‹зЇ‰
   BasicWindow::D0_ de0;
 
   de0.title = title;
@@ -47,7 +47,7 @@ urania::WindowFactory::factory__(
   de0.popup = popup;
   de0.border_only = border_only;
 
-  // ђe–”‚НѓIЃ[ѓiЃ[Window‚ЖMenu–”‚НЋqWindowID‚МђЭ’и
+  // и¦ЄеЏ€гЃЇг‚ЄгѓјгѓЉгѓјWindowгЃЁMenuеЏ€гЃЇе­ђWindowIDгЃ®иЁ­е®љ
   if (par)
     de0.pwnd = res->getHW__(par);
 
@@ -56,7 +56,7 @@ urania::WindowFactory::factory__(
   else if (menu)
     de0.hm = res->linkMenu__(Menu::create(menu));
 
-  // ЋАЌЫ‚Йђ¶ђ¬
+  // е®џйљ›гЃ«з”џж€ђ
   res->createWindow0__(de0);
 
   return res;
@@ -67,7 +67,7 @@ urania::WindowFactory::factory__(
 
 /*================================================
  *  Window::wproc__()
- *  ЉeWindow‚МѓЃѓbѓZЃ[ѓWЏ€—ќѓvѓЌѓVЃ[ѓWѓѓ
+ *  еђ„WindowгЃ®гѓЎгѓѓг‚»гѓјг‚ёе‡¦зђ†гѓ—гѓ­г‚·гѓјг‚ёгѓЈ
  *==============================================*/
 LRESULT urania::Window::wproc__(UINT msg, WPARAM wp, LPARAM lp)
 {
@@ -88,14 +88,14 @@ LRESULT urania::Window::wproc__(UINT msg, WPARAM wp, LPARAM lp)
 
 /*==================================================
  *  Window::init__()
- *  ѓЃѓbѓZЃ[ѓW™|—ќЊn‚МЏ‰Љъ‰»
+ *  гѓЎгѓѓг‚»гѓјг‚ёи™•зђ†зі»гЃ®е€ќжњџеЊ–
  *================================================*/
 void urania::Window::init__(HWND hw)
 {
-  // HWND‚ЖWindow object‚МЊ‹Ќ‡
+  // HWNDгЃЁWindow objectгЃ®зµђеђ€
   bindHWND__(hw);
 
-  // Drag and Drop‚МђЭ’и
+  // Drag and DropгЃ®иЁ­е®љ
   if (dad_)
     ::DragAcceptFiles(hw, TRUE);
 }
@@ -103,27 +103,27 @@ void urania::Window::init__(HWND hw)
 
 /*===============================================
  *  Window::uninit__()
- *  ѓЃѓbѓZЃ[ѓW™|—ќЊn‚МЏ‰Љъ‰»‰рЏњ
- *  destroyed‚Жdeleting‚М‰єђї
+ *  гѓЎгѓѓг‚»гѓјг‚ёи™•зђ†зі»гЃ®е€ќжњџеЊ–и§Јй™¤
+ *  destroyed__()гЃЁdeleting__()гЃ®дё‹и«‹
  *=============================================*/
 void urania::Window::uninit__()
 {
-  // Drag and Drop‚МђЭ’иЊгЋn––
+  // Drag and DropгЃ®иЁ­е®љеѕЊе§‹жњ«
   if (dad_)
     ::DragAcceptFiles(hw_, FALSE);
 
-  // ЉЦAMenu‚МЋn––
+  // й–ўйЂЈMenuгЃ®е§‹жњ«
   if (!!menu_)
     menu_->detach__();
 
-  // HWND‘¤‚©‚з‚МѓЉѓ“ѓN‚рђШ’f
+  // HWNDеЃґгЃ‹г‚‰гЃ®гѓЄгѓіг‚Їг‚’е€‡ж–­
   unbindHWND__();
 }
 
 
 /*================================================
  *  WMHandler::operator()
- *  ѓЃѓbѓZЃ[ѓW‚Йњд‚¶‚Дѓnѓ“ѓhѓ‰‚рЊД‚СЏo‚·
+ *  гѓЎгѓѓг‚»гѓјг‚ёгЃ«ж‡‰гЃгЃ¦гѓЏгѓігѓ‰гѓ©г‚’е‘јгЃіе‡єгЃ™
  */
 LRESULT urania::WMHandler::operator()(urania::WndMessage* msg)
 {

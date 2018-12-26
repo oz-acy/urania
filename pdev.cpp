@@ -64,7 +64,7 @@ urania::PaintDevice::~PaintDevice()
  *          void* a     : コールバックに渡すパラメータ
  *          unsigned w  : デバイス幅
  *          unsigned h  : デバイス高さ
- *   返値:  オブジェクトのスマートポインタ(Qointer)
+ *   返値:  オブジェクトへのポインタ
  */
 urania::PaintDevice*
 urania::PaintDevice::create(HDC dc, DestProc dp, void* a, int w, int h)

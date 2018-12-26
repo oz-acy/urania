@@ -1,35 +1,29 @@
-/**************************************************************************
+/**********************************************************************//**
  *
- *  bwin.h
- *  by oZ/acy
- *  (c) 2002-2016 oZ/acy.  ALL RIGHTS RESERVED.
+ *  @file bwin.h
+ *  @author oZ/acy (名賀月晃嗣)
+ *  @brief Window用基底クラス
  *
- *  Basic WINdow  for part "URANIA"
- *  Window用基底クラス
- *
- *  履歴
- *    2016.2.29  修正
- *************************************************************************/
-
+ *  @date 2016.2.29   修正
+ *  @date 2018.12.26  修正
+ */
+/*
+ *  (c) 2002-2018 oZ/acy.  ALL RIGHTS RESERVED.
+ */
 #ifndef INC_URANIA_BASICWINDOW_H___
 #define INC_URANIA_BASICWINDOW_H___
 
+#include <memory>
 #include <vector>
 #include "wbase.h"
 #include "paintdev.h"
 
 
-/*---------------------------------------
- *  class BasicWindow
- *  Window管理・操作用基底クラス
- *-------------------------------------*/
+/*----------------------------------------------*//**
+ * @brief Window管理・操作用基底クラス
+ */
 class urania::BasicWindow : public urania::WndBase
 {
-//public:
-//  typedef urania::BasicWindow BW_;
-//  typedef BW_* PBW_;
-
-
 public:
   //-------------------
   //  struct D0_
@@ -113,32 +107,48 @@ protected:
 
   void createWindow0__(const D0_& de);
 
-  //===========================================
-  //  bindHWND__()
-  //  BasicWindow と HWND の二重結合を形成
-  //===========================================
+  /// @brief  BasicWindowオブジェクトとHWNDの二重結合を形成
+  ///
+  /// BasicWindowオブジェクトからHWNDへの結合と、
+  /// HWNDからオブジェクトへの結合を形成する。
+  /// @param オブジェクトと結合するHWND
   void bindHWND__(HWND hw)
   {
     link__(hw);
     SetWindowLongPtr(hw, 0, reinterpret_cast<ULONG_PTR>(this));
   }
 
-  //==========================================
-  //  unbindHWND__()
-  //  HWND から BasicWindow への結合を切斷
-  //==========================================
+  /// @brief HWNDからBasicWindowオブジェクトへの結合を切斷
   void unbindHWND__()
   {
     if (hw_)
       SetWindowLongPtr(hw_, 0, reinterpret_cast<ULONG_PTR>(nullptr));
   }
 
-  void destroyWindow__()
+  /// @brief ウィンドウ破棄の實處理を實裝
+  void destroyWindow__() override
   {
     kill__();
   }
 
+  /// @brief ウィンドウプロシージャ(個別)
+  ///
+  /// オブジェクトに結び附いたウィンドウへのメッセージを
+  /// 處理するプロシージャ。
+  /// 派生クラスで實裝する。
+  /// @param[in] msg メッセージ
+  /// @param[in] wp メッセージのパラメータ(WPARAM)
+  /// @param[in] lp メッセージのパラメータ(LPARAM)
   virtual LRESULT wproc__(UINT msg, WPARAM wp, LPARAM lp) =0;
+
+  /// @brief ウィンドウプロシージャ
+  ///
+  /// BasicWindowオブジェクトと結合してゐるHWND用のウィンドウプロシージャ。
+  /// HWNDと結び附いたオブジェクトのwproc__()を呼び出す。
+  /// @param[in] HWND メッセージを受けたウィンドウのHWND
+  /// @param[in] msg メッセージ
+  /// @param[in] wp メッセージのパラメータ(WPARAM)
+  /// @param[in] lp メッセージのパラメータ(LPARAM)
   static LRESULT CALLBACK winproc__(HWND hw, UINT msg, WPARAM wp, LPARAM lp);
 
   static std::wstring registWC__(const WC_& wc);
@@ -147,19 +157,32 @@ protected:
 public:
   ~BasicWindow() {}
 
-
+  /// @brief ウィンドウ更新(再描畫要求)
+  ///
+  /// ウィンドウの再描畫を要求する。
+  /// ウィンドウの全部あるいは一部が再描畫せらるべき場合には、
+  /// 再描畫處理が呼び出される。
   void update()
   {
     if (hw_)
       ::UpdateWindow(hw_);
   }
 
+  /// @brief ウィンドウの再描畫領域の設定
+  ///
+  /// ウィンドウのクライアント領域全體を、
+  /// 再描畫が必要な領域に設定する。
   void invalidate()
   {
     if (hw_)
       ::InvalidateRect(hw_, nullptr, FALSE);
   }
 
+  /// @brief ウィンドウの再描畫領域の設定
+  ///
+  /// ウィンドウのクライアント領域の指定した範圍を
+  /// 再描畫が必要な領域に設定する。
+  /// @param[in] rect 再描畫領域に設定する長方形
   void invalidate(const polymnia::Rect& rect)
   {
     if (hw_)
@@ -174,9 +197,23 @@ public:
     }
   }
 
+  /// @brief ウィンドウ描畫用のPaintDeviceを取得
+  ///
+  /// ウィンドウを(再)描畫するためのPaintDeviceを取得する。
   urania::PaintDevice* getPaintDevice();
+
+  /// @brief ウィンドウ再描畫
+  ///
+  /// ウィンドウ再描畫時に呼び出される。
+  /// getPaintDevice()で取得したPaintDeviceを實引數として
+  /// 描畫處理procを呼び出した後、
+  /// PaintDeviceを破棄する。
+  /// @param proc
+  ///   描畫處理を行ふ函數オブジェクト。
+  ///   プロトタイプは void (proc)(BasicWindow*, PaintDevice*);
   template<class PT_> LRESULT onPaint(PT_&& proc, WPARAM wp, LPARAM lp);
 
+  /// @brief クライアント領域の幅を取得
   int getClientWidth()
   {
     if (!hw_)
@@ -186,6 +223,7 @@ public:
     return rc.right;
   }
 
+  /// @brief クライアント領域の高さを取得
   int getClientHeight()
   {
     if (!hw_)
@@ -195,17 +233,24 @@ public:
     return rc.bottom;
   }
 
-  bool getClientWidthAndHeight(int* w, int* h)
+
+  /// @brief クライアント領域の幅と高さを取得
+  /// @param[out] w 幅
+  /// @param[out] h 高さ
+  /// @return 成功時はtrue、さもなくばfalse
+  bool getClientWidthAndHeight(int& w, int& h)
   {
     if (!hw_)
       return false;
     RECT rc;
     ::GetClientRect(hw_, &rc);
-    *w = rc.right;
-    *h = rc.bottom;
+    w = rc.right;
+    h = rc.bottom;
     return true;
   }
 
+  /* 仕樣に疑義あり 一端削除
+   * 削除を取り消す場合でも、getClientRectに改名するのが適當か?
   polymnia::Rect getClientWidthAndHeight()
   {
     polymnia::Rect re(0, 0, 0, 0);
@@ -218,13 +263,24 @@ public:
     }
     return re;
   }
+  */
 
+  /// @brief ウィンドウの大きさを變更
+  /// @param w 幅
+  /// @param h 高さ
   void resize(int w, int h)
   {
     if (hw_)
       ::SetWindowPos(hw_, nullptr, 0, 0, w, h, SWP_NOMOVE | SWP_NOZORDER);
   }
 
+  /// @brief ウィンドウの大きさを變更
+  ///
+  /// ウィンドウの内側(描畫領域)の幅と高さを指定して
+  /// ウィンドウの大きさを變更する。
+  /// @param w 幅
+  /// @param h 高さ
+  // 改名の必要あり?
   void resizeScreen(int w, int h)
   {
     if (!hw_)
@@ -237,14 +293,16 @@ public:
     ::SetWindowPos(hw_, nullptr, 0, 0, w, h, SWP_NOMOVE | SWP_NOZORDER);
   }
 
+  /// @brief タイマーを設定
+  /// @param id タイマーのID
+  /// @param elapse タイムアウト値(ミリ秒)
   void setTimer(int id, int elapse) { ::SetTimer(hw_, id, elapse, nullptr); }
+
+  /// @brief タイマーを破棄
+  /// @param id タイマーのID
   void killTimer(int id) { ::KillTimer(hw_, id); }
 
-
-  //==========================================================
-  //  BasicWindow::defHandler()
-  //  デフォルトのメッセージ処理
-  //==========================================================
+  /// @brief デフォルトのメッセージ處理
   virtual LRESULT defHandler(UINT msg, WPARAM wp, LPARAM lp);
 };
 
@@ -267,12 +325,15 @@ inline LRESULT urania::BasicWindow::onPaint(PT_&& proc, WPARAM wp, LPARAM lp)
   ::BeginPaint(hw_, &ps);
   RECT rc;
   ::GetClientRect(hw_, &rc);
-  PaintDevice* pd
-   = PaintDevice::create(ps.hdc, nullptr, nullptr, rc.right, rc.bottom);
+  std::unique_ptr<PaintDevice>
+    pd(PaintDevice::create(ps.hdc, nullptr, nullptr, rc.right, rc.bottom));
+  //PaintDevice* pd
+  // = PaintDevice::create(ps.hdc, nullptr, nullptr, rc.right, rc.bottom);
 
-  proc(this, pd);
+  proc(this, pd.get());
 
-  delete pd;
+  pd.reset();
+  //delete pd;
   ::EndPaint(hw_, &ps);
 
   return 0;
