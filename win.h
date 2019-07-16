@@ -47,13 +47,28 @@ class urania::WMHandler : boost::noncopyable
 {
 public:
   /// @brief コマンドハンドラ
+  ///
+  /// ウィンドウがWM_COMMANDを受け取つたときに呼び出される
+  /// コマンドハンドラの型。
+  /// コマンドのID毎に必要な處理をハンドラとして實裝し、
+  /// WMHandler::regist()で登錄する。
   typedef void (*CmdHandler)(Window*);
 
 private:
-  std::map<int, CmdHandler> cmap_;
+  std::map<int, CmdHandler> cmap_; ///< コマンドのIDとハンドラのマップ
 
 public:
+  /// 解體子
   virtual ~WMHandler() {}
+
+  /// @brief コマンドに對するハンドラを登録する
+  /// @param cmdid コマンドのID
+  /// @param c ハンドラ
+  void regist(int cmdid, CmdHandler c) { cmap_[cmdid] = c; }
+
+  /// @brief メッセージに應じたハンドラを呼び出す
+  /// @param msg メッセージ
+  LRESULT operator()(urania::WndMessage* msg);
 
   /// @brief ウィンドウ破棄時のハンドラ
   ///
@@ -187,15 +202,6 @@ public:
   virtual void onDropFiles(
     Window* w, std::vector<std::wstring>& fa, int x, int y)
     {}
-
-  /// @brief コマンドに對するハンドラを登録する
-  /// @param cmdid コマンドのID
-  /// @param c ハンドラ
-  void set(int cmdid, CmdHandler c) { cmap_[cmdid] = c; }
-
-  /// @brief メッセージを受け取つたときに適當なハンドラを呼び出す
-  /// @param msg 受け取つたメッセージ
-  LRESULT operator()(urania::WndMessage* msg);
 
 private:
   /// @brief ファイルドロップ時の處理

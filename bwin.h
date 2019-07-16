@@ -276,12 +276,11 @@ public:
 
   /// @brief ウィンドウの大きさを變更
   ///
-  /// ウィンドウの内側(描畫領域)の幅と高さを指定して
+  /// クライアント領域の幅と高さを指定して
   /// ウィンドウの大きさを變更する。
   /// @param w 幅
   /// @param h 高さ
-  // 改名の必要あり?
-  void resizeScreen(int w, int h)
+  void resizeClientArea(int w, int h)
   {
     if (!hw_)
       return;
