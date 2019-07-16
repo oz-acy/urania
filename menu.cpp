@@ -4,10 +4,10 @@
  *  by oZ/acy
  *  (c) 2002-2016 oZ/acy. ALL RIGHTS RESERVED.
  *
- *  class urania::Menu ‚ÌÀ‘•’è‹`
+ *  class urania::Menu ã®å®Ÿè£…å®šç¾©
  *
- *  —š—ğ
- *    2016.2.28  C³
+ *  å±¥æ­´
+ *    2016.2.28  ä¿®æ­£
  *************************************************************************/
 
 #include "menu.h"
@@ -15,7 +15,7 @@
 
 /*====================================
  *  Menu::create()
- *  ƒŠƒ\[ƒXID‚©‚çMenu‚ğ¶¬
+ *  ãƒªã‚½ãƒ¼ã‚¹IDã‹ã‚‰Menuã‚’ç”Ÿæˆ
  */
 urania::RCP_Menu urania::Menu::create(int rc)
 {
@@ -27,7 +27,7 @@ urania::RCP_Menu urania::Menu::create(int rc)
 
 /*===================================
  *  Menu::getSub()
- *  ƒTƒuƒƒjƒ…[‚ğæ“¾
+ *  ã‚µãƒ–ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã‚’å–å¾—
  */
 urania::RCP_Menu urania::Menu::getSub(unsigned id)
 {
@@ -46,7 +46,7 @@ urania::RCP_Menu urania::Menu::getSub(unsigned id)
 
 /*==================================================
  *  Menu::checkItem()
- *  w’èƒAƒCƒeƒ€‚Éƒ`ƒFƒbƒN‚ğ‚Â‚¯‚é
+ *  æŒ‡å®šã‚¢ã‚¤ãƒ†ãƒ ã«ãƒã‚§ãƒƒã‚¯ã‚’ã¤ã‘ã‚‹
  */
 void urania::Menu::checkItem(unsigned cmdid)
 {
@@ -57,7 +57,7 @@ void urania::Menu::checkItem(unsigned cmdid)
 
 /*======================================
 *  Menu::uncheckItem()
-*  w’èƒAƒCƒeƒ€‚Ìƒ`ƒFƒbƒN‚ğ‚Í‚¸‚·
+*  æŒ‡å®šã‚¢ã‚¤ãƒ†ãƒ ã®ãƒã‚§ãƒƒã‚¯ã‚’ã¯ãšã™
 *=====================================*/
 void urania::Menu::uncheckItem(unsigned cmdid)
 {
@@ -68,7 +68,7 @@ void urania::Menu::uncheckItem(unsigned cmdid)
 
 /*==========================================================
  *  Menu::getItemCheck()
- *  ƒAƒCƒeƒ€‚ªƒ`ƒFƒbƒN‚³‚ê‚Ä‚¢‚é‚©‚Ç‚¤‚©’²‚×‚é
+ *  ã‚¢ã‚¤ãƒ†ãƒ ãŒãƒã‚§ãƒƒã‚¯ã•ã‚Œã¦ã„ã‚‹ã‹ã©ã†ã‹èª¿ã¹ã‚‹
  */
 bool urania::Menu::getItemCheck(unsigned cmdid)
 {
@@ -88,7 +88,7 @@ bool urania::Menu::getItemCheck(unsigned cmdid)
 
 /*=========================================
  *  Menu::enableItem()
- *  ƒAƒCƒeƒ€‚ğ‘I‘ğ‰Â”\‚É‚·‚é
+ *  ã‚¢ã‚¤ãƒ†ãƒ ã‚’é¸æŠå¯èƒ½ã«ã™ã‚‹
  */
 void urania::Menu::enableItem(unsigned cmdid)
 {
@@ -99,7 +99,7 @@ void urania::Menu::enableItem(unsigned cmdid)
 
 /*=========================================
  *  Menu::disableItem()
- *  ƒAƒCƒeƒ€‚ğ‘I‘ğ•s‰Â‚É‚·‚é
+ *  ã‚¢ã‚¤ãƒ†ãƒ ã‚’é¸æŠä¸å¯ã«ã™ã‚‹
  */
 void urania::Menu::disableItem(unsigned cmdid)
 {
@@ -110,7 +110,7 @@ void urania::Menu::disableItem(unsigned cmdid)
 
 /*===============================================
  *  Menu::grayItem()
- *  ƒAƒCƒeƒ€‚ğ’WF•\¦(‘I‘ğ•s‰Â)‚É‚·‚é
+ *  ã‚¢ã‚¤ãƒ†ãƒ ã‚’æ·¡è‰²è¡¨ç¤º(é¸æŠä¸å¯)ã«ã™ã‚‹
  */
 void urania::Menu::grayItem(unsigned cmdid)
 {

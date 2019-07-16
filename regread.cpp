@@ -4,15 +4,15 @@
  *  by oZ/acy
  *  (c) 2004-2016 oZ/acy.  ALL RIGHTS RESERVED.
  *
- *  ƒŒƒWƒXƒgƒŠ‘€ìƒNƒ‰ƒX (Reader)
+ *  ãƒ¬ã‚¸ã‚¹ãƒˆãƒªæ“ä½œã‚¯ãƒ©ã‚¹ (Reader)
  *
- *  —š—ğ
- *    22 Feb 2004  ì¬
- *    28 Dec 2005  C³
- *    24 Apr 2008  C³
- *     4 Apr 2009  C³ for UNICODE›”œä
- *     8 Sep 2011  C³ for C++11›”œä
- *    29 Feb 2016  C³
+ *  å±¥æ­´
+ *    22 Feb 2004  ä½œæˆ
+ *    28 Dec 2005  ä¿®æ­£
+ *    24 Apr 2008  ä¿®æ­£
+ *     4 Apr 2009  ä¿®æ­£ for UNICODEå°æ‡‰
+ *     8 Sep 2011  ä¿®æ­£ for C++11å°æ‡‰
+ *    29 Feb 2016  ä¿®æ­£
  *************************************************************************/
 
 #include <memory>
@@ -53,10 +53,10 @@ DWORD urania::RegistryReader::getDwordData(const std::wstring& name)
   if (typ != REG_DWORD)
     return 0;
 
-  // ƒf[ƒ^Ši”[—Ìˆæ‚ğŠm•Û
+  // ãƒ‡ãƒ¼ã‚¿æ ¼ç´é ˜åŸŸã‚’ç¢ºä¿
   std::unique_ptr<unsigned char[]> data(new unsigned char[sz]);
 
-  // ƒf[ƒ^‚ğæ“¾‚·‚é
+  // ãƒ‡ãƒ¼ã‚¿ã‚’å–å¾—ã™ã‚‹
   if (::RegQueryValueEx(
           getKey_(), name.c_str(), nullptr, nullptr, (BYTE *)(data.get()), &sz))
   {
@@ -82,10 +82,10 @@ std::wstring urania::RegistryReader::getStringData(const std::wstring& name)
   if (typ != REG_SZ)
     return L"";
 
-  // ƒf[ƒ^Ši”[—Ìˆæ‚ğŠm•Û
+  // ãƒ‡ãƒ¼ã‚¿æ ¼ç´é ˜åŸŸã‚’ç¢ºä¿
   std::unique_ptr<unsigned char[]> data(new unsigned char[sz]);
 
-  // ƒf[ƒ^‚ğæ“¾‚·‚é
+  // ãƒ‡ãƒ¼ã‚¿ã‚’å–å¾—ã™ã‚‹
   if (::RegQueryValueEx(
           getKey_(), name.c_str(), nullptr, nullptr, (BYTE*)(data.get()), &sz))
   {

@@ -4,11 +4,11 @@
  *  by oZ/acy
  *  (c) 2002-2016 oZ/acy.  ALL RIGHTS RESERVED.
  *
- *  ƒRƒ‚ƒ“ƒ_ƒCƒAƒƒOƒ‰ƒbƒp[
+ *  ã‚³ãƒ¢ãƒ³ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ãƒ©ãƒƒãƒ‘ãƒ¼
  *
- *  —š—ğ
- *    2016.2.29  OpenFileDialog‚ÆSaveFileDialog‚ğFileDialog‚Éˆê–{‰»
- *    2016.8.10  FileDialog::crearFilePath()‚ÌŒ^‚ğC³
+ *  å±¥æ­´
+ *    2016.2.29  OpenFileDialogã¨SaveFileDialogã‚’FileDialogã«ä¸€æœ¬åŒ–
+ *    2016.8.10  FileDialog::crearFilePath()ã®å‹ã‚’ä¿®æ­£
  *************************************************************************/
 
 #ifndef INC_URANIA_COMMONDLG_H___
@@ -19,7 +19,7 @@
 
 /*------------------------------------------------
  *  class CommonDialogBase
- *  Common Dialog ƒx[ƒXƒNƒ‰ƒX
+ *  Common Dialog ãƒ™ãƒ¼ã‚¹ã‚¯ãƒ©ã‚¹
  *----------------------------------------------*/
 class urania::CommonDialogBase : boost::noncopyable
 {
@@ -39,7 +39,7 @@ inline urania::CommonDialogBase::~CommonDialogBase() {}
 
 /*------------------------------------------------
  *  class FileDialog
- *  ƒtƒ@ƒCƒ‹ƒ_ƒCƒAƒƒO
+ *  ãƒ•ã‚¡ã‚¤ãƒ«ãƒ€ã‚¤ã‚¢ãƒ­ã‚°
  */
 class urania::FileDialog : public urania::CommonDialogBase
 {
@@ -84,7 +84,7 @@ public:
 
 /*------------------------------------------------
  *  class FileDialogBase
- *  ƒtƒ@ƒCƒ‹ƒ_ƒCƒAƒƒOƒx[ƒXƒNƒ‰ƒX
+ *  ãƒ•ã‚¡ã‚¤ãƒ«ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ãƒ™ãƒ¼ã‚¹ã‚¯ãƒ©ã‚¹
  *----------------------------------------------*/
 /*
 class urania::FileDialogBase : public urania::CommonDialogBase
@@ -118,7 +118,7 @@ public:
 
 /*------------------------------------------------
  *   class OpenFileDialog
- *   ƒI[ƒvƒ“ƒtƒ@ƒCƒ‹ƒ_ƒCƒAƒƒO‚Ìƒ‰ƒbƒp[ƒNƒ‰ƒX
+ *   ã‚ªãƒ¼ãƒ—ãƒ³ãƒ•ã‚¡ã‚¤ãƒ«ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã®ãƒ©ãƒƒãƒ‘ãƒ¼ã‚¯ãƒ©ã‚¹
  *-----------------------------------------------*/
 /*
 class urania::OpenFileDialog : public urania::FileDialogBase
@@ -145,7 +145,7 @@ public:
 
 /*----------------------------------------------
  *  class SaveFileDialog
- *   ƒZ[ƒuƒtƒ@ƒCƒ‹ƒ_ƒCƒAƒƒO‚Ìƒ‰ƒbƒp[ƒNƒ‰ƒX
+ *   ã‚»ãƒ¼ãƒ–ãƒ•ã‚¡ã‚¤ãƒ«ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã®ãƒ©ãƒƒãƒ‘ãƒ¼ã‚¯ãƒ©ã‚¹
  *--------------------------------------------*/
 /*
 class urania::SaveFileDialog : public urania::FileDialogBase

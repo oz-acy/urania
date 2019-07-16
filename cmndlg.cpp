@@ -4,10 +4,10 @@
  *  by oZ/acy
  *  (c) 2002-2016 oZ/acy.  ALL RIGHTS RESERVED.
  *
- *  ƒRƒ‚ƒ“ƒ_ƒCƒAƒƒOƒ‰ƒbƒp[ƒNƒ‰ƒX’è‹`
+ *  ã‚³ãƒ¢ãƒ³ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ãƒ©ãƒƒãƒ‘ãƒ¼ã‚¯ãƒ©ã‚¹å®šç¾©
  *
- *  —š—ð
- *    2016.2.29  FileDialogƒNƒ‰ƒX‚Éˆê–{‰»
+ *  å±¥æ­´
+ *    2016.2.29  FileDialogã‚¯ãƒ©ã‚¹ã«ä¸€æœ¬åŒ–
  *************************************************************************/
 
 #include <cstring>

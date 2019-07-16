@@ -4,10 +4,10 @@
  *  by oZ/acy
  *  (c) 2002-2016 oZ/acy.  ALL RIGHTS RESERVED.
  *
- *  ƒƒbƒZ[ƒWƒ‹[ƒvˆ— •W€
+ *  ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãƒ«ãƒ¼ãƒ—å‡¦ç† æ¨™æº–
  *
- *  —š—ð
- *    2016.2.27  ƒtƒ@ƒCƒ‹–¼ÌXAstart() ‚ð messageLoop()‚É‰ü–¼
+ *  å±¥æ­´
+ *    2016.2.27  ãƒ•ã‚¡ã‚¤ãƒ«åè®Šæ›´ã€start() ã‚’ messageLoop()ã«æ”¹å
  *************************************************************************/
 
 #include "system.h"

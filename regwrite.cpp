@@ -4,15 +4,15 @@
  *  by oZ/acy
  *  (c) 2004-2016 oZ/acy. ALL RIGHTS RESERVED.
  *
- *  ƒŒƒWƒXƒgƒŠ‘€ìƒNƒ‰ƒX (Writer)
+ *  ãƒ¬ã‚¸ã‚¹ãƒˆãƒªæ“ä½œã‚¯ãƒ©ã‚¹ (Writer)
  *
- *  —š—ð
- *    22 Feb 2004  ì¬
- *    17 Mar 2006  C³
- *    24 Apr 2008  C³
- *     4 Apr 2009  C³ for UNICODE›”œä
- *     8 Sep 2011  C³ for C++11›”œä“™
- *    29 Feb 2016  C³
+ *  å±¥æ­´
+ *    22 Feb 2004  ä½œæˆ
+ *    17 Mar 2006  ä¿®æ­£
+ *    24 Apr 2008  ä¿®æ­£
+ *     4 Apr 2009  ä¿®æ­£ for UNICODEå°æ‡‰
+ *     8 Sep 2011  ä¿®æ­£ for C++11å°æ‡‰ç­‰
+ *    29 Feb 2016  ä¿®æ­£
  *************************************************************************/
 
 #include "registry.h"

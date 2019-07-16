@@ -4,13 +4,13 @@
  *  by oZ/acy
  *  (c) 2004-2016 oZ/acy.  ALL RIGHTS RESERVED.
  *
- *  儗僕僗僩儕憖嶌僋儔僗
+ *  銉偢銈广儓銉搷浣溿偗銉┿偣
  *
- *  棜楌
- *    15 Feb 2004  嶌惉
- *    24 Apr 2008  廋惓
- *     4 Apr 2009  廋惓 for UNICODE洈滀
- *    29 Feb 2016  廋惓
+ *  灞ユ
+ *    15 Feb 2004  浣滄垚
+ *    24 Apr 2008  淇
+ *     4 Apr 2009  淇 for UNICODE灏嶆噳
+ *    29 Feb 2016  淇
  **************************************************************************/
 #ifndef INC_URANIA_REGISTRY_H___
 #define INC_URANIA_REGISTRY_H___
@@ -33,7 +33,7 @@ enum RegRootKey {
 
 /*----------------------------------------------------------
  *  class RegistryBase
- *  儗僕僗僩儕憖嶌僋儔僗婎掙
+ *  銉偢銈广儓銉搷浣溿偗銉┿偣鍩哄簳
  */
 class RegistryBase
 {
@@ -60,7 +60,7 @@ protected:
 
 /*-----------------------------------------------------------
  *  class RegistryReader
- *  儗僕僗僩儕妞崬僋儔僗
+ *  銉偢銈广儓銉畝杈笺偗銉┿偣
  */
 class RegistryReader : public RegistryBase
 {
@@ -77,7 +77,7 @@ public:
 
 /*-----------------------------------------------------------
  *  class RegistryWriter
- *  儗僕僗僩儕彂崬僋儔僗
+ *  銉偢銈广儓銉浉杈笺偗銉┿偣
  */
 class RegistryWriter : public RegistryBase
 {

@@ -4,19 +4,19 @@
  *  by oZ/acy
  *  (c) 2016 oZ/acy.  ALL RIGHTS RESERVED.
  *
- *  —š—ğ
- *    27 Feb 2016  getCmdLineArgs() ‚Ì wchar_t ”Å‚ğì¬
+ *  å±¥æ­´
+ *    27 Feb 2016  getCmdLineArgs() ã® wchar_t ç‰ˆã‚’ä½œæˆ
  *************************************************************************/
 
 #include "system.h"
 
-// ‚à‚µ‚©‚µ‚ÄƒRƒ“ƒpƒCƒ‰ˆË‘¶??
+// ã‚‚ã—ã‹ã—ã¦ã‚³ãƒ³ãƒ‘ã‚¤ãƒ©ä¾å­˜??
 extern int __argc;
 extern wchar_t** __wargv;
 
 
 /*===========================================
-*  ƒRƒ}ƒ“ƒhƒ‰ƒCƒ“ˆøÉ‚ğæ“¾(wchar_t”Å)
+*  ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³å¼•æ•¸ã‚’å–å¾—(wchar_tç‰ˆ)
 */
 std::vector<std::wstring> urania::System::getCmdLineArgsW()
 {

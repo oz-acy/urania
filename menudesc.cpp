@@ -4,7 +4,7 @@
  *  by oZ/acy
  *  (c) 2002-2011 oZ/acy. ALL RIGHTS RESERVED.
  *
- *  class urania::MenuDesc, class urania::Menu(ˆê•”) ‚ÌÀ‘•’è‹`
+ *  class urania::MenuDesc, class urania::Menu(ä¸€éƒ¨) ã®å®Ÿè£…å®šç¾©
  *
  *  last update : 8 Sep MMXI
  *
@@ -14,7 +14,7 @@
 
 /*============================
  *  MenuDesc::addPopup()
- *  ƒ|ƒbƒvƒAƒbƒv€–Ú‚ğ’Ç‰Á
+ *  ãƒãƒƒãƒ—ã‚¢ãƒƒãƒ—é …ç›®ã‚’è¿½åŠ 
  */
 bool urania::MenuDesc::addPopup(const std::wstring& s)
 {
@@ -25,7 +25,7 @@ bool urania::MenuDesc::addPopup(const std::wstring& s)
 
 /*============================
  *  MenuDesc::addPopup()
- *  ‘I‘ğ€–Ú‚ğ’Ç‰Á
+ *  é¸æŠé …ç›®ã‚’è¿½åŠ 
  */
 bool urania::MenuDesc::addPopup(const std::wstring& s,int i)
 {
@@ -38,7 +38,7 @@ bool urania::MenuDesc::addPopup(const std::wstring& s,int i)
 
 /*======================================
  *  MenuDesc::createHandle__()
- *  Object‚Å‹K’è‚³‚ê‚½ƒƒjƒ…[‚ğ¶¬
+ *  Objectã§è¦å®šã•ã‚ŒãŸãƒ¡ãƒ‹ãƒ¥ãƒ¼ã‚’ç”Ÿæˆ
  */
 HMENU urania::MenuDesc::createHandle__() const
 {
@@ -55,7 +55,7 @@ HMENU urania::MenuDesc::createHandle__() const
 
 /*===============================================================
  *  MenuDesc::addPopupMenu__()
- *  createHandle__()‚Ì‰º¿‚¯‚Æ‚µ‚Äƒ|ƒbƒvƒAƒbƒvƒƒjƒ…[‚ğ¶¬
+ *  createHandle__()ã®ä¸‹è«‹ã‘ã¨ã—ã¦ãƒãƒƒãƒ—ã‚¢ãƒƒãƒ—ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã‚’ç”Ÿæˆ
  */
 void urania::MenuDesc::addPopupMenu__(HMENU pm, const MenuDesc::Node_& item)
 {
@@ -76,7 +76,7 @@ void urania::MenuDesc::addPopupMenu__(HMENU pm, const MenuDesc::Node_& item)
 
 /*======================================
  *  MenuDesc::Node_::addSeparator()
- *  ‹æØ‚èü‚ğ’Ç‰Á
+ *  åŒºåˆ‡ã‚Šç·šã‚’è¿½åŠ 
  */
 bool urania::MenuDesc::Node_::addSeparator()
 {
@@ -89,7 +89,7 @@ bool urania::MenuDesc::Node_::addSeparator()
 
 /*======================================
  *  MenuDesc::Node_::addPopup()
- *  ƒ|ƒbƒvƒAƒbƒv€–Ú‚ğ’Ç‰Á
+ *  ãƒãƒƒãƒ—ã‚¢ãƒƒãƒ—é …ç›®ã‚’è¿½åŠ 
  */
 bool urania::MenuDesc::Node_::addPopup(const std::wstring& s)
 {
@@ -102,7 +102,7 @@ bool urania::MenuDesc::Node_::addPopup(const std::wstring& s)
 
 /*======================================
  *  MenuDesc::Node_::addPopup()
- *  ‘I‘ğ€–Ú‚ğ’Ç‰Á
+ *  é¸æŠé …ç›®ã‚’è¿½åŠ 
  */
 bool urania::MenuDesc::Node_::addPopup(const std::wstring& s,int i)
 {
@@ -117,7 +117,7 @@ bool urania::MenuDesc::Node_::addPopup(const std::wstring& s,int i)
 
 /*=====================================================
  *  Menu::create(const urania::MenuDesc& desc)
- *  MenuDesc‚©‚çMenu‚ğ¶¬
+ *  MenuDescã‹ã‚‰Menuã‚’ç”Ÿæˆ
  */
 urania::RCP_Menu urania::Menu::create(const urania::MenuDesc& desc)
 {

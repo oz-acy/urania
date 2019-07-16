@@ -24,8 +24,8 @@ namespace urania
 /*-------------------------------------------------
  *  class CanvasBase<B_, Dev_>
  *
- *  B_   : á`‘œƒoƒbƒtƒ@
- *  Dev_ : •`á`ƒfƒoƒCƒX
+ *  B_   : ç•«åƒãƒãƒƒãƒ•ã‚¡
+ *  Dev_ : æç•«ãƒ‡ãƒã‚¤ã‚¹
  *-----------------------------------------------*/
 template<class B_, class Dev_>
 class CanvasBase : public BasicWindow
@@ -33,7 +33,7 @@ class CanvasBase : public BasicWindow
 public:
   enum
   {
-    MODE_DOT  // êy•`á`ƒ‚[ƒh
+    MODE_DOT  // é»æç•«ãƒ¢ãƒ¼ãƒ‰
   };
 
   typedef CanvasBase<B_, Dev_>* PCB_;
@@ -67,11 +67,11 @@ public:
 
   //================================================
   //  static create()
-  //  Canvas Object ‚ğ¶¬
-  //  ˆøÉ gw,gh   : ƒCƒ[ƒW‚Ì•‚Æ‚‚³
-  //       x,y,w,h : ƒpƒlƒ‹ˆÊ’u‚Æ•‚Æ‚‚³
-  //       par     : e Window
-  //       id      : ƒpƒlƒ‹‚Ìq Window ID
+  //  Canvas Object ã‚’ç”Ÿæˆ
+  //  å¼•æ•¸ gw,gh   : ã‚¤ãƒ¡ãƒ¼ã‚¸ã®å¹…ã¨é«˜ã•
+  //       x,y,w,h : ãƒ‘ãƒãƒ«ä½ç½®ã¨å¹…ã¨é«˜ã•
+  //       par     : è¦ª Window
+  //       id      : ãƒ‘ãƒãƒ«ã®å­ Window ID
   //================================================
   static PCB_ create(
     int gw, int gh, int x, int y, int w, int h, WndBase* par, int id);
@@ -79,14 +79,14 @@ public:
 
   //========================================
   //  getImage()
-  //  “à•”ƒCƒ[ƒW‚ğN‚·
+  //  å†…éƒ¨ã‚¤ãƒ¡ãƒ¼ã‚¸ã‚’æ™’ã™
   //========================================
   QB_ getImage() { return buf_; }
 
 
   //===================================================
   //  setDrawColor(), getDrawColor()
-  //  •`á`F‚Ìİ’è‚Ææ“¾
+  //  æç•«è‰²ã®è¨­å®šã¨å–å¾—
   //===================================================
   void setDrawColor(const C1_& col) { col_ = col; }
   C1_ getDrawColor() const { return col_; }
@@ -94,14 +94,14 @@ public:
 
   //======================================
   //  setMode(),getMode()
-  //  •`á`ƒ‚[ƒh‚Ìİ’è‚Ææ“¾
+  //  æç•«ãƒ¢ãƒ¼ãƒ‰ã®è¨­å®šã¨å–å¾—
   //======================================
   void setMode(int m) { mode_ = m; }
   int getMode() const { return mode_; }
 
   /*==============================
   *  paint()
-  *  ƒpƒlƒ‹•`á`
+  *  ãƒ‘ãƒãƒ«æç•«
   *=============================*/
   void paint(urania::BasicWindow* w, urania::PaintDevice* pdev);
 };

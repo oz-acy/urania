@@ -4,11 +4,11 @@
  *  by oZ/acy
  *  (c) 2002-2016 oZ/acy.  ALL RIGHTS RESERVED.
  *
- *  class urania::PaintDevice ‚ÌÀ‘•’è‹`‚»‚Ì“ó
- *  š¤Œ`•¶š•`á`‹y‚Ñ‚»‚Ìƒwƒ‹ƒp
+ *  class urania::PaintDevice ã®å®Ÿè£…å®šç¾©ãã®å¼
+ *  åœ–å½¢æ–‡å­—æç•«åŠã³ãã®ãƒ˜ãƒ«ãƒ‘
  *
- *  —š—ğ
- *    2016.2.27  C³
+ *  å±¥æ­´
+ *    2016.2.27  ä¿®æ­£
  *************************************************************************/
 
 #include "paintdev.h"
@@ -17,8 +17,8 @@
 
 /*===============================================================
  *  PaintDevice::changeBrush__()
- *  •`‰æ—pƒuƒ‰ƒV‚ÌŒğŠ·
- *   ˆø” :  col : V‚½‚Éw’è‚·‚éƒuƒ‰ƒV‚ÌF
+ *  æç”»ç”¨ãƒ–ãƒ©ã‚·ã®äº¤æ›
+ *   å¼•æ•° :  col : æ–°ãŸã«æŒ‡å®šã™ã‚‹ãƒ–ãƒ©ã‚·ã®è‰²
  */
 void urania::PaintDevice::changeBrush__(const urania::Color& col)
 {
@@ -30,8 +30,8 @@ void urania::PaintDevice::changeBrush__(const urania::Color& col)
 
 /*==========================================================
  *  PaintDevice::changePen__()
- *  •`‰æ—pƒyƒ“‚ÌŒğŠ·
- *   ˆø” :  col : V‚½‚Éw’è‚·‚éƒyƒ“‚ÌF
+ *  æç”»ç”¨ãƒšãƒ³ã®äº¤æ›
+ *   å¼•æ•° :  col : æ–°ãŸã«æŒ‡å®šã™ã‚‹ãƒšãƒ³ã®è‰²
  */
 void urania::PaintDevice::changePen__(const urania::Color& col)
 {
@@ -43,7 +43,7 @@ void urania::PaintDevice::changePen__(const urania::Color& col)
 
 /*===========================================
  *  PaintDevice::box()
- *  ’·•ûŒ`‚ğ•`‰æ
+ *  é•·æ–¹å½¢ã‚’æç”»
  */
 void
 urania::PaintDevice::box(
@@ -77,7 +77,7 @@ urania::PaintDevice::box(
 
 /*======================================
  *  PaintDevice::line()
- *  ’¼ü‚ğ•`‰æ
+ *  ç›´ç·šã‚’æç”»
  */
 void
 urania::PaintDevice::line(
@@ -91,7 +91,7 @@ urania::PaintDevice::line(
 
 /*======================================
  *  PaintDevice::ellipse()
- *  ‘È‰~‚ğ•`‰æ
+ *  æ¥•å††ã‚’æç”»
  */
 void
 urania::PaintDevice::ellipse(
@@ -114,7 +114,7 @@ urania::PaintDevice::ellipse(
 
 /*======================================
  *  PaintDevice::dotset()
- *  “_‚ğ•`‰æ
+ *  ç‚¹ã‚’æç”»
  */
 void urania::PaintDevice::dotset(int x, int y, const urania::Color& col)
 {
@@ -124,8 +124,8 @@ void urania::PaintDevice::dotset(int x, int y, const urania::Color& col)
 
 /*===========================================
  *  PaintDevice::text()
- *  ƒeƒLƒXƒg‚ğ•`‰æ
- *   •Ô’l : •`‰æ’·•ûŒ`‚Ì‰E‰ºŠpÀ•W
+ *  ãƒ†ã‚­ã‚¹ãƒˆã‚’æç”»
+ *   è¿”å€¤ : æç”»é•·æ–¹å½¢ã®å³ä¸‹è§’åº§æ¨™
  */
 polymnia::Point
 urania::PaintDevice::text(
@@ -156,8 +156,8 @@ urania::PaintDevice::text(
 
 /*===========================================
  *  PaintDevice::text()
- *  ƒeƒLƒXƒg‚ğ•`‰æ(•w’èƒo[ƒWƒ‡ƒ“)
- *   •Ô’l : •`‰æ’·•ûŒ`‚Ì‰E‰ºŠpÀ•W
+ *  ãƒ†ã‚­ã‚¹ãƒˆã‚’æç”»(å¹…æŒ‡å®šãƒãƒ¼ã‚¸ãƒ§ãƒ³)
+ *   è¿”å€¤ : æç”»é•·æ–¹å½¢ã®å³ä¸‹è§’åº§æ¨™
  */
 polymnia::Point
 urania::PaintDevice::text(
@@ -191,7 +191,7 @@ urania::PaintDevice::text(
 
 /*===========================================
  *  PaintDevice::changeFont()
- *  ƒtƒHƒ“ƒg‚Ì•ÏX
+ *  ãƒ•ã‚©ãƒ³ãƒˆã®å¤‰æ›´
  */
 void
 urania::PaintDevice::changeFont(

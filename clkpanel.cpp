@@ -14,7 +14,7 @@
 
 /*================================================
  *  ClickPanel::create()
- *  ƒNƒŠƒbƒNƒpƒlƒ‹‚ğ¶¬
+ *  ã‚¯ãƒªãƒƒã‚¯ãƒ‘ãƒãƒ«ã‚’ç”Ÿæˆ
  */
 urania::ClickPanel* urania::ClickPanel::create(
   int x, int y, int w, int h, ClickPanel::PH_ ph, void* ap,
@@ -47,7 +47,7 @@ urania::ClickPanel* urania::ClickPanel::create(
 
 /*================================================
  *  ClickPanel::wproc__()
- *  WNDPROCŒÄ‚Ño‚µ‚ÉŒÄ‚Î‚ê‚éƒƒ“ƒo
+ *  WNDPROCå‘¼ã³å‡ºã—æ™‚ã«å‘¼ã°ã‚Œã‚‹ãƒ¡ãƒ³ãƒ
  */
 LRESULT urania::ClickPanel::wproc__(UINT msg, WPARAM wp, LPARAM lp)
 {

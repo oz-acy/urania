@@ -4,10 +4,10 @@
  *  by oZ/acy
  *  (c) 2009-2016 oZ/acy. ALL RIGHTS RESERVED.
  *
- *  —š—ð
- *    9 Nov MMIX  ì¬
- *    8 Sep MMXI  C³
- *    27 Feb MMXVI  ƒƒ\ƒbƒh–¼ÌX
+ *  å±¥æ­´
+ *    9 Nov MMIX  ä½œæˆ
+ *    8 Sep MMXI  ä¿®æ­£
+ *    27 Feb MMXVI  ãƒ¡ã‚½ãƒƒãƒ‰åè®Šæ›´
  */
 #include <memory>
 #include "system.h"

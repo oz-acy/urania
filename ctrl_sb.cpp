@@ -4,16 +4,16 @@
  *  by oZ/acy
  *  (c) 2012-2018 oZ/acy.  ALL RIGHTS RESERVED.
  *
- *  WndBase ƒXƒNƒ[ƒ‹ƒo[§ŒäèŒW
+ *  WndBase ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ãƒãƒ¼åˆ¶å¾¡é—œä¿‚
  *
- *  —š—ğ
- *    2016.2.27   C³
- *    2018.12.24  C³
+ *  å±¥æ­´
+ *    2016.2.27   ä¿®æ­£
+ *    2018.12.24  ä¿®æ­£
  */
 #include "wbase.h"
 
 /*================================================
- *  ƒXƒNƒ[ƒ‹ˆÊ’u‚ğİ’è
+ *  ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ä½ç½®ã‚’è¨­å®š
  */
 int urania::WndBase::getPosSB(int id)
 {
@@ -50,7 +50,7 @@ int urania::WndBase::getPosSB(int id)
 
 
 /*================================================
- *  ƒXƒNƒ[ƒ‹ˆÊ’u‚ğæ“¾
+ *  ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ä½ç½®ã‚’å–å¾—
  */
 void urania::WndBase::setPosSB(int id, int pos)
 {
@@ -87,7 +87,7 @@ void urania::WndBase::setPosSB(int id, int pos)
 
 
 /*================================================
- *  ƒŒƒ“ƒW‚ğæ“¾
+ *  ãƒ¬ãƒ³ã‚¸ã‚’å–å¾—
  */
 void urania::WndBase::getRangeSB(int id, int& min, int& max, int& page)
 {
@@ -127,7 +127,7 @@ void urania::WndBase::getRangeSB(int id, int& min, int& max, int& page)
 
 
 /*================================================
- *  ƒŒƒ“ƒW‚ğİ’è
+ *  ãƒ¬ãƒ³ã‚¸ã‚’è¨­å®š
  */
 void urania::WndBase::setRangeSB(int id, int min, int max, int page)
 {

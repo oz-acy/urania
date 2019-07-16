@@ -12,7 +12,7 @@
 
 /*==========================================================
  *  WMHandler::onScroll_()
- *  ƒXƒNƒ[ƒ‹Œn‚Ì’èŒ^™|—‚ğs‚ĞAƒR[ƒ‹ƒoƒbƒN‚ğŒÄ‚Ño‚·
+ *  ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ç³»ã®å®šå‹è™•ç†ã‚’è¡Œã²ã€ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ã‚’å‘¼ã³å‡ºã™
  */
 void urania::WMHandler::onScroll_(
   urania::Window* w, UINT msg, WPARAM wparam, LPARAM lparam)

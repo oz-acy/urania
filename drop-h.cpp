@@ -6,8 +6,8 @@
  *
  *  Dropfiles Handler
  *
- *  —љ—р
- *    2016.2.28  ЏCђі
+ *  е±Ґж­ґ
+ *    2016.2.28  дї®ж­Ј
  */
 
 #include "win.h"
@@ -15,7 +15,7 @@
 
 /*===============================================================
  *  WMHandler::onDropFiles_()
- *  ѓhѓЌѓbѓvѓtѓ@ѓCѓ‹‚М’иЊ^™|—ќ‚рЌs‚РЃAѓ†Ѓ[ѓU›‰ед•”‚рЊД‚СЏo‚·
+ *  гѓ‰гѓ­гѓѓгѓ—гѓ•г‚Ўг‚¤гѓ«гЃ®е®љећ‹и™•зђ†г‚’иЎЊгЃІгЂЃгѓ¦гѓјг‚¶еЇ¦иЈќйѓЁг‚’е‘јгЃіе‡єгЃ™
  */
 void urania::WMHandler::onDropFiles_(urania::Window* win, WPARAM wp)
 {
@@ -35,7 +35,7 @@ void urania::WMHandler::onDropFiles_(urania::Window* win, WPARAM wp)
 
   DragFinish(hd);
 
-  // ѓ†Ѓ[ѓU‚ЄѓTѓuѓNѓ‰ѓX‚ЕѓIЃ[ѓoЃ[ѓ‰ѓCѓh‚·‚йѓnѓ“ѓhѓ‰‚рЊД‚СЏo‚µ
+  // гѓ¦гѓјг‚¶гЃЊг‚µгѓ–г‚Їгѓ©г‚№гЃ§г‚Єгѓјгѓђгѓјгѓ©г‚¤гѓ‰гЃ™г‚‹гѓЏгѓігѓ‰гѓ©г‚’е‘јгЃіе‡єгЃ—
   onDropFiles(win, astr, p.x, p.y);
 }
 

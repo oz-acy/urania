@@ -4,9 +4,9 @@
  *  by oZ/acy
  *  (c) 2002-2018 oZ/acy.  ALL RIGHTS RESERVED.
  *
- *  —š—ğ
- *    2016.2.27   C³
- *    2018.12.24  C³
+ *  å±¥æ­´
+ *    2016.2.27   ä¿®æ­£
+ *    2018.12.24  ä¿®æ­£
  */
 #include <memory>
 #include "wbase.h"
@@ -15,7 +15,7 @@
 //// EditBox ////
 /*===========================================
  *  WndBase::getTextEB()
- *  ƒGƒfƒBƒbƒgƒ{ƒbƒNƒX‚Ì•¶š—ñ‚ğæ“¾
+ *  ã‚¨ãƒ‡ã‚£ãƒƒãƒˆãƒœãƒƒã‚¯ã‚¹ã®æ–‡å­—åˆ—ã‚’å–å¾—
  */
 std::wstring urania::WndBase::getTextEB(int id)
 {
@@ -34,9 +34,9 @@ std::wstring urania::WndBase::getTextEB(int id)
 
 /*===========================================
  *  WndBase::getLineTextEB()
- *  w’è‚µ‚½s‚Ì•¶š—ñ‚ğæ“¾
- *    id : ƒRƒ“ƒgƒ[ƒ‹ID
- *    no : s”Ô†
+ *  æŒ‡å®šã—ãŸè¡Œã®æ–‡å­—åˆ—ã‚’å–å¾—
+ *    id : ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ«ID
+ *    no : è¡Œç•ªå·
  */
 std::wstring urania::WndBase::getLineTextEB(int id, int no)
 {
@@ -58,7 +58,7 @@ std::wstring urania::WndBase::getLineTextEB(int id, int no)
 //// ListBox ////
 /*************************************************
  *  WndBase::getItemLB()
- *  ƒŠƒXƒgƒ{ƒbƒNƒX‚Ì€–Ú‚Ì•¶š—ñ‚ğæ“¾
+ *  ãƒªã‚¹ãƒˆãƒœãƒƒã‚¯ã‚¹ã®é …ç›®ã®æ–‡å­—åˆ—ã‚’å–å¾—
  */
 std::wstring urania::WndBase::getItemLB(int id, int no)
 {
@@ -72,7 +72,7 @@ std::wstring urania::WndBase::getItemLB(int id, int no)
 
 /***********************************************************
  *  WndBase::dirLB()
- *  ƒŠƒXƒgƒ{ƒbƒNƒX‚Ì“à—e‚ğw’èƒfƒBƒŒƒNƒgƒŠ‚Ì“à—e‚Æ‚·‚é
+ *  ãƒªã‚¹ãƒˆãƒœãƒƒã‚¯ã‚¹ã®å†…å®¹ã‚’æŒ‡å®šãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã®å†…å®¹ã¨ã™ã‚‹
  */
 void urania::WndBase::dirLB(int id, const std::wstring& path, int flag)
 {
@@ -84,7 +84,7 @@ void urania::WndBase::dirLB(int id, const std::wstring& path, int flag)
 //// ComboBox ////
 /*================================================
  *  WndBase::getItemCB()
- *  ƒRƒ“ƒ{ƒ{ƒbƒNƒX‚ÌƒŠƒXƒg€–Ú‚Ì•¶š—ñ‚ğæ“¾‚·‚é
+ *  ã‚³ãƒ³ãƒœãƒœãƒƒã‚¯ã‚¹ã®ãƒªã‚¹ãƒˆé …ç›®ã®æ–‡å­—åˆ—ã‚’å–å¾—ã™ã‚‹
  */
 std::wstring urania::WndBase::getItemCB(int id, int no)
 {
@@ -100,7 +100,7 @@ std::wstring urania::WndBase::getItemCB(int id, int no)
 
 /*===============================================================
  *  WndBase::dirCB()
- *  ƒRƒ“ƒ{ƒ{ƒbƒNƒX‚Ì“à—e‚ğw’èƒfƒBƒŒƒNƒgƒŠ‚Ìƒtƒ@ƒCƒ‹–¼‚É‚·‚é
+ *  ã‚³ãƒ³ãƒœãƒœãƒƒã‚¯ã‚¹ã®å†…å®¹ã‚’æŒ‡å®šãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã®ãƒ•ã‚¡ã‚¤ãƒ«åã«ã™ã‚‹
  */
 void urania::WndBase::dirCB(int id, const std::wstring& path, int flag)
 {
