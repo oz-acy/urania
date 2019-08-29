@@ -2,22 +2,18 @@
  *
  *  pmdev.cpp
  *  by oZ/acy
- *  (c) 2002-2016 oZ/acy.  ALL RIGHTS RESERVED.
  *
- *  class urania::PaintMemDevice の実装定義
+ *  class urania::PaintMemDevice の實裝
  *
  *  履歴
- *    2016.02.27  修正
- *    2016.03.02  修正
- **************************************************************************/
-
+ *    2016.2.27  修正
+ *    2016.3.2   修正
+ *    2019.8.29  修正
+ */
 #include <algorithm>
 #include "paintdev.h"
 
-/*================================================
- *  PaintMemDevice::PaintMemDevice()
- *  DIBSection生成他初期化
- *==============================================*/
+
 urania::PaintMemDevice::PaintMemDevice(unsigned w, unsigned h)
   : polymnia::ImageBuffer<urania::Color>(w, h, 0), hdc_(NULL), oldbmp_(NULL)
 {
@@ -55,8 +51,7 @@ urania::PaintMemDevice::PaintMemDevice(unsigned w, unsigned h)
    = CreateDIBSection(
        hTmpDC, (BITMAPINFO*)&BmpInfo, DIB_RGB_COLORS, (void**)(&buf_), NULL, 0);
 
-  if (!hBitmapNew || !buf_)
-  {
+  if (!hBitmapNew || !buf_) {
     //初期化に失敗
     ReleaseDC(NULL, hTmpDC);
     return;
@@ -68,19 +63,16 @@ urania::PaintMemDevice::PaintMemDevice(unsigned w, unsigned h)
   oldbmp_ = (HBITMAP)SelectObject(hdc_, hBitmapNew);
 
   //メモリ領域のクリア
-  memset(buf_, 0, sizeof(polymnia::RgbColor) * offset_ * h_);
+  memset(buf_, 0, sizeof(Color) * offset_ * h_);
 }
 
 
-/*===================================================
- *  PaintMemDevice::~PaintMemDevice()
- *  割り当てデバイスの解放
- *=================================================*/
+
+
 urania::PaintMemDevice::~PaintMemDevice()
 {
   HBITMAP hbmp;
-  if (hdc_ && oldbmp_)
-  {
+  if (hdc_ && oldbmp_) {
     //hdcが確保されている場合だけ開放する
     hbmp = (HBITMAP)SelectObject(hdc_, oldbmp_);
     DeleteObject(hbmp);
@@ -89,46 +81,35 @@ urania::PaintMemDevice::~PaintMemDevice()
 }
 
 
-/*===============================================================
- *  PaintMemDevice::create()
- *  Object生成
- *  引數:  unsigned w : デバイス幅
- *         unsigned h : デバイス高さ
- *  返値:  生成したオブジェクトへのポインタ
- *=============================================================*/
-urania::PaintMemDevice* urania::PaintMemDevice::create(
-  unsigned w, unsigned h)
+
+
+std::unique_ptr<urania::PaintMemDevice>
+urania::PaintMemDevice::create(unsigned w, unsigned h)
 {
   try
   {
-    PaintMemDevice* dv = new PaintMemDevice(w, h);
+    std::unique_ptr<PaintMemDevice> dv(new PaintMemDevice(w, h));
     if (dv->buf_)
       return dv;
-    else {
-      delete dv;
+    else
       return nullptr;
-    }
   }
-  catch (std::bad_alloc)
+  catch (std::bad_alloc&)
   {
     return nullptr;
   }
 }
 
 
-/*=========================================================
- *  PaintMemDevice::create()
- *  Object生成 (既存 Picture Object の "複製")
- *  引數: Picture* pct : コピー元 Picture
- *  返値: オブジェクトへのポインタ
- *=======================================================*/
-urania::PaintMemDevice*
-urania::PaintMemDevice::create(const polymnia::Picture* pct)
+
+
+std::unique_ptr<urania::PaintMemDevice>
+urania::PaintMemDevice::duplicate(const polymnia::Picture* pct)
 {
   int ww = pct->width();
   int hh = pct->height();
 
-  PaintMemDevice* vd = create(ww, hh);
+  auto vd = create(ww, hh);
   if (!vd)
     return nullptr;
 
@@ -145,16 +126,14 @@ urania::PaintMemDevice::create(const polymnia::Picture* pct)
 }
 
 
-/*====================================================================
- *  PaintMemDevice::createPicture()
- *  同内容の Picture インスタンスの生成
- *  返値: 生成されたインスタンスへのポインタ
- *==================================================================*/
-polymnia::Picture* urania::PaintMemDevice::createPicture() const
+
+
+std::unique_ptr<polymnia::Picture>
+urania::PaintMemDevice::duplicatePicture() const
 {
   using namespace polymnia;
 
-  Picture* pct = Picture::create(w_, h_);
+  auto pct = Picture::create(w_, h_);
   if (!pct)
     return nullptr;
 
@@ -169,20 +148,14 @@ polymnia::Picture* urania::PaintMemDevice::createPicture() const
 }
 
 
-/*=====================================================
- *  PaintMemDevice::clone()
- *  同内容の Object の生成
- *  返値: 生成されたオブジェクトへのポインタ
- *===================================================*/
-urania::PaintMemDevice* urania::PaintMemDevice::clone() const
-{
-  using namespace std;
 
-  PaintMemDevice* res = create(w_, h_);
+
+std::unique_ptr<urania::PaintMemDevice> urania::PaintMemDevice::clone() const
+{
+  auto res = create(w_, h_);
   if (!res)
     return nullptr;
-
-  copy(buf_, buf_ + h_ * offset_, res->buf_);
+  std::copy(buf_, buf_ + h_ * offset_, res->buf_);
   return res;
 }
 

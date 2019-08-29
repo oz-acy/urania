@@ -1,26 +1,25 @@
 /**************************************************************************
  *
  *  pdev2.cpp
- *  by oZ/acy
- *  (c) 2002-2016 oZ/acy.  ALL RIGHTS RESERVED.
+ *  by oZ/acy (名賀月晃嗣)
  *
  *  class urania::PaintDevice の実装定義その弐
  *  圖形文字描畫及びそのヘルパ
  *
  *  履歴
  *    2016.2.27  修正
- *************************************************************************/
-
-#include "paintdev.h"
+ *    2019.8.29  修正
+ */
 #include <cstring>
+#include "paintdev.h"
 
 
 /*===============================================================
- *  PaintDevice::changeBrush__()
+ *  PaintDevice::changeBrush_()
  *  描画用ブラシの交換
  *   引数 :  col : 新たに指定するブラシの色
  */
-void urania::PaintDevice::changeBrush__(const urania::Color& col)
+void urania::PaintDevice::changeBrush_(const urania::Color& col)
 {
   HBRUSH br = CreateSolidBrush(col.getColorref());
   HBRUSH ob = (HBRUSH)SelectObject(hdc_, br);
@@ -29,11 +28,11 @@ void urania::PaintDevice::changeBrush__(const urania::Color& col)
 
 
 /*==========================================================
- *  PaintDevice::changePen__()
+ *  PaintDevice::changePen_()
  *  描画用ペンの交換
  *   引数 :  col : 新たに指定するペンの色
  */
-void urania::PaintDevice::changePen__(const urania::Color& col)
+void urania::PaintDevice::changePen_(const urania::Color& col)
 {
   HPEN tp = CreatePen(PS_SOLID, 0, col.getColorref());
   HPEN op = (HPEN)SelectObject(hdc_, tp);
@@ -49,15 +48,13 @@ void
 urania::PaintDevice::box(
   int x1, int y1, int x2, int y2, const urania::Color& col, bool f)
 {
-  if (f)
-  {
+  if (f) {
     HBRUSH fb = CreateSolidBrush(col.getColorref());
     RECT rc = {x1, y1, x2, y2};
     FillRect(hdc_, &rc, fb);
     DeleteObject(fb);
   }
-  else
-  {
+  else {
     POINT pt[5];
     pt[0].x = x1;
     pt[0].y = y1;
@@ -69,7 +66,7 @@ urania::PaintDevice::box(
     pt[3].y = y2;
     pt[4].x = x1;
     pt[4].y = y1;
-    changePen__(col);
+    changePen_(col);
     Polyline(hdc_, pt, 5);
   }
 }
@@ -83,7 +80,7 @@ void
 urania::PaintDevice::line(
   int x1, int y1, int x2, int y2, const urania::Color& col)
 {
-  changePen__(col);
+  changePen_(col);
   MoveToEx(hdc_, x1, y1, nullptr);
   LineTo(hdc_, x2, y2);
 }
@@ -97,15 +94,13 @@ void
 urania::PaintDevice::ellipse(
   int x, int y, int a, int b, const urania::Color& col, bool f)
 {
-  changePen__(col);
+  changePen_(col);
 
-  if (f)
-  {
-    changeBrush__(col);
+  if (f) {
+    changeBrush_(col);
     Ellipse(hdc_, x-a, y-b, x+a, y+b);
   }
-  else
-  {
+  else {
     Arc(hdc_, x-a, y-b, x+a, y+b, x, y-1, x, y+1);
     Arc(hdc_, x-a, y-b, x+a, y+b, x, y+1, x, y-1);
   }

@@ -1,17 +1,15 @@
-/**************************************************************************
+/**********************************************************************//**
  *
- *  paintdev.h
- *  by oZ/acy
- *  (C) 2002-2016 oZ/acy.  ALL RIGHTS RESERVED.
+ *  @file paintdev.h
+ *  @author oZ/acy (名賀月晃嗣)
+ *  @brief Windows DC 描畫用クラス
  *
- *  Windows DC 描畫用クラス
+ *  @date 2016.3.2   修正
+ *  @date 2019.8.29  修正
  *
- *  履歴
- *    2016.03.02  修正
- *
- *************************************************************************/
-#ifndef INC_URANIA_PAINTDEVICE_H___
-#define INC_URANIA_PAINTDEVICE_H___
+ */
+#ifndef INCLUDE_GUARD_URANIA_PAINTDEVICE_H
+#define INCLUDE_GUARD_URANIA_PAINTDEVICE_H
 
 #include <windows.h>
 #include <themis/inttype.h>
@@ -19,10 +17,7 @@
 
 namespace urania
 {
-  //-------------------------------
-  //  Color
-  //  Windows用BGRカラー構造体
-  //-------------------------------
+  ///  Windows用BGRカラー構造體
   class Color
   {
   public:
@@ -36,7 +31,6 @@ namespace urania
       : b(bb), g(gg), r(rr) {}
     constexpr Color(const polymnia::RgbColor& org)
       : b(org.b), g(org.g), r(org.r) {}
-
     constexpr explicit Color(COLORREF cr)
       : b(GetBValue(cr)), g(GetGValue(cr)), r(GetRValue(cr)) {}
 
@@ -72,9 +66,8 @@ namespace urania
 
 
 
-/*=====================================================
- *  PaintMemDevice
- *  PaintDevice互換メモリ上仮想デバイス(24bit color)
+/**
+ *  PaintDevice互換メモリ上假想デバイス(24bit color)
  */
 class urania::PaintMemDevice : public polymnia::ImageBuffer<urania::Color>
 {
@@ -91,18 +84,29 @@ protected:
 public:
   ~PaintMemDevice();
 
-  static urania::PaintMemDevice* create(unsigned w, unsigned h);
-  static urania::PaintMemDevice* create(const polymnia::Picture* pct);
+  /// PaintMemDeviceを生成する。
+  /// @param w 幅
+  /// @param h 高さ
+  /// @return 生成したオブジェクトを保持するunique_ptr
+  static std::unique_ptr<PaintMemDevice> create(unsigned w, unsigned h);
 
-  polymnia::Picture* createPicture() const;
-  urania::PaintMemDevice* clone() const;
+  /// Pictureを複製したPaintMemDeviceを生成する。
+  /// @param pct 複製元Picture
+  /// @return 生成したオブジェクトを保持するunique_ptr
+  static std::unique_ptr<PaintMemDevice>
+  duplicate(const polymnia::Picture* pct);
+
+  /// 内容を複製したPictureを生成する。
+  std::unique_ptr<polymnia::Picture> duplicatePicture() const;
+
+  /// 複製する。
+  std::unique_ptr<PaintMemDevice> clone() const;
 };
 
 
 
-/*===============================================================
- *  PaintMemDeviceIndexed
- *  PaintDevice互換メモリ上仮想デバイス(256 palette color)
+/**
+ *  PaintDevice互換メモリ上假想デバイス(256 palette color)
  */
 class urania::PaintMemDeviceIndexed
   : public polymnia::ImageBuffer<themis::UByte>
@@ -121,27 +125,39 @@ protected:
  public:
   ~PaintMemDeviceIndexed();
 
-  static PaintMemDeviceIndexed* create(unsigned w, unsigned h);
-  static PaintMemDeviceIndexed* create(const polymnia::PictureIndexed* pct);
+  /// PaintMemDeviceIndexedを生成する。
+  /// @param w 幅
+  /// @param h 高さ
+  /// @return 生成したオブジェクトを保持するunique_ptr
+  static std::unique_ptr<PaintMemDeviceIndexed> create(unsigned w, unsigned h);
 
-  polymnia::PictureIndexed* createPicture() const;
-  PaintMemDeviceIndexed* clone() const;
+  /// PictureIndexedを複製したPaintMemDeviceIndexedを生成する。
+  /// @param pct 複製元Picture
+  /// @return 生成したオブジェクトを保持するunique_ptr
+  static std::unique_ptr<PaintMemDeviceIndexed>
+  duplicate(const polymnia::PictureIndexed* pct);
+
+  /// 内容を複製したPictureIndexedを生成する。
+  std::unique_ptr<polymnia::PictureIndexed> duplicatePictureIndexed() const;
+
+  /// 複製する。
+  std::unique_ptr<PaintMemDeviceIndexed> clone() const;
 
   urania::Color& palette(int id) { return pal_[id]; }
   const urania::Color& palette(int id) const { return pal_[id]; }
   urania::Color* paletteBuffer() { return pal_; }
   const urania::Color* paletteBuffer() const { return pal_; }
 
+  /// パレットハンドルを更新する。
   void updatePalette();
 };
 
 
 
-/*================================================
- *  PaintDevice
- *  Windows デバイスコンテキストのラッパー
+/**
+ *  Windowsデバイスコンテキストのラッパー
  */
-class urania::PaintDevice : boost::noncopyable
+class urania::PaintDevice : themis::Noncopyable<urania::PaintDevice>
 {
 public:
   typedef void (*DestProc)(HDC, void*);
@@ -239,7 +255,7 @@ public:
   //===================================================
   void circle(int x, int y, int r, const urania::Color& col, bool f =false)
   {
-    ellipse(x,y,r,r,col,f);
+    ellipse(x, y, r, r, col, f);
   }
 
 
@@ -354,11 +370,10 @@ public:
 
 
 private:
-  void changeBrush__(const urania::Color& col);
-  void changePen__(const urania::Color& col);
+  void changeBrush_(const urania::Color& col);
+  void changePen_(const urania::Color& col);
 };
 
 
 
-#endif
-//eof
+#endif // INCLUDE_GUARD_URANIA_PAINTDEVICE_H

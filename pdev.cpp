@@ -20,7 +20,7 @@
  *  DCの各オブジェクトの原状保存と新規割り当て
  */
 urania::PaintDevice::PaintDevice(HDC dc, DestProc dp, void* ap, int w, int h)
-  : hdc_(dc), dst_(dp), app_(ap), width_(w), height_(h)
+  : hdc_(dc), width_(w), height_(h), app_(ap), dst_(dp)
 {
   HBRUSH tb = CreateSolidBrush(RGB(255, 255, 255));
   HPEN tp = CreatePen(PS_SOLID, 0, RGB(255, 255, 255));
@@ -73,7 +73,7 @@ urania::PaintDevice::create(HDC dc, DestProc dp, void* a, int w, int h)
   {
     return new PaintDevice(dc, dp, a, w, h);
   }
-  catch (std::bad_alloc)
+  catch (std::bad_alloc&)
   {
     return nullptr;
   }
