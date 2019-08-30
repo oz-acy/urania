@@ -1,27 +1,24 @@
-/**************************************************************************
+/**********************************************************************//**
  *
- *  cmndlg.h
- *  by oZ/acy
- *  (c) 2002-2016 oZ/acy.  ALL RIGHTS RESERVED.
+ *  @file cmndlg.h
+ *  @author oZ/acy (名賀月晃嗣)
+ *  @brief コモンダイアログラッパー
  *
- *  コモンダイアログラッパー
- *
- *  履歴
- *    2016.2.29  OpenFileDialogとSaveFileDialogをFileDialogに一本化
- *    2016.8.10  FileDialog::crearFilePath()の型を修正
- *************************************************************************/
+ *  @date 2016.2.29  OpenFileDialogとSaveFileDialogをFileDialogに一本化
+ *  @date 2016.8.10  FileDialog::crearFilePath()の型を修正
+ *  @date 2019.8.30  各クラスのcreate()の返却型をunique_ptrに修正
+ */
+#ifndef INCLUDE_GUARD_URANIA_COMMONDLG_H
+#define INCLUDE_GUARD_URANIA_COMMONDLG_H
 
-#ifndef INC_URANIA_COMMONDLG_H___
-#define INC_URANIA_COMMONDLG_H___
-
-#include <boost/utility.hpp>
+#include <memory>
 #include "wbase.h"
 
 /*------------------------------------------------
  *  class CommonDialogBase
  *  Common Dialog ベースクラス
  *----------------------------------------------*/
-class urania::CommonDialogBase : boost::noncopyable
+class urania::CommonDialogBase : themis::Noncopyable<urania::CommonDialogBase>
 {
  protected:
   static HWND getHW__(const urania::WndBase* wb)
@@ -72,10 +69,12 @@ public:
   void setFilePath(const std::wstring& path);
   void setInitDir(const std::wstring& path);
 
-  static urania::FileDialog* create(
-    const std::wstring& flt, const std::wstring& ext =L"")
+  static
+  std::unique_ptr<FileDialog>
+  create(const std::wstring& flt, const std::wstring& ext =L"")
   {
-    return new FileDialog(flt, ext);
+    return std::unique_ptr<FileDialog>(new FileDialog(flt, ext));
+    //return new FileDialog(flt, ext);
   }
 };
 
@@ -173,4 +172,4 @@ public:
 
 
 
-#endif // INC_URANIA_COMMONDLG_H___
+#endif // INCLUDE_GUARD_URANIA_COMMONDLG_H

@@ -7,9 +7,11 @@
  *   WMsgHandlerクラスにonLButtonDown()、onMButtonDown()、onRButtonDown()を追加
  * @date 2018.12.25 修正
  *   Windows::msgHandler_を生ポインタからunique_ptrに變更
+ * @date 2019.8.30 修正
+ *       豫約されてゐる識別子に該當してゐたものを修正
  */
-#ifndef INC_URANIA_WINDOW_H___
-#define INC_URANIA_WINDOW_H___
+#ifndef INCLUDE_GUARD_URANIA_WINDOW_H
+#define INCLUDE_GUARD_URANIA_WINDOW_H
 
 #include <map>
 #include <memory>
@@ -29,7 +31,7 @@ class WindowFactory;
 
 
 /**
- * @brief メッセージ引き渡し用の構造體
+ * メッセージ引き渡し用の構造體
  */
 struct urania::WndMessage
 {
@@ -43,7 +45,7 @@ struct urania::WndMessage
 /**
  * @brief メッセージハンドラ基底
  */
-class urania::WMHandler : boost::noncopyable
+class urania::WMHandler : themis::Noncopyable<urania::WMHandler>
 {
 public:
   /// @brief コマンドハンドラ
@@ -235,24 +237,25 @@ protected:
 
 protected:
   Window() : msgHandler_(), dad_(false) {}
-  void init__(HWND hw);
-  void uninit__();
+  void init_(HWND hw) override;
+  void uninit_() override;
 
 public:
-  ~Window() { deleting__(); }
+  ~Window() { deleting_(); }
 
   urania::RCP_Menu getMenu() const { return menu_; }
-  void setMenu(const urania::RCP_Menu& m) { linkMenu__(m); }
+  void setMenu(const urania::RCP_Menu& m) { linkMenu_(m); }
 
 protected:
-  virtual LRESULT wproc__(UINT msg, WPARAM wp, LPARAM lp);
+  /// 各Windowのメッセージ処理プロシージャ
+  virtual LRESULT wproc_(UINT msg, WPARAM wp, LPARAM lp) override;
 
-  static HMENU getHM__(const urania::RCP_Menu& mn) { return mn->hmenu_; }
+  static HMENU getHM_(const urania::RCP_Menu& mn) { return mn->hmenu_; }
 
-  HMENU linkMenu__(const urania::RCP_Menu& mn)
+  HMENU linkMenu_(const urania::RCP_Menu& mn)
   {
     menu_ = mn;
-    return mn->giveHM__();
+    return mn->giveHM_();
   }
 };
 
@@ -313,7 +316,7 @@ public:
   ///   スマートポインタで管理することを推奬する。
   urania::Window* create(urania::WMHandler* mh, int menu =0)
   {
-    return factory__(mh, menu, nullptr, 0);
+    return factory_(mh, menu, nullptr, 0);
   }
 
   /// @brief オーナー附ウィンドウの作成
@@ -330,7 +333,7 @@ public:
   createAsOwned(
     urania::BasicWindow* owner, urania::WMHandler* mh, int menu =0)
   {
-    return factory__(mh, menu, owner, 0);
+    return factory_(mh, menu, owner, 0);
   }
 
   /// @brief 子ウィンドウの作成
@@ -346,7 +349,7 @@ public:
   urania::Window*
   createAsChild(urania::BasicWindow* parent, int cid, urania::WMHandler* mh)
   {
-    return factory__(mh, 0, parent, cid);
+    return factory_(mh, 0, parent, cid);
   }
 
 private:
@@ -354,11 +357,11 @@ private:
   ///
   /// create()、createAsOwned()、createAsChildの下請けとして、
   /// Win32 APIを呼び出してウィンドウを作成する。
-  urania::Window* factory__(
+  urania::Window* factory_(
     urania::WMHandler* mh, int menu, urania::BasicWindow* par, int cid);
 };
 
 
 
 
-#endif // INC_URANIA_WINDOW_H___
+#endif // INCLUDE_GUARD_URANIA_WINDOW_H

@@ -6,12 +6,10 @@
  *
  *  @date 2016.2.29   修正
  *  @date 2018.12.26  修正
+ *  @date 2019.8.30   修正
  */
-/*
- *  (c) 2002-2018 oZ/acy.  ALL RIGHTS RESERVED.
- */
-#ifndef INC_URANIA_BASICWINDOW_H___
-#define INC_URANIA_BASICWINDOW_H___
+#ifndef INCLUDE_GUARD_URANIA_BASICWINDOW_H
+#define INCLUDE_GUARD_URANIA_BASICWINDOW_H
 
 #include <memory>
 #include <vector>
@@ -65,7 +63,7 @@ public:
 private:
   //----------------------------------
   //  struct WC_
-  //  WNDCLASS 生成情報格納クラス
+  //  WNDCLASS生成情報格納クラス
   //--------------------------------//
   struct WC_
   {
@@ -76,7 +74,7 @@ private:
     std::wstring wcname_;
 
     //========================================================================
-    //  WNDCLASS 登録の要不要を決めるための operator==() と operator!=()
+    //  WNDCLASS登録の要不要を決めるための operator==() と operator!=()
     //========================================================================
     bool operator==(const WC_& my) const
     {
@@ -105,30 +103,30 @@ private:
 protected:
   BasicWindow() {}
 
-  void createWindow0__(const D0_& de);
+  void createWindow0_(const D0_& de);
 
   /// @brief  BasicWindowオブジェクトとHWNDの二重結合を形成
   ///
   /// BasicWindowオブジェクトからHWNDへの結合と、
   /// HWNDからオブジェクトへの結合を形成する。
   /// @param オブジェクトと結合するHWND
-  void bindHWND__(HWND hw)
+  void bindHWND_(HWND hw)
   {
-    link__(hw);
+    link_(hw);
     SetWindowLongPtr(hw, 0, reinterpret_cast<ULONG_PTR>(this));
   }
 
   /// @brief HWNDからBasicWindowオブジェクトへの結合を切斷
-  void unbindHWND__()
+  void unbindHWND_()
   {
     if (hw_)
       SetWindowLongPtr(hw_, 0, reinterpret_cast<ULONG_PTR>(nullptr));
   }
 
   /// @brief ウィンドウ破棄の實處理を實裝
-  void destroyWindow__() override
+  void destroyWindow_() override
   {
-    kill__();
+    kill_();
   }
 
   /// @brief ウィンドウプロシージャ(個別)
@@ -139,19 +137,19 @@ protected:
   /// @param[in] msg メッセージ
   /// @param[in] wp メッセージのパラメータ(WPARAM)
   /// @param[in] lp メッセージのパラメータ(LPARAM)
-  virtual LRESULT wproc__(UINT msg, WPARAM wp, LPARAM lp) =0;
+  virtual LRESULT wproc_(UINT msg, WPARAM wp, LPARAM lp) =0;
 
   /// @brief ウィンドウプロシージャ
   ///
   /// BasicWindowオブジェクトと結合してゐるHWND用のウィンドウプロシージャ。
-  /// HWNDと結び附いたオブジェクトのwproc__()を呼び出す。
+  /// HWNDと結び附いたオブジェクトのwproc_()を呼び出す。
   /// @param[in] HWND メッセージを受けたウィンドウのHWND
   /// @param[in] msg メッセージ
   /// @param[in] wp メッセージのパラメータ(WPARAM)
   /// @param[in] lp メッセージのパラメータ(LPARAM)
-  static LRESULT CALLBACK winproc__(HWND hw, UINT msg, WPARAM wp, LPARAM lp);
+  static LRESULT CALLBACK winproc_(HWND hw, UINT msg, WPARAM wp, LPARAM lp);
 
-  static std::wstring registWC__(const WC_& wc);
+  static std::wstring registWC_(const WC_& wc);
 
 
 public:
@@ -340,5 +338,4 @@ inline LRESULT urania::BasicWindow::onPaint(PT_&& proc, WPARAM wp, LPARAM lp)
 
 
 
-#endif
-//eof
+#endif // INCLUDE_GUARD_URANIA_BASICWINDOW_H

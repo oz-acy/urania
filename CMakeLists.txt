@@ -76,11 +76,6 @@ target_compile_definitions(urania PRIVATE NDEBUG _UNICODE UNICODE WINVER=0x500)
 
 
 
-
-
-
-
-
 install(TARGETS urania
   EXPORT urania-export
   ARCHIVE DESTINATION lib

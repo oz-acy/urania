@@ -1,13 +1,12 @@
 /**************************************************************************
  *
  *  win.cpp
- *  by oZ/acy
- *  (c) 2002-2016 oZ/acy. ALL RIGHTS RESERVED.
+ *  by oZ/acy (名賀月晃嗣)
  *
  *  履歴
  *    2016.2.29  修正 (クロージャの實裝をbindから[this](){}に變更)
- *************************************************************************/
-
+ *    2019.8.30  修正 豫約されてゐる識別子に該當してゐたものを修正
+ */
 #include <cstdlib>
 #include <algorithm>
 #include <functional>
@@ -15,11 +14,10 @@
 #include "win.h"
 
 /*====================================
- *  WindowFactory::factory__()
  *  ウィンドウ生成の下請け
- *==================================*/
+ */
 urania::Window*
-urania::WindowFactory::factory__(
+urania::WindowFactory::factory_(
   urania::WMHandler* mh, int menu, urania::BasicWindow* par, int cid)
 {
   Window* res = new Window;
@@ -49,15 +47,15 @@ urania::WindowFactory::factory__(
 
   // 親又はオーナーWindowとMenu又は子WindowIDの設定
   if (par)
-    de0.pwnd = res->getHW__(par);
+    de0.pwnd = res->getHW_(par);
 
   if (par && cid)
     de0.hm = (HMENU)cid;
   else if (menu)
-    de0.hm = res->linkMenu__(Menu::create(menu));
+    de0.hm = res->linkMenu_(Menu::create(menu));
 
   // 実際に生成
-  res->createWindow0__(de0);
+  res->createWindow0_(de0);
 
   return res;
 }
@@ -69,7 +67,7 @@ urania::WindowFactory::factory__(
  *  Window::wproc__()
  *  各Windowのメッセージ処理プロシージャ
  *==============================================*/
-LRESULT urania::Window::wproc__(UINT msg, WPARAM wp, LPARAM lp)
+LRESULT urania::Window::wproc_(UINT msg, WPARAM wp, LPARAM lp)
 {
   if (msgHandler_)
   {
@@ -87,13 +85,12 @@ LRESULT urania::Window::wproc__(UINT msg, WPARAM wp, LPARAM lp)
 
 
 /*==================================================
- *  Window::init__()
  *  メッセージ處理系の初期化
  *================================================*/
-void urania::Window::init__(HWND hw)
+void urania::Window::init_(HWND hw)
 {
   // HWNDとWindow objectの結合
-  bindHWND__(hw);
+  bindHWND_(hw);
 
   // Drag and Dropの設定
   if (dad_)
@@ -102,11 +99,10 @@ void urania::Window::init__(HWND hw)
 
 
 /*===============================================
- *  Window::uninit__()
  *  メッセージ處理系の初期化解除
  *  destroyed__()とdeleting__()の下請
  *=============================================*/
-void urania::Window::uninit__()
+void urania::Window::uninit_()
 {
   // Drag and Dropの設定後始末
   if (dad_)
@@ -114,15 +110,14 @@ void urania::Window::uninit__()
 
   // 関連Menuの始末
   if (!!menu_)
-    menu_->detach__();
+    menu_->detach_();
 
   // HWND側からのリンクを切断
-  unbindHWND__();
+  unbindHWND_();
 }
 
 
 /*================================================
- *  WMHandler::operator()
  *  メッセージに應じてハンドラを呼び出す
  */
 LRESULT urania::WMHandler::operator()(urania::WndMessage* msg)

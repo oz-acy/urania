@@ -1,18 +1,15 @@
 /**************************************************************************
  *
  *  bwin.cpp
- *  by oZ/acy
- *  (c) 2002-2016 oZ/acy.  ALL RIGHTS RESERVED.
+ *  by oZ/acy (名賀月晃嗣)
  *
- *  Window用基底クラス 実装
+ *  Window用基底クラス 實裝
  *
- *  履歴
  *    2016.2.28  修正
- *************************************************************************/
-
-#include <cstdlib>
+ */
 #include <algorithm>
 #include <sstream>
+#include <cstdlib>
 #include "bwin.h"
 
 
@@ -21,16 +18,15 @@ std::vector<urania::BasicWindow::WC_> urania::BasicWindow::vwc_S;
 
 
 /*============================================
- *  BasicWindow::registWC__()
+ *  BasicWindow::registWC_()
  *  WNDCLASS登録 & WNDCLASS名を返す
  *  同じ内容のWNDCLASSの二重登録を阻止する
  *==========================================*/
-std::wstring urania::BasicWindow::registWC__
+std::wstring urania::BasicWindow::registWC_
 (const urania::BasicWindow::WC_& wc)
 {
   std::vector<WC_>::iterator it = std::find(vwc_S.begin(), vwc_S.end(), wc);
-  if (it == vwc_S.end())
-  {
+  if (it == vwc_S.end()) {
     ////////////////////////////////////////////////////////
     // WNDCLASSの登録とvectorへの追加
     ////////////////////////////////////////////////////////
@@ -41,7 +37,7 @@ std::wstring urania::BasicWindow::registWC__
     std::basic_ostringstream<wchar_t> tmp;
     tmp << vwc_S.size();
 
-    wc2.wcname_ = std::wstring(L"GPWNDCLASS") + tmp.str();
+    wc2.wcname_ = std::wstring(L"URANIAWNDCLS") + tmp.str();
 
     // WNDCLASS Structure
     WNDCLASS wndcls =
@@ -50,7 +46,7 @@ std::wstring urania::BasicWindow::registWC__
       wc2.proc_,
       0,
       sizeof(Window*),
-      getHI__(),
+      getHI_(),
       NULL,
       NULL,
       NULL,
@@ -60,20 +56,19 @@ std::wstring urania::BasicWindow::registWC__
 
     // Icon の設定
     if (wc2.icon_id_ != DEFAULT_RC)
-      wndcls.hIcon = LoadIcon(getHI__(), MAKEINTRESOURCE(wc2.icon_id_));
+      wndcls.hIcon = LoadIcon(getHI_(), MAKEINTRESOURCE(wc2.icon_id_));
     else
       wndcls.hIcon = LoadIcon(0, IDI_APPLICATION);
 
     // Cursor の設定
     if (wc2.cursor_id_ != DEFAULT_RC)
-      wndcls.hCursor = LoadCursor(getHI__(), MAKEINTRESOURCE(wc2.cursor_id_));
+      wndcls.hCursor = LoadCursor(getHI_(), MAKEINTRESOURCE(wc2.cursor_id_));
     else
       wndcls.hCursor = LoadCursor(0, IDC_ARROW);
 
 
     // 背景色の設定
-    switch (wc2.bkcolor_)
-    {
+    switch (wc2.bkcolor_) {
     case BG_WHITE:
       wndcls.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
       break;
@@ -119,10 +114,10 @@ std::wstring urania::BasicWindow::registWC__
 
 
 /*=========================================
- *  BasicWindow::createWindow0__()
+ *  BasicWindow::createWindow0_()
  *  ウィンドウの生成
  *=======================================*/
-void urania::BasicWindow::createWindow0__(const urania::BasicWindow::D0_& de)
+void urania::BasicWindow::createWindow0_(const urania::BasicWindow::D0_& de)
 {
   HWND hwnd;
   int style = WS_CLIPCHILDREN;
@@ -135,8 +130,8 @@ void urania::BasicWindow::createWindow0__(const urania::BasicWindow::D0_& de)
   if (de.winproc)
     wc.proc_ = de.winproc;
   else
-    wc.proc_ = winproc__;
-  std::wstring wcname = registWC__(wc);
+    wc.proc_ = winproc_;
+  std::wstring wcname = registWC_(wc);
 
   // Window Style の設定
   if (de.can_resize)
@@ -151,16 +146,14 @@ void urania::BasicWindow::createWindow0__(const urania::BasicWindow::D0_& de)
     style |= WS_MINIMIZEBOX;
 
   // 子Windowになるかどうかで変わる設定
-  if (de.pwnd && de.hm)
-  {
+  if (de.pwnd && de.hm) {
     style |= WS_CHILD | WS_CLIPSIBLINGS;
     if (!de.popup && !de.border_only)
       style |= WS_CAPTION | WS_SYSMENU;
     else if (de.border_only)
       style |= WS_BORDER;
   }
-  else
-  {
+  else {
     if (!de.border_only && !de.popup)
       style |= WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU;
     else if (de.border_only)
@@ -173,7 +166,7 @@ void urania::BasicWindow::createWindow0__(const urania::BasicWindow::D0_& de)
   hwnd
     = ::CreateWindow(
         wcname.c_str(), de.title.c_str(), style, de.x, de.y, de.w, de.h,
-        de.pwnd, de.hm, getHI__(), (void*)this);
+        de.pwnd, de.hm, getHI_(), (void*)this);
 
   ::ShowWindow(hwnd, SW_SHOW);
   ::UpdateWindow(hwnd);
@@ -181,36 +174,34 @@ void urania::BasicWindow::createWindow0__(const urania::BasicWindow::D0_& de)
 
 
 /*===================================================================
- *  BasicWindow::winproc__()
+ *  BasicWindow::winproc_()
  *  BasicWindowと結合しているHWND用のWindow Procedure
  *=================================================================*/
-LRESULT CALLBACK urania::BasicWindow::winproc__(
+LRESULT CALLBACK urania::BasicWindow::winproc_(
   HWND hw, UINT msg, WPARAM wp, LPARAM lp)
 {
   BasicWindow* pw = (BasicWindow*)GetWindowLongPtr(hw, 0);
 
   // pwが設定されてないときの処理
-  if (!pw)
-  {
+  if (!pw) {
     if (msg != WM_CREATE)
       return ::DefWindowProc(hw, msg, wp, lp);
 
     LPCREATESTRUCT lpcs = (LPCREATESTRUCT)lp;
     BasicWindow* p= (BasicWindow*)(lpcs->lpCreateParams);
-    p->init__(hw);
-    p->wproc__(msg, wp, lp);
+    p->init_(hw);
+    p->wproc_(msg, wp, lp);
 
     return 0;
   }
 
-  if (msg == WM_DESTROY)
-  {
-    pw->wproc__(msg, wp, lp);
-    pw->destroyed__();
+  if (msg == WM_DESTROY) {
+    pw->wproc_(msg, wp, lp);
+    pw->destroyed_();
     return 0;
   }
   else
-    return pw->wproc__(msg, wp, lp);
+    return pw->wproc_(msg, wp, lp);
 }
 
 
@@ -231,7 +222,7 @@ LRESULT urania::BasicWindow::defHandler(UINT msg, WPARAM wp, LPARAM lp)
  *======================================================*/
 namespace
 {
-  void releasePaint__(HDC dc, void* app)
+  void releasePaint_(HDC dc, void* app)
   {
     ::ReleaseDC((HWND)app, dc);
   }
@@ -243,7 +234,7 @@ urania::PaintDevice* urania::BasicWindow::getPaintDevice()
   ::GetClientRect(hw_, &rc);
 
   return
-    PaintDevice::create(GetDC(hw_), releasePaint__, hw_, rc.right, rc.bottom);
+    PaintDevice::create(GetDC(hw_), releasePaint_, hw_, rc.right, rc.bottom);
 }
 
 

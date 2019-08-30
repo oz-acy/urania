@@ -2,19 +2,15 @@
  *
  * @file wbase.h
  * @author oZ/acy (名賀月晃嗣)
- * @brief class WndBase: Window、Dialog共通基底クラス
- *
- * HWND管理用の基底クラス
- *
+ * @brief HWND管理用の基底クラス
  * @date 2018.2.27 修正
  * @date 2018.12.24 修正
- *//*
- * (c) 2002-2018 oZ/acy.  ALL RIGHTS RESERVED.
+ * @date 2019.8.30 修正
  */
-#ifndef INC_URANIA_WINDOW_BASE_H___
-#define INC_URANIA_WINDOW_BASE_H___
+#ifndef INCLUDE_GUARD_URANIA_WINDOW_BASE_H
+#define INCLUDE_GUARD_URANIA_WINDOW_BASE_H
 
-#include <boost/utility.hpp>
+#include <themis/noncopyable.h>
 #include <polymnia/ibuf.h>
 #include "system.h"
 
@@ -24,7 +20,7 @@
  *
  *  HWNDの管理・操作等を行う。
  */
-class urania::WndBase : boost::noncopyable
+class urania::WndBase : themis::Noncopyable<urania::WndBase>
 {
   friend class urania::System;
   friend class urania::CommonDialogBase;
@@ -46,9 +42,9 @@ protected:
   /// WndBaseオブジェクトとHWNDを強固に結び附け、
   /// オブジェクト破棄時にHWNDを同時に破棄する。
   /// @param h 連結するHWND
-  void link__(HWND h)
+  void link_(HWND h)
   {
-    attach__(h);
+    attach_(h);
     if (hw_)
       dst_ = true;
   }
@@ -56,21 +52,21 @@ protected:
   /// @brief HWNDの切り離しと破棄
   ///
   /// WndBaseオブジェクトとHWNDを切り離す。
-  /// もしもlink__()されてゐるならHWNDを破棄する。
-  void kill__()
+  /// もしもlink_()されてゐるならHWNDを破棄する。
+  void kill_()
   {
     if (dst_ && hw_)
       ::DestroyWindow(hw_);
-    detach__();
+    detach_();
   }
 
   /// @brief HWNDを連結
   ///
   /// WndBaseオブジェクトとHWNDを結び附ける。
   /// オブジェクト破棄時にHWNDを破棄しない。
-  void attach__(HWND h)
+  void attach_(HWND h)
   {
-    kill__();
+    kill_();
     hw_ = h;
   }
 
@@ -78,7 +74,7 @@ protected:
   ///
   /// WndBaseオブジェクトとHWNDを切り離す。
   /// HWNDを破棄しない。
-  void detach__()
+  void detach_()
   {
     hw_ = NULL;
     dst_ = false;
@@ -91,7 +87,7 @@ protected:
   /// オブジェクトとHWNDを結合し、
   /// その他の處理を行ふ。
   /// 派生クラスで實裝する。
-  virtual void init__(HWND) =0;
+  virtual void init_(HWND) =0;
 
   /// @brief メッセージ處理系初期化解除
   ///
@@ -99,12 +95,12 @@ protected:
   /// HWNDからオブジェクトへの結合を切斷し、
   /// その他の處理を行ふ。
   /// 派生クラスで實裝する。
-  virtual void uninit__() =0;
+  virtual void uninit_() =0;
 
   /// @brief ウィンドウ破棄の實處理
   /// destroy()から呼び出される下請け。
   /// ウィンドウを破棄するための處理を、派生クラスで實裝する。
-  virtual void destroyWindow__() =0;
+  virtual void destroyWindow_() =0;
 
   /// @brief オブジェクト側からHWNDを破棄
   ///
@@ -112,13 +108,13 @@ protected:
   /// インスタンス生成可能な派生クラスの
   /// デストラクタは、
   /// 先祖クラスのデストラクタが
-  /// deleting__()を呼び出す場合を除き、
-  /// deleting__()を呼び出すべし。
-  void deleting__()
+  /// deleting_()を呼び出す場合を除き、
+  /// deleting_()を呼び出すべし。
+  void deleting_()
   {
     if (hw_) {
-      uninit__();
-      destroyWindow__();
+      uninit_();
+      destroyWindow_();
     }
   }
 
@@ -126,11 +122,11 @@ protected:
   ///
   /// HWNDが破棄されたときに呼び出され、
   /// オブジェクトとHWNDの間の結合を切斷する。
-  void destroyed__()
+  void destroyed_()
   {
     if (hw_) {
-      uninit__();
-      detach__();
+      uninit_();
+      detach_();
     }
   }
 
@@ -138,12 +134,12 @@ protected:
   //  派生クラスで使う "カプセル破り"
   //===========================================
   /// @brief 派生クラスがHINSTANCEを取得するための"カプセル破り"
-  static HINSTANCE getHI__()
+  static HINSTANCE getHI_()
   {
     return System::hi_S;
   }
   /// @brief 派生クラスがHWNDを取得するための"カプセル破り"
-  static HWND getHW__(urania::WndBase* wb)
+  static HWND getHW_(urania::WndBase* wb)
   {
     if (wb)
       return wb->hw_;
@@ -170,7 +166,7 @@ public:
   ///////////////////////////////////
 
   /// @brief ウィンドウの破棄
-  void destroy() { destroyWindow__(); }
+  void destroy() { destroyWindow_(); }
 
   /// @brief ウィンドウタイトルの變更
   /// @param ttl 新しいタイトル
@@ -333,7 +329,7 @@ public:
   void createEditBox(int id, const urania::CtrlDesc& de)
   {
     CreateWindow(L"EDIT", L"", WS_CHILD | WS_VISIBLE | WS_BORDER,
-      de.x, de.y, de.w, de.h, hw_, (HMENU)id, getHI__(), nullptr);
+      de.x, de.y, de.w, de.h, hw_, (HMENU)id, getHI_(), nullptr);
   }
 
   /// @brief 複數行エディットボックスを生成
@@ -344,7 +340,7 @@ public:
     CreateWindow(L"EDIT", L"",
       WS_CHILD | WS_VISIBLE | WS_BORDER | ES_MULTILINE | ES_NOHIDESEL |
       ES_WANTRETURN | ES_AUTOVSCROLL | WS_VSCROLL,
-      de.x, de.y, de.w, de.h, hw_, (HMENU)id, getHI__(), nullptr);
+      de.x, de.y, de.w, de.h, hw_, (HMENU)id, getHI_(), nullptr);
   }
 
   /// @brief リストボックスを生成
@@ -355,7 +351,7 @@ public:
     CreateWindow(
       L"LISTBOX", L"",
       WS_CHILD | WS_VISIBLE | WS_BORDER | LBS_DISABLENOSCROLL | WS_VSCROLL,
-      de.x, de.y, de.w, de.h, hw_, (HMENU)id, getHI__(), nullptr);
+      de.x, de.y, de.w, de.h, hw_, (HMENU)id, getHI_(), nullptr);
   }
 
   /// @brief コンボボックスを生成
@@ -366,7 +362,7 @@ public:
     CreateWindow(L"COMBOBOX", L"",
       WS_CHILD | WS_VISIBLE | WS_VSCROLL | CBS_DISABLENOSCROLL
       | CBS_DROPDOWNLIST, de.x, de.y, de.w, de.h, hw_,
-      (HMENU)id, getHI__(), nullptr);
+      (HMENU)id, getHI_(), nullptr);
   }
 
   /// @brief ボタンを生成
@@ -377,7 +373,7 @@ public:
   {
     CreateWindow(
       L"BUTTON", str.c_str(), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-      de.x, de.y, de.w, de.h, hw_, (HMENU)id, getHI__(), nullptr);
+      de.x, de.y, de.w, de.h, hw_, (HMENU)id, getHI_(), nullptr);
   }
 
   /// @brief ラベルを生成
@@ -387,7 +383,7 @@ public:
   {
     CreateWindow(
       L"STATIC", str.c_str(), WS_CHILD | WS_VISIBLE | SS_LEFT,
-      de.x, de.y, de.w, de.h, hw_, (HMENU)id, getHI__(), nullptr);
+      de.x, de.y, de.w, de.h, hw_, (HMENU)id, getHI_(), nullptr);
   }
   
   /// @brief チェックボックスを生成
@@ -398,7 +394,7 @@ public:
   {
     CreateWindow(
       L"BUTTON", str.c_str(), WS_CHILD | WS_VISIBLE | BS_AUTOCHECKBOX,
-      de.x, de.y, de.w, de.h, hw_, (HMENU)id, getHI__(), nullptr);
+      de.x, de.y, de.w, de.h, hw_, (HMENU)id, getHI_(), nullptr);
   }
 
   // 2018.12.24 定義意圖不明によりコメントアウト
@@ -847,5 +843,4 @@ public:
 
 
 
-#endif
-//eof
+#endif // INCLUDE_GUARD_URANIA_WINDOW_BASE_H

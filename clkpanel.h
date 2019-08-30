@@ -1,18 +1,17 @@
-/**************************************************************************
+/**************************************************************************//**
  *
- *  clkpanel.h
- *  by oZ/acy
- *  (c) 2000-2016 oZ/acy.  All Rights Reserved.
+ *  @file clkpanel.h
+ *  @author oZ/acy (名賀月晃嗣)
  *
- *  履歴
- *    2016.2.28  修正
- *
- *************************************************************************/
+ *  @date 2016.2.28  修正
+ *  @date 2019.8.30  修正
+ */
 
-#ifndef INC_URANIA_CLKPANEL_H___
-#define INC_URANIA_CLKPANEL_H___
+#ifndef INCLUDE_GUARD_URANIA_CLKPANEL_H
+#define INCLUDE_GUARD_URANIA_CLKPANEL_H
 
 #include "bwin.h"
+
 
 namespace urania {
 
@@ -20,8 +19,8 @@ namespace urania {
 class ClickPanel : public urania::BasicWindow
 {
 public:
-  typedef ClickPanel* PCP_;
-  typedef void (*PH_)(urania::BasicWindow*, urania::PaintDevice*, void*);
+  using PH_ = void (*)(urania::BasicWindow*, urania::PaintDevice*, void*);
+  //typedef void (*PH_)(urania::BasicWindow*, urania::PaintDevice*, void*);
 
 private:
   HWND pw_;
@@ -31,39 +30,37 @@ private:
 
   ClickPanel() : ph_(nullptr), app_(nullptr) {}
 
-  LRESULT wproc__(UINT msg, WPARAM wp, LPARAM lp);
+  LRESULT wproc_(UINT msg, WPARAM wp, LPARAM lp) override;
 
-  void init__(HWND hw)
+  void init_(HWND hw) override
   {
-    bindHWND__(hw);
+    bindHWND_(hw);
   }
 
-  void uninit__()
+  void uninit_() override
   {
-    unbindHWND__();
+    unbindHWND_();
   }
 
 
 public:
   ~ClickPanel() {}
 
-
   //================================================================
   //  static create()
-  //  Canvas Object を生成
-  //  引數  x,y,w,h : パネル位置と幅と高さ
-  //        ph      : 描畫ハンドラ
-  //        ap      : ハンドラ用データ
-  //        par     : 親 Window
-  //        id      : パネルの子WindowID
-  //================================================================
+  /// クリックパネルを生成する。
+  /// @param x パネルの位置(X座標)
+  /// @param y パネルの位置(Y座標)
+  /// @param w パネルの幅
+  /// @param h パネルの高さ
+  /// @param ph 描畫ハンドラ
+  /// @param ap ハンドラ用データ
+  /// @param par 親Window
+  /// @param id パネルの子WindowID
   static ClickPanel* create(
     int x, int y, int w, int h, PH_ ph, void* ap, WndBase* par, int id);
 
-  //=====================================
-  //  paint()
-  //  描畫ハンドラを呼び出す
-  //=====================================
+  ///  描畫ハンドラを呼び出す。
   void paint(BasicWindow* w, PaintDevice* pdev)
   {
     if (ph_)
@@ -75,4 +72,4 @@ public:
 }// end of namespace urania
 
 
-#endif // INC_URANIA_CLKPANEL_H___
+#endif // INCLUDE_GUARD_URANIA_CLKPANEL_H
