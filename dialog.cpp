@@ -24,19 +24,19 @@ int urania::Dialog::doModal(int rid, Ini_ ini, Ini_ ui, H_ hnd, void* app)
 }
 
 
-urania::Dialog* urania::Dialog::doModeless(
-  int rid, Ini_ ini, Ini_ ui, H_ hnd, void* app)
+std::unique_ptr<urania::Dialog>
+//urania::Dialog*
+urania::Dialog::doModeless(int rid, Ini_ ini, Ini_ ui, H_ hnd, void* app)
 {
-  Dialog* dlg = new Dialog(ini, ui, hnd, false, app);
-
+  std::unique_ptr<Dialog> dlg(new Dialog(ini, ui, hnd, false, app));
   ::CreateDialogParam(
-    getHI_(), MAKEINTRESOURCE(rid), NULL, (DLGPROC)dlgproc_, (LPARAM)dlg);
-
+    getHI_(), MAKEINTRESOURCE(rid), NULL, (DLGPROC)dlgproc_, (LPARAM)dlg.get());
   return dlg;
 }
 
 
-int urania::Dialog::doOwnedModal(
+int
+urania::Dialog::doOwnedModal(
   int rid, urania::WndBase* par, Ini_ ini, Ini_ ui, H_ hnd, void* app)
 {
   std::unique_ptr<Dialog> dlg(new Dialog(ini, ui, hnd, true, app));
@@ -47,14 +47,15 @@ int urania::Dialog::doOwnedModal(
 }
 
 
-urania::Dialog* urania::Dialog::doOwnedModeless(
+std::unique_ptr<urania::Dialog>
+urania::Dialog::doOwnedModeless(
   int rid, urania::WndBase* par, Ini_ ini, Ini_ ui, H_ hnd, void* app)
 {
-  Dialog* dlg = new Dialog(ini, ui, hnd, false, app);
+  std::unique_ptr<Dialog> dlg(new Dialog(ini, ui, hnd, false, app));
 
   ::CreateDialogParam(
     getHI_(), MAKEINTRESOURCE(rid), getHW_(par), (DLGPROC)dlgproc_,
-    (LPARAM)dlg);
+    (LPARAM)dlg.get());
 
   return dlg;
 }

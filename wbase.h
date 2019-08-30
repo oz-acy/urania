@@ -328,8 +328,10 @@ public:
   /// @param de コントロールの位置、幅、高さの指定
   void createEditBox(int id, const urania::CtrlDesc& de)
   {
-    CreateWindow(L"EDIT", L"", WS_CHILD | WS_VISIBLE | WS_BORDER,
-      de.x, de.y, de.w, de.h, hw_, (HMENU)id, getHI_(), nullptr);
+    CreateWindow(
+      L"EDIT", L"", WS_CHILD | WS_VISIBLE | WS_BORDER,
+      de.x, de.y, de.w, de.h, hw_,
+      reinterpret_cast<HMENU>(id), getHI_(), nullptr);
   }
 
   /// @brief 複數行エディットボックスを生成
@@ -340,7 +342,8 @@ public:
     CreateWindow(L"EDIT", L"",
       WS_CHILD | WS_VISIBLE | WS_BORDER | ES_MULTILINE | ES_NOHIDESEL |
       ES_WANTRETURN | ES_AUTOVSCROLL | WS_VSCROLL,
-      de.x, de.y, de.w, de.h, hw_, (HMENU)id, getHI_(), nullptr);
+      de.x, de.y, de.w, de.h, hw_, 
+      reinterpret_cast<HMENU>(id), getHI_(), nullptr);
   }
 
   /// @brief リストボックスを生成
@@ -351,7 +354,8 @@ public:
     CreateWindow(
       L"LISTBOX", L"",
       WS_CHILD | WS_VISIBLE | WS_BORDER | LBS_DISABLENOSCROLL | WS_VSCROLL,
-      de.x, de.y, de.w, de.h, hw_, (HMENU)id, getHI_(), nullptr);
+      de.x, de.y, de.w, de.h, hw_,
+      reinterpret_cast<HMENU>(id), getHI_(), nullptr);
   }
 
   /// @brief コンボボックスを生成
@@ -359,10 +363,12 @@ public:
   /// @param de コントロールの位置、幅、高さの指定
   void createComboBox(int id, const urania::CtrlDesc& de)
   {
-    CreateWindow(L"COMBOBOX", L"",
-      WS_CHILD | WS_VISIBLE | WS_VSCROLL | CBS_DISABLENOSCROLL
-      | CBS_DROPDOWNLIST, de.x, de.y, de.w, de.h, hw_,
-      (HMENU)id, getHI_(), nullptr);
+    CreateWindow(
+      L"COMBOBOX", L"",
+        WS_CHILD | WS_VISIBLE | WS_VSCROLL
+      | CBS_DISABLENOSCROLL | CBS_DROPDOWNLIST,
+      de.x, de.y, de.w, de.h, hw_,
+      reinterpret_cast<HMENU>(id), getHI_(), nullptr);
   }
 
   /// @brief ボタンを生成
@@ -373,7 +379,8 @@ public:
   {
     CreateWindow(
       L"BUTTON", str.c_str(), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-      de.x, de.y, de.w, de.h, hw_, (HMENU)id, getHI_(), nullptr);
+      de.x, de.y, de.w, de.h, hw_,
+      reinterpret_cast<HMENU>(id), getHI_(), nullptr);
   }
 
   /// @brief ラベルを生成
@@ -383,7 +390,8 @@ public:
   {
     CreateWindow(
       L"STATIC", str.c_str(), WS_CHILD | WS_VISIBLE | SS_LEFT,
-      de.x, de.y, de.w, de.h, hw_, (HMENU)id, getHI_(), nullptr);
+      de.x, de.y, de.w, de.h, hw_,
+      reinterpret_cast<HMENU>(id), getHI_(), nullptr);
   }
   
   /// @brief チェックボックスを生成
@@ -394,7 +402,8 @@ public:
   {
     CreateWindow(
       L"BUTTON", str.c_str(), WS_CHILD | WS_VISIBLE | BS_AUTOCHECKBOX,
-      de.x, de.y, de.w, de.h, hw_, (HMENU)id, getHI_(), nullptr);
+      de.x, de.y, de.w, de.h, hw_,
+      reinterpret_cast<HMENU>(id), getHI_(), nullptr);
   }
 
   // 2018.12.24 定義意圖不明によりコメントアウト

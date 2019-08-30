@@ -24,12 +24,11 @@ class urania::Dialog : public urania::WndBase
 private:
   /// メッセージハンドラの型
   using H_ = BOOL (*)(urania::Dialog*, UINT, WPARAM, LPARAM);
-  //typedef BOOL (*H_)(urania::Dialog*, UINT, WPARAM, LPARAM);
+
   /// 初期化函數の型
   using Ini_ = void (*)(urania::Dialog*);
-  //typedef void (*Ini_)(urania::Dialog*);
 
- protected:
+protected:
   Ini_ ini_;
   Ini_ uini_;
   H_ handler_;
@@ -44,7 +43,7 @@ private:
   void destroyWindow_() override;
 
 
- public:
+public:
   ~Dialog() { deleting_(); }
 
   /// Modalなダイアログを作成する。
@@ -71,7 +70,10 @@ private:
   /// @param app 任意のポインタ(void*)。
   ///        設定しておくと getAppData() で參照できる。
   /// @return 作成されたダイアログへのポインタ
-  static urania::Dialog* doModeless(
+  static
+  // urania::Dialog* 
+  std::unique_ptr<Dialog>
+  doModeless(
     int rid, Ini_ ini, Ini_ ui, H_ hnd, void* app =nullptr);
 
   /// 所有者附のModalなダイアログを作成する。
@@ -87,8 +89,7 @@ private:
   ///     設定しておくと getAppData() で參照できる。
   /// @return ダイアログの返した整數値
   static int doOwnedModal(
-    int rid, urania::WndBase* par, Ini_ ini, Ini_ ui, H_ hnd,
-    void* app =nullptr);
+    int rid, WndBase* par, Ini_ ini, Ini_ ui, H_ hnd, void* app =nullptr);
 
   /// 所有者附のModelessなダイアログを作成する。
   /// @param rid リソースID
@@ -102,9 +103,11 @@ private:
   /// @param app 任意のポインタ(void*)。
   ///    設定しておくと getAppData() で參照できる。
   /// @return 作成されたダイアログへのポインタ
-  static urania::Dialog* doOwnedModeless(
-    int rid, urania::WndBase* par, Ini_ ini, Ini_ ui, H_ hnd,
-    void* app =nullptr);
+  static
+  // urania::Dialog* 
+  std::unique_ptr<Dialog>
+  doOwnedModeless(
+    int rid, WndBase* par, Ini_ ini, Ini_ ui, H_ hnd, void* app =nullptr);
 
 
   /// Modalなダイアログを終了する。

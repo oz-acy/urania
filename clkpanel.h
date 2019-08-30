@@ -20,7 +20,6 @@ class ClickPanel : public urania::BasicWindow
 {
 public:
   using PH_ = void (*)(urania::BasicWindow*, urania::PaintDevice*, void*);
-  //typedef void (*PH_)(urania::BasicWindow*, urania::PaintDevice*, void*);
 
 private:
   HWND pw_;
@@ -46,8 +45,6 @@ private:
 public:
   ~ClickPanel() {}
 
-  //================================================================
-  //  static create()
   /// クリックパネルを生成する。
   /// @param x パネルの位置(X座標)
   /// @param y パネルの位置(Y座標)
@@ -57,7 +54,9 @@ public:
   /// @param ap ハンドラ用データ
   /// @param par 親Window
   /// @param id パネルの子WindowID
-  static ClickPanel* create(
+  static
+  std::unique_ptr<ClickPanel>
+  create(
     int x, int y, int w, int h, PH_ ph, void* ap, WndBase* par, int id);
 
   ///  描畫ハンドラを呼び出す。

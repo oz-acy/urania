@@ -15,13 +15,10 @@
 #include <cstring>
 
 
-/*==========================================================
- *  PaintDevice::PaintDevice()
- *  DCの各オブジェクトの原状保存と新規割り当て
- */
 urania::PaintDevice::PaintDevice(HDC dc, DestProc dp, void* ap, int w, int h)
   : hdc_(dc), width_(w), height_(h), app_(ap), dst_(dp)
 {
+  // DCに設定するオブジェクトを生成する。
   HBRUSH tb = CreateSolidBrush(RGB(255, 255, 255));
   HPEN tp = CreatePen(PS_SOLID, 0, RGB(255, 255, 255));
   HFONT tf
@@ -29,6 +26,7 @@ urania::PaintDevice::PaintDevice(HDC dc, DestProc dp, void* ap, int w, int h)
        16, 0, 0, 0, 0, 0, 0, 0, SHIFTJIS_CHARSET, 0, 0, 0, FIXED_PITCH,
        nullptr);
 
+  // 生成したオブジェクトをDCに設定するとともに、原狀を保存しておく。
   obr_ = (HBRUSH)SelectObject(hdc_, tb);
   opn_ = (HPEN)SelectObject(hdc_, tp);
   oft_ = (HFONT)SelectObject(hdc_, tf);
@@ -36,42 +34,33 @@ urania::PaintDevice::PaintDevice(HDC dc, DestProc dp, void* ap, int w, int h)
 }
 
 
-/*===============================================================
- *  PaintDevice::~PaintDevice()
- *  DCの各オブジェクトの原状復帰・DC解放コールバック呼び出し
- */
 urania::PaintDevice::~PaintDevice()
 {
+  // DCの各オブジェクトを原狀復歸する。
   HBRUSH tb = (HBRUSH)SelectObject(hdc_, obr_);
   HPEN tp = (HPEN)SelectObject(hdc_, opn_);
   HFONT tf = (HFONT)SelectObject(hdc_, oft_);
   SetBkMode(hdc_, obm_);
 
+  // 自分で作成、設定してゐたオブジェクトを破棄する。
   DeleteObject(tb);
   DeleteObject(tp);
   DeleteObject(tf);
 
+  // 解放用コールバックがあるなら呼び出す。
   if (dst_)
     dst_(hdc_, app_);
 }
 
 
-/*===============================================================
- *  PaintDevice::create()
- *  Object生成
- *   引数:  HDC dc      : デバイスコンテキストハンドル
- *          DestProc dp : DC解放用コールバック
- *          void* a     : コールバックに渡すパラメータ
- *          unsigned w  : デバイス幅
- *          unsigned h  : デバイス高さ
- *   返値:  オブジェクトへのポインタ
- */
-urania::PaintDevice*
+
+
+std::unique_ptr<urania::PaintDevice>
 urania::PaintDevice::create(HDC dc, DestProc dp, void* a, int w, int h)
 {
   try
   {
-    return new PaintDevice(dc, dp, a, w, h);
+    return std::unique_ptr<PaintDevice>(new PaintDevice(dc, dp, a, w, h));
   }
   catch (std::bad_alloc&)
   {

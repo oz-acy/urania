@@ -53,8 +53,8 @@ HPALETTE createPalHandle_(const urania::Color col[])
 
 
 urania::PaintMemDeviceIndexed::PaintMemDeviceIndexed(unsigned w, unsigned h)
-  : polymnia::ImageBuffer<themis::UByte>(w, h, 0), hdc_(NULL), oldbmp_(NULL),
-    hpal_(NULL)
+  : polymnia::ImageBuffer<themis::UByte>(w, h, 0),
+    hdc_(NULL), hpal_(NULL), oldbmp_(NULL)
 {
   using namespace themis;
   using namespace polymnia;

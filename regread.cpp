@@ -13,8 +13,7 @@
  *     4 Apr 2009  修正 for UNICODE對應
  *     8 Sep 2011  修正 for C++11對應
  *    29 Feb 2016  修正
- *************************************************************************/
-
+ */
 #include <memory>
 #include <cstdlib>
 #include "registry.h"
@@ -54,12 +53,13 @@ DWORD urania::RegistryReader::getDwordData(const std::wstring& name)
     return 0;
 
   // データ格納領域を確保
-  std::unique_ptr<unsigned char[]> data(new unsigned char[sz]);
+  auto data = std::make_unique<unsigned char[]>(sz);
+  //std::unique_ptr<unsigned char[]> data(new unsigned char[sz]);
 
   // データを取得する
   if (::RegQueryValueEx(
-          getKey_(), name.c_str(), nullptr, nullptr, (BYTE *)(data.get()), &sz))
-  {
+          getKey_(), name.c_str(), nullptr, nullptr,
+          (BYTE *)(data.get()), &sz)) {
     return 0;
   }
 
@@ -83,12 +83,13 @@ std::wstring urania::RegistryReader::getStringData(const std::wstring& name)
     return L"";
 
   // データ格納領域を確保
-  std::unique_ptr<unsigned char[]> data(new unsigned char[sz]);
+  auto data = std::make_unique<unsigned char[]>(sz);
+  //std::unique_ptr<unsigned char[]> data(new unsigned char[sz]);
 
   // データを取得する
   if (::RegQueryValueEx(
-          getKey_(), name.c_str(), nullptr, nullptr, (BYTE*)(data.get()), &sz))
-  {
+          getKey_(), name.c_str(), nullptr, nullptr,
+          (BYTE*)(data.get()), &sz)) {
     return L"";
   }
 

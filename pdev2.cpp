@@ -127,8 +127,9 @@ urania::PaintDevice::text(
   int x, int y, const std::wstring& str, const urania::Color& col)
 {
   ::SetTextColor(hdc_, col.getColorref());
-  wchar_t *ptxt = new wchar_t[str.length()];
-  std::wcscpy(ptxt, str.c_str());
+  auto ptxt = std::make_unique<wchar_t[]>(str.length());
+  //wchar_t *ptxt = new wchar_t[str.length()];
+  std::wcscpy(ptxt.get(), str.c_str());
 
   RECT rc = {x, y, x, y};
   DRAWTEXTPARAMS dtp;
@@ -138,13 +139,14 @@ urania::PaintDevice::text(
   dtp.iRightMargin = 0;
 
   ::DrawTextEx(
-    hdc_, ptxt, -1, &rc, DT_CALCRECT|DT_NOPREFIX|DT_TABSTOP|DT_EXPANDTABS,
-    &dtp);
+    hdc_, ptxt.get(), -1, &rc,
+    DT_CALCRECT | DT_NOPREFIX | DT_TABSTOP | DT_EXPANDTABS, &dtp);
 
   ::DrawTextEx(
-    hdc_, ptxt, -1, &rc, DT_NOCLIP|DT_NOPREFIX|DT_TABSTOP|DT_EXPANDTABS, &dtp);
+    hdc_, ptxt.get(), -1, &rc,
+    DT_NOCLIP | DT_NOPREFIX | DT_TABSTOP | DT_EXPANDTABS, &dtp);
 
-  delete[] ptxt;
+  //delete[] ptxt;
   return polymnia::Point(rc.right, rc.bottom);
 }
 
@@ -159,10 +161,11 @@ urania::PaintDevice::text(
   int x, int y, int ww, const std::wstring& str, const urania::Color& col)
 {
   ::SetTextColor(hdc_, col.getColorref());
-  wchar_t *ptxt = new wchar_t[str.length()];
-  std::wcscpy(ptxt, str.c_str());
+  auto ptxt = std::make_unique<wchar_t>(str.length());
+  //wchar_t *ptxt = new wchar_t[str.length()];
+  std::wcscpy(ptxt.get(), str.c_str());
 
-  RECT rc = {x, y, x+ww, y};
+  RECT rc = {x, y, x + ww, y};
   DRAWTEXTPARAMS dtp;
   dtp.cbSize = sizeof(dtp);
   dtp.iTabLength = 4;
@@ -170,16 +173,18 @@ urania::PaintDevice::text(
   dtp.iRightMargin = 0;
 
   ::DrawTextEx(
-    hdc_, ptxt, -1, &rc,
-    DT_CALCRECT|DT_NOPREFIX|DT_WORDBREAK|DT_EDITCONTROL|DT_TABSTOP
-    |DT_EXPANDTABS, &dtp);
-
-  ::DrawTextEx(
-    hdc_, ptxt, -1, &rc,
-    DT_NOCLIP|DT_NOPREFIX|DT_WORDBREAK|DT_EDITCONTROL|DT_TABSTOP|DT_EXPANDTABS,
+    hdc_, ptxt.get(), -1, &rc,
+    DT_CALCRECT | DT_NOPREFIX | DT_WORDBREAK | DT_EDITCONTROL
+    | DT_TABSTOP | DT_EXPANDTABS,
     &dtp);
 
-  delete[] ptxt;
+  ::DrawTextEx(
+    hdc_, ptxt.get(), -1, &rc,
+    DT_NOCLIP | DT_NOPREFIX | DT_WORDBREAK | DT_EDITCONTROL
+    | DT_TABSTOP | DT_EXPANDTABS,
+    &dtp);
+
+  //delete[] ptxt;
   return polymnia::Point(rc.right, rc.bottom);
 }
 
@@ -201,7 +206,7 @@ urania::PaintDevice::changeFont(
   BYTE strike = (BYTE)(sk ? 1 : 0);
 
   paf |= ro ? FF_ROMAN : FF_MODERN;
-  int wf = fx ? (size/2) : 0;
+  int wf = fx ? (size / 2) : 0;
 
 
   HFONT tf

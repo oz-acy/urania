@@ -11,10 +11,11 @@
  * @date 2 Sep 2010  task系削除・start系追加
  * @date 13 May 2012  C++11對應
  * @date 27 Feb 2016  ファイル名變更、メソッド名變更
- * @date 1 Oct 2016  不要なfriend classを削除
+ * @date 1 Oct 2016   不要なfriend classを削除
+ * @date 30 Aug 2019  インクルードガードを修正
  */
-#ifndef INC_GP_GUI_SYSTEM_H__
-#define INC_GP_GUI_SYSTEM_H__
+#ifndef INCLUDE_GUARD_URANIA_SYSTEM_H
+#define INCLUDE_GUARD_URANIA_SYSTEM_H
 
 #include <windows.h>
 #include <string>
@@ -23,7 +24,7 @@
 
 
 /**
- * @brief システム周り
+ * システム周りのあれこれ
  */
 class urania::System
 {
@@ -37,27 +38,28 @@ private:
   System() =delete; //インスタンス生成禁止
 
 public:
-  /// @brief 開始
-  ///
-  /// 最初に一度だけ呼ぶ。
+  /// 利用開始する。最初に一度だけ呼ぶ。
   /// @param[in] hi HINSTANCE値。WinMain()の1つ目の引數を渡す。
   static void start(HINSTANCE hi)
   {
     hi_S = hi;
   }
 
-  /// @brief メッセージキューに終了を投げる
+  /// メッセージキューに終了を投げる。
   static void quit(int r)
   {
     ::PostQuitMessage(r);
   }
 
-  /// @brief メッセージループ
+  /// メッセージループ
   static void messageLoop();
 
-  // メッセージループ(コールバック付)
+  /// コールバック附のメッセージループ。
+  /// @param f
+  ///   アイドル状態の時に呼び出されるコールバック函數。
+  ///   引數を取らず、bool値を返す。
+  ///   falseを返した場合、次にメッセージを處理するまでコールバックしない。
   template<class Func_> static void messageLoop(Func_ f);
-  //static void startRT();
 
 
   // メッセージボックス系
@@ -149,7 +151,7 @@ public:
 
 
   // デスクトップ情報取得
-  /// @brief デスクトップの幅を取得する
+  /// デスクトップの幅を取得する。
   static int getDesktopWidth()
   {
     RECT rc;
@@ -157,7 +159,7 @@ public:
     return rc.right - rc.left;
   }
 
-  /// デスクトップの高さを取得する
+  /// デスクトップの高さを取得する。
   static int getDesktopHeight()
   {
     RECT rc;
@@ -168,14 +170,8 @@ public:
 };
 
 
-/**
- * @brief メッセージループ(コールバック付)
- * @param f
- *   アイドル状態の時に呼び出されるコールバック函數。
- *   bool値を返す。
- *   falseを返した場合、次にメッセージを處理するまでコールバックしない。
- */
 template<class Func_>
+inline
 void urania::System::messageLoop(Func_ f)
 {
   MSG msg;
@@ -206,4 +202,4 @@ void urania::System::messageLoop(Func_ f)
 
 
 
-#endif
+#endif // INCLUDE_GUARD_URANIA_SYSTEM_H

@@ -198,7 +198,8 @@ public:
   /// @brief ウィンドウ描畫用のPaintDeviceを取得
   ///
   /// ウィンドウを(再)描畫するためのPaintDeviceを取得する。
-  urania::PaintDevice* getPaintDevice();
+  std::unique_ptr<PaintDevice> getPaintDevice();
+  //urania::PaintDevice* getPaintDevice();
 
   /// @brief ウィンドウ再描畫
   ///
@@ -313,7 +314,8 @@ public:
  *  ユーザ定義のハンドラから必要に応じて明示的に呼び出すこと
  *===============================================================*/
 template<class PT_>
-inline LRESULT urania::BasicWindow::onPaint(PT_&& proc, WPARAM wp, LPARAM lp)
+inline
+LRESULT urania::BasicWindow::onPaint(PT_&& proc, WPARAM wp, LPARAM lp)
 {
   (void)wp;
   (void)lp;
@@ -322,15 +324,12 @@ inline LRESULT urania::BasicWindow::onPaint(PT_&& proc, WPARAM wp, LPARAM lp)
   ::BeginPaint(hw_, &ps);
   RECT rc;
   ::GetClientRect(hw_, &rc);
-  std::unique_ptr<PaintDevice>
-    pd(PaintDevice::create(ps.hdc, nullptr, nullptr, rc.right, rc.bottom));
-  //PaintDevice* pd
-  // = PaintDevice::create(ps.hdc, nullptr, nullptr, rc.right, rc.bottom);
+
+  auto pd = PaintDevice::create(ps.hdc, nullptr, nullptr, rc.right, rc.bottom);
 
   proc(this, pd.get());
 
-  pd.reset();
-  //delete pd;
+  pd.reset(); // EndPaintを呼ぶ前にPaintDeviceを破棄する
   ::EndPaint(hw_, &ps);
 
   return 0;

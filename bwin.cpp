@@ -228,11 +228,10 @@ namespace
   }
 }
 
-urania::PaintDevice* urania::BasicWindow::getPaintDevice()
+std::unique_ptr<urania::PaintDevice> urania::BasicWindow::getPaintDevice()
 {
   RECT rc;
   ::GetClientRect(hw_, &rc);
-
   return
     PaintDevice::create(GetDC(hw_), releasePaint_, hw_, rc.right, rc.bottom);
 }

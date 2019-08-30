@@ -74,7 +74,6 @@ public:
   create(const std::wstring& flt, const std::wstring& ext =L"")
   {
     return std::unique_ptr<FileDialog>(new FileDialog(flt, ext));
-    //return new FileDialog(flt, ext);
   }
 };
 

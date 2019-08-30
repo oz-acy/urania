@@ -53,7 +53,7 @@ urania::WindowFactory::factory_(
     de0.pwnd = res->getHW_(par);
 
   if (par && cid)
-    de0.hm = (HMENU)cid;
+    de0.hm = reinterpret_cast<HMENU>(cid);
   else if (menu)
     de0.hm = res->linkMenu_(Menu::create(menu));
 

@@ -8,11 +8,11 @@
 #include "clkpanel.h"
 
 
-urania::ClickPanel* urania::ClickPanel::create(
+std::unique_ptr<urania::ClickPanel> urania::ClickPanel::create(
   int x, int y, int w, int h, ClickPanel::PH_ ph, void* ap,
   urania::WndBase* par, int id)
 {
-   ClickPanel* panel = new ClickPanel;
+   std::unique_ptr<ClickPanel> panel(new ClickPanel);
    if (!panel)
      return nullptr;
 
@@ -30,7 +30,7 @@ urania::ClickPanel* urania::ClickPanel::create(
    panel->pw_ = getHW_(par);
    de.pwnd = panel->pw_;
    panel->id_ = id;
-   de.hm = (HMENU)id;
+   de.hm = reinterpret_cast<HMENU>(id);
    panel->createWindow0_(de);
 
    return panel;
@@ -39,14 +39,12 @@ urania::ClickPanel* urania::ClickPanel::create(
 
 LRESULT urania::ClickPanel::wproc_(UINT msg, WPARAM wp, LPARAM lp)
 {
-  using namespace std;
-  using namespace std::placeholders;
-
   switch(msg)
   {
   case WM_PAINT:
-    onPaint([this](BasicWindow* bw, PaintDevice* pd){ paint(bw, pd); }, wp, lp);
-    //onPaint(bind(&ClickPanel::paint, this, _1, _2), wp, lp);
+    onPaint(
+      [this](BasicWindow* bw, PaintDevice* pd){ this->paint(bw, pd); },
+      wp, lp);
     return 0;
 
   case WM_LBUTTONUP:
