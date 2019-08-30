@@ -1,6 +1,6 @@
 /**
  * @file win.h
- * @author oZ/acy
+ * @author oZ/acy (名賀月晃嗣)
  * @brief ウィンドウ
  * @date 2016.2.28  修正
  * @date 2016.10.11 修正
@@ -15,6 +15,7 @@
 
 #include <map>
 #include <memory>
+#include <utility>
 #include "bwin.h"
 #include "menu.h"
 
@@ -54,7 +55,7 @@ public:
   /// コマンドハンドラの型。
   /// コマンドのID毎に必要な處理をハンドラとして實裝し、
   /// WMHandler::regist()で登錄する。
-  typedef void (*CmdHandler)(Window*);
+  using CmdHandler = void (*)(Window*);
 
 private:
   std::map<int, CmdHandler> cmap_; ///< コマンドのIDとハンドラのマップ
@@ -305,60 +306,60 @@ public:
       border_only(false), resizeable(false)
   {}
 
-  /// @brief ウィンドウ作成
+  /// @brief ウィンドウ生成
   ///
-  /// ファクトリの設定に從つてウィンドウを作成する。
-  /// @param mh メッセージハンドラ。
-  ///    このハンドラオブジェクトは、作成されたWindowオブジェクトが破棄する。
+  /// ファクトリの設定に從つてウィンドウを生成する。
+  /// @param hnd メッセージハンドラ。
+  ///   このハンドラオブジェクトは、生成されたWindowオブジェクトが破棄する。
   /// @param menu メニューのリソースID
-  /// @return Windowオブジェクト。
-  ///   呼び出し側は、このオブジェクトの破棄の責任を負ふ。
-  ///   スマートポインタで管理することを推奬する。
-  urania::Window* create(urania::WMHandler* mh, int menu =0)
+  /// @return 生成したWindowオブジェクトを保持するunique_ptr。
+  std::unique_ptr<urania::Window>
+  create(std::unique_ptr<urania::WMHandler>&& hnd, int menu =0)
   {
-    return factory_(mh, menu, nullptr, 0);
+    return factory_(std::move(hnd), menu, nullptr, 0);
   }
 
-  /// @brief オーナー附ウィンドウの作成
+  /// @brief オーナー附ウィンドウの生成
   ///
-  /// ファクトリの設定に從つてオーナー附ウィンドウを作成する。
+  /// ファクトリの設定に從つてオーナー附ウィンドウを生成する。
   /// @param owner オーナーウィンドウ
-  /// @param mh メッセージハンドラ。
-  ///    このハンドラオブジェクトは、作成されたWindowオブジェクトが破棄する。
+  /// @param hnd メッセージハンドラ。
+  ///   このハンドラオブジェクトは、生成されたWindowオブジェクトが破棄する。
   /// @param menu メニューのリソースID
-  /// @return Windowオブジェクト。
-  ///   呼び出し側は、このオブジェクトの破棄の責任を負ふ。
-  ///   スマートポインタで管理することを推奬する。
-  urania::Window*
+  /// @return 生成したWindowオブジェクトを保持するunique_ptr。
+  std::unique_ptr<urania::Window>
   createAsOwned(
-    urania::BasicWindow* owner, urania::WMHandler* mh, int menu =0)
+    urania::BasicWindow* owner, 
+    std::unique_ptr<urania::WMHandler>&& hnd, 
+    int menu =0)
   {
-    return factory_(mh, menu, owner, 0);
+    return factory_(std::move(hnd), menu, owner, 0);
   }
 
-  /// @brief 子ウィンドウの作成
+  /// @brief 子ウィンドウの生成
   ///
-  /// ファクトリの設定に從つて子ウィンドウを作成する。
+  /// ファクトリの設定に從つて子ウィンドウを生成する。
   /// @param parent 親ウィンドウ
   /// @param cid 子ウィンドウID
   /// @param mh メッセージハンドラ。
-  ///    このハンドラオブジェクトは、作成されたWindowオブジェクトが破棄する。
-  /// @return Windowオブジェクト。
-  ///   呼び出し側は、このオブジェクトの破棄の責任を負ふ。
-  ///   スマートポインタで管理することを推奬する。
-  urania::Window*
-  createAsChild(urania::BasicWindow* parent, int cid, urania::WMHandler* mh)
+  ///   このハンドラオブジェクトは、生成されたWindowオブジェクトが破棄する。
+  /// @return 生成したWindowオブジェクトを保持するunique_ptr。
+  std::unique_ptr<urania::Window>
+  createAsChild(
+    urania::BasicWindow* parent, int cid, std::unique_ptr<WMHandler>&& hnd)
   {
-    return factory_(mh, 0, parent, cid);
+    return factory_(std::move(hnd), 0, parent, cid);
   }
 
 private:
-  /// @brief ウィンドウ作成
+  /// @brief ウィンドウ生成
   ///
   /// create()、createAsOwned()、createAsChildの下請けとして、
-  /// Win32 APIを呼び出してウィンドウを作成する。
-  urania::Window* factory_(
-    urania::WMHandler* mh, int menu, urania::BasicWindow* par, int cid);
+  /// Win32 APIを呼び出してウィンドウを生成する。
+  std::unique_ptr<urania::Window>
+  factory_(
+    std::unique_ptr<WMHandler>&& hnd, int menu,
+    urania::BasicWindow* par, int cid);
 };
 
 

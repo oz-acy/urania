@@ -16,14 +16,17 @@
 /*====================================
  *  ウィンドウ生成の下請け
  */
-urania::Window*
+//urania::Window*
+std::unique_ptr<urania::Window>
 urania::WindowFactory::factory_(
-  urania::WMHandler* mh, int menu, urania::BasicWindow* par, int cid)
+  std::unique_ptr<urania::WMHandler>&& hnd,
+  int menu, urania::BasicWindow* par, int cid)
 {
-  Window* res = new Window;
+  std::unique_ptr<Window> res(new Window);
 
   // ハンドラマネージャとD&Dの設定
-  res->msgHandler_.reset(mh);
+  res->msgHandler_ = std::move(hnd);
+  //res->msgHandler_.reset(mh);
   res->dad_ = drag_and_drop;
 
   // BasicWindow記述構造体の構築
@@ -63,10 +66,6 @@ urania::WindowFactory::factory_(
 
 
 
-/*================================================
- *  Window::wproc__()
- *  各Windowのメッセージ処理プロシージャ
- *==============================================*/
 LRESULT urania::Window::wproc_(UINT msg, WPARAM wp, LPARAM lp)
 {
   if (msgHandler_)
@@ -84,9 +83,7 @@ LRESULT urania::Window::wproc_(UINT msg, WPARAM wp, LPARAM lp)
 
 
 
-/*==================================================
- *  メッセージ處理系の初期化
- *================================================*/
+
 void urania::Window::init_(HWND hw)
 {
   // HWNDとWindow objectの結合
@@ -98,10 +95,6 @@ void urania::Window::init_(HWND hw)
 }
 
 
-/*===============================================
- *  メッセージ處理系の初期化解除
- *  destroyed__()とdeleting__()の下請
- *=============================================*/
 void urania::Window::uninit_()
 {
   // Drag and Dropの設定後始末
@@ -117,9 +110,8 @@ void urania::Window::uninit_()
 }
 
 
-/*================================================
- *  メッセージに應じてハンドラを呼び出す
- */
+
+
 LRESULT urania::WMHandler::operator()(urania::WndMessage* msg)
 {
   using namespace std;
@@ -205,10 +197,11 @@ LRESULT urania::WMHandler::operator()(urania::WndMessage* msg)
     break;
 
   case WM_PAINT:
-    return msg->window->onPaint(
-             [this](BasicWindow* bw, PaintDevice* pd){ onPaint(bw, pd); },
-             //bind(&WMHandler::onPaint, this, _1, _2),
-             msg->wparam, msg->lparam);
+    return
+      msg->window->onPaint(
+        [this](BasicWindow* bw, PaintDevice* pd){ this->onPaint(bw, pd); },
+        //bind(&WMHandler::onPaint, this, _1, _2),
+        msg->wparam, msg->lparam);
     break;
 
   case WM_MOUSEWHEEL:
