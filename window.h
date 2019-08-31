@@ -1,5 +1,5 @@
 /**
- * @file win.h
+ * @file window.h
  * @author oZ/acy (名賀月晃嗣)
  * @brief ウィンドウ
  * @date 2016.2.28  修正

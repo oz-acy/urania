@@ -43,7 +43,7 @@ set(URANIA_HEADERS
   paintdev.h
   dialog.h
   menu.h
-  win.h
+  window.h
   clkpanel.h
   cmndlg.h
   registry.h

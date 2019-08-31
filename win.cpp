@@ -11,7 +11,7 @@
 #include <algorithm>
 #include <functional>
 #include <windowsx.h>
-#include "win.h"
+#include "window.h"
 
 /*====================================
  *  ウィンドウ生成の下請け
