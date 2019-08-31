@@ -17,7 +17,7 @@ C++によるWin32APIのラッパー。
 |urania/system.h|システム周り、或は雜多な周邊機能|
 |urania/wbase.h|ウィンドウハンドルの管理|
 |urania/bwin.h|ウィンドウやダイアログの基底クラス|
-|urania/win.h|ウィンドウ|
+|urania/window.h|ウィンドウ|
 |urania/dialog.h|ダイアログ|
 |urania/clkpanel.h|「クリックパネル」コントロール|
 |urania/cmndlg.h|コモンダイアログ|
