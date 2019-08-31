@@ -5,11 +5,8 @@
  * @date 2016.2.27  ファイル名變更
  * @date 2016.2.29  ファイルダイアログ關係の變更
  */
-/*
- *  DECLaration classes  for part "URANIA"
- */
-#ifndef INC_URANIA_DECL_H___
-#define INC_URANIA_DECL_H___
+#ifndef INCLUDE_GUARD_URANIA_DECL_H
+#define INCLUDE_GUARD_URANIA_DECL_H
 
 namespace urania
 {
@@ -46,13 +43,13 @@ namespace urania
   {
     WST_NORMAL  = 0,
     WST_POPUP   = 1,        // 枠なしウィンドウ
-    WST_BORDER  = 1<<1,     // 枠のみのウィンドウ
-    WST_THICK   = 1<<2,     // サイズ変更可能ウィンドウ
-    WST_VSCROLL = 1<<3,     // 縦スクロールバー付き
-    WST_HSCROLL = 1<<4,     // 横スクロールバー付き
-    WST_MAXBOX  = 1<<5,     // 最大化ボタン付き
-    WST_MINBOX  = 1<<6,     // 最小化ボタン付き
-    WST_DRAGANDDROP = 1<<7  // Drag&Drop受け付け
+    WST_BORDER  = 1 << 1,     // 枠のみのウィンドウ
+    WST_THICK   = 1 << 2,     // サイズ変更可能ウィンドウ
+    WST_VSCROLL = 1 << 3,     // 縦スクロールバー付き
+    WST_HSCROLL = 1 << 4,     // 横スクロールバー付き
+    WST_MAXBOX  = 1 << 5,     // 最大化ボタン付き
+    WST_MINBOX  = 1 << 6,     // 最小化ボタン付き
+    WST_DRAGANDDROP = 1 << 7  // Drag&Drop受け付け
   };
 
   enum //system color
@@ -122,5 +119,4 @@ namespace urania
 }//end of namespace urania
 
 
-#endif
-//eof
+#endif // INCLUDE_GUARD_URANIA_DECL_H

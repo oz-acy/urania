@@ -1,23 +1,20 @@
-/**************************************************************************
+/**************************************************************************//**
  *
- *  registry.h
- *  by oZ/acy
- *  (c) 2004-2016 oZ/acy.  ALL RIGHTS RESERVED.
+ *  @file registry.h
+ *  @author oZ/acy (名賀月晃嗣)
+ *  @brief レジストリ操作クラス
  *
- *  レジストリ操作クラス
- *
- *  履歴
- *    15 Feb 2004  作成
- *    24 Apr 2008  修正
- *     4 Apr 2009  修正 for UNICODE對應
- *    29 Feb 2016  修正
- **************************************************************************/
-#ifndef INC_URANIA_REGISTRY_H___
-#define INC_URANIA_REGISTRY_H___
+ *  @date  15 Feb 2004  作成
+ *  @date  24 Apr 2008  修正
+ *  @date   4 Apr 2009  修正 for UNICODE對應
+ *  @date  29 Feb 2016  修正
+ */
+#ifndef INCLUDE_GUARD_URANIA_REGISTRY_H
+#define INCLUDE_GUARD_URANIA_REGISTRY_H
 
 #include <windows.h>
-//#include <themis/inttype.h>
 #include <string>
+//#include <themis/inttype.h>
 
 
 namespace urania {
@@ -95,4 +92,4 @@ public:
 }// end of namespace urania
 
 
-#endif // INC_URANIA_REGISTRY_H___
+#endif // INCLUDE_GUARD_URANIA_REGISTRY_H
