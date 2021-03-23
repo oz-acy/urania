@@ -373,6 +373,7 @@ public:
 
   /// @brief ボタンを生成
   /// @param id コントロールID
+  /// @param str ボタンに表示する文字列
   /// @param de コントロールの位置、幅、高さの指定
   void createPushButton(
     int id, const std::wstring& str, const urania::CtrlDesc& de)
@@ -385,6 +386,7 @@ public:
 
   /// @brief ラベルを生成
   /// @param id コントロールID
+  /// @param str ラベルに表示する文字列
   /// @param de コントロールの位置、幅、高さの指定
   void createLabel(int id, const std::wstring& str, const urania::CtrlDesc& de)
   {
@@ -396,6 +398,7 @@ public:
   
   /// @brief チェックボックスを生成
   /// @param id コントロールID
+  /// @param str チェックボックスに表示する文字列
   /// @param de コントロールの位置、幅、高さの指定
   void createCheckBox(
     int id, const std::wstring& str, const urania::CtrlDesc& de)

@@ -1,14 +1,16 @@
-/**
+/**********************************************************************//**
+ *
  * @file window.h
  * @author oZ/acy (名賀月晃嗣)
- * @brief ウィンドウ
+ * @brief ウィンドウクラス
+ *
  * @date 2016.2.28  修正
- * @date 2016.10.11 修正
- *   WMsgHandlerクラスにonLButtonDown()、onMButtonDown()、onRButtonDown()を追加
- * @date 2018.12.25 修正
- *   Windows::msgHandler_を生ポインタからunique_ptrに變更
- * @date 2019.8.30 修正
- *       豫約されてゐる識別子に該當してゐたものを修正
+ * @date 2016.10.11
+ *  WMsgHandlerクラスにonLButtonDown()、onMButtonDown()、onRButtonDown()を追加。
+ * @date 2018.12.25
+ *  Windows::msgHandler_を生ポインタからunique_ptrに變更。
+ * @date 2019.8.30
+ *  豫約されてゐる識別子に該當してゐたものを修正。
  */
 #ifndef INCLUDE_GUARD_URANIA_WINDOW_H
 #define INCLUDE_GUARD_URANIA_WINDOW_H
@@ -110,7 +112,7 @@ public:
   ///
   /// マウス左ボタンが押下されたときに呼び出されるハンドラ。
   /// ライブラリのユーザは適宜オーバーライドして必要な處理を實裝する。
-  /// @param w ウィンドウ
+  /// @param win ウィンドウ
   /// @param x X座標
   /// @param y Y座標
   /// @param ctrl Ctrlキーが押されてゐるかどうか
@@ -121,13 +123,13 @@ public:
   /// @return デフォルトではfalseを返す。
   ///  オーバーライドする場合、有效な處理の後にはtrueを返すこと。
   virtual bool onLButtonDown(
-    Window* w, int x, int y, bool ctrl, bool shft, bool lb, bool mb, bool rb)
+    Window* win, int x, int y, bool ctrl, bool shft, bool lb, bool mb, bool rb)
     { return false; }
 
   /// マウス中ボタンが押下されたときに呼び出されるハンドラ。
   /// ライブラリのユーザは適宜オーバーライドして必要な處理を實裝する。
   /// @brief マウス中ボタン押下時のハンドラ
-  /// @param w ウィンドウ
+  /// @param win ウィンドウ
   /// @param x X座標
   /// @param y Y座標
   /// @param ctrl Ctrlキーが押されてゐるかどうか
@@ -138,14 +140,14 @@ public:
   /// @return デフォルトではfalseを返す。
   ///  オーバーライドする場合、有效な處理の後にはtrueを返すこと。
   virtual bool onMButtonDown(
-    Window*, int x, int y, bool ctrl, bool shft, bool lb, bool mb, bool rb)
+    Window* win, int x, int y, bool ctrl, bool shft, bool lb, bool mb, bool rb)
     { return false; }
 
   /// @brief マウス右ボタン押下時のハンドラ
   ///
   /// マウス右ボタンが押下されたときに呼び出されるハンドラ。
   /// ライブラリのユーザは適宜オーバーライドして必要な處理を實裝する。
-  /// @param w ウィンドウ
+  /// @param win ウィンドウ
   /// @param x X座標
   /// @param y Y座標
   /// @param ctrl Ctrlキーが押されてゐるかどうか
@@ -156,7 +158,7 @@ public:
   /// @return デフォルトではfalseを返す。
   ///  オーバーライドする場合、有效な處理の後にはtrueを返すこと。
   virtual bool onRButtonDown(
-    Window*, int x, int y, bool ctrl, bool shft, bool lb, bool mb, bool rb)
+    Window* win, int x, int y, bool ctrl, bool shft, bool lb, bool mb, bool rb)
     { return false; }
 
   /// @brief 再描畫要求時のハンドラ
@@ -341,7 +343,7 @@ public:
   /// ファクトリの設定に從つて子ウィンドウを生成する。
   /// @param parent 親ウィンドウ
   /// @param cid 子ウィンドウID
-  /// @param mh メッセージハンドラ。
+  /// @param hnd メッセージハンドラ。
   ///   このハンドラオブジェクトは、生成されたWindowオブジェクトが破棄する。
   /// @return 生成したWindowオブジェクトを保持するunique_ptr。
   std::unique_ptr<urania::Window>
@@ -354,7 +356,7 @@ public:
 private:
   /// @brief ウィンドウ生成
   ///
-  /// create()、createAsOwned()、createAsChildの下請けとして、
+  /// create()、createAsOwned()、createAsChild()の下請けとして、
   /// Win32 APIを呼び出してウィンドウを生成する。
   std::unique_ptr<urania::Window>
   factory_(

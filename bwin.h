@@ -109,7 +109,7 @@ protected:
   ///
   /// BasicWindowオブジェクトからHWNDへの結合と、
   /// HWNDからオブジェクトへの結合を形成する。
-  /// @param オブジェクトと結合するHWND
+  /// @param hw オブジェクトと結合するHWND
   void bindHWND_(HWND hw)
   {
     link_(hw);
@@ -143,7 +143,7 @@ protected:
   ///
   /// BasicWindowオブジェクトと結合してゐるHWND用のウィンドウプロシージャ。
   /// HWNDと結び附いたオブジェクトのwproc_()を呼び出す。
-  /// @param[in] HWND メッセージを受けたウィンドウのHWND
+  /// @param[in] hw メッセージを受けたウィンドウのHWND
   /// @param[in] msg メッセージ
   /// @param[in] wp メッセージのパラメータ(WPARAM)
   /// @param[in] lp メッセージのパラメータ(LPARAM)
@@ -199,7 +199,6 @@ public:
   ///
   /// ウィンドウを(再)描畫するためのPaintDeviceを取得する。
   std::unique_ptr<PaintDevice> getPaintDevice();
-  //urania::PaintDevice* getPaintDevice();
 
   /// @brief ウィンドウ再描畫
   ///
@@ -210,6 +209,8 @@ public:
   /// @param proc
   ///   描畫處理を行ふ函數オブジェクト。
   ///   プロトタイプは void (proc)(BasicWindow*, PaintDevice*);
+  /// @param wp 再描畫要求メッセージのパラメタ(不使用)
+  /// @param lp 再描畫要求メッセージのパラメタ(不使用)
   template<class PT_> LRESULT onPaint(PT_&& proc, WPARAM wp, LPARAM lp);
 
   /// @brief クライアント領域の幅を取得
