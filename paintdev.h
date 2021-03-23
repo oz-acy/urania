@@ -6,6 +6,8 @@
  *
  *  @date 2016.3.2   修正
  *  @date 2019.8.29  修正
+ *  @date 2021.3.23
+ *    PaintDevice::blt()の仕樣を一部變更。PaintDevice::stretchBlt()を追加。
  *
  */
 #ifndef INCLUDE_GUARD_URANIA_PAINTDEVICE_H
@@ -335,15 +337,30 @@ public:
     int dx, int dy, urania::PaintMemDeviceIndexed* src,
     int sx, int sy, int w, int h, const polymnia::Rect& mask);
 
-  /// 轉送元の全領域から自己の全領域に轉送する。
-  /// 領域の大きさが異なる場合は擴大縮小される。
-  /// @param src 轉送元
-  void blt(const urania::PaintMemDevice* src);
 
   /// 轉送元の全領域から自己の全領域に轉送する。
   /// 領域の大きさが異なる場合は擴大縮小される。
   /// @param src 轉送元
+  void stretchBlt(const urania::PaintMemDevice* src);
+
+  /// 轉送元の全領域から自己の全領域に轉送する。
+  /// 領域の大きさが異なる場合は擴大縮小される。
+  /// @param src 轉送元
+  void stretchBlt(urania::PaintMemDeviceIndexed* src);
+
+  /// 轉送元の全領域から自己の全領域に轉送する。
+  /// 領域の大きさが異なる場合はアスペクト比を保存しつつ擴大縮小される。
+  /// 轉送元と自己のアスペクト比が異なる場合、餘白が生じる。
+  /// @param src 轉送元
+  void blt(const urania::PaintMemDevice* src);
+
+  /// 轉送元の全領域から自己の全領域に轉送する。
+  /// 領域の大きさが異なる場合はアスペクト比を保存しつつ擴大縮小される。
+  /// 轉送元と自己のアスペクト比が異なる場合、餘白が生じる。
+  /// @param src 轉送元
   void blt(urania::PaintMemDeviceIndexed* src);
+
+
 
 
   /// システムカラーを取得する。
