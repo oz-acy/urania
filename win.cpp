@@ -1,15 +1,39 @@
-/**************************************************************************
+/*
+ * Copyright 2002-2021 oZ/acy (名賀月晃嗣)
+ * Redistribution and use in source and binary forms, 
+ *     with or without modification, 
+ *   are permitted provided that the following conditions are met:
  *
- *  win.cpp
- *  by oZ/acy (名賀月晃嗣)
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
  *
- *  履歴
- *    2016.2.29  修正 (クロージャの實裝をbindから[this](){}に變更)
- *    2019.8.30  修正 豫約されてゐる識別子に該當してゐたものを修正
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, 
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+/*
+ * @file win.cpp
+ * @author oZ/acy (名賀月晃嗣)
+ *
+ * @date 2016.2.29  修正 (クロージャの實裝をbindから[this](){}に變更)
+ * @date 2019.8.30  修正 豫約されてゐる識別子に該當してゐたものを修正
+ *
  */
 #include <cstdlib>
 #include <algorithm>
-#include <functional>
 #include <windowsx.h>
 #include "window.h"
 
@@ -26,7 +50,6 @@ urania::WindowFactory::factory_(
 
   // ハンドラマネージャとD&Dの設定
   res->msgHandler_ = std::move(hnd);
-  //res->msgHandler_.reset(mh);
   res->dad_ = drag_and_drop;
 
   // BasicWindow記述構造体の構築
@@ -64,12 +87,11 @@ urania::WindowFactory::factory_(
 }
 
 
-
-
+// Window用「ウィンドウプロシージャ」
+// BasicWindow::winproc_()から呼び出され、ハンドラを呼び出す。
 LRESULT urania::Window::wproc_(UINT msg, WPARAM wp, LPARAM lp)
 {
-  if (msgHandler_)
-  {
+  if (msgHandler_) {
     urania::WndMessage m;
     m.window = this;
     m.id = msg;
@@ -82,8 +104,12 @@ LRESULT urania::Window::wproc_(UINT msg, WPARAM wp, LPARAM lp)
 }
 
 
-
-
+// 初期化處理
+// 
+// Window生成時に呼び出され、WindowオブジェクトとHWNDを結合する。
+//
+// より具體的には、
+// BasicWindow::winproc_()がWM_CREATEを處理するときに呼び出される。
 void urania::Window::init_(HWND hw)
 {
   // HWNDとWindow objectの結合
@@ -95,17 +121,25 @@ void urania::Window::init_(HWND hw)
 }
 
 
+// 未初期化處理
+//
+// ウィンドウ破棄時に呼び出される。
+//
+// より具體的には、
+// (1) BasicWindow::winproc_()がWM_DESTROYを處理するとき、
+// (2) Windowオブジェクトが解體されるとき、
+// に、HWNDとの結合が殘つてゐるならば呼び出される。
 void urania::Window::uninit_()
 {
-  // Drag and Dropの設定後始末
+  // Drag and Dropの設定の後始末
   if (dad_)
     ::DragAcceptFiles(hw_, FALSE);
 
-  // 関連Menuの始末
-  if (!!menu_)
+  // 関聯Menuの始末
+  if (menu_)
     menu_->detach_();
 
-  // HWND側からのリンクを切断
+  // HWND側からのリンクを切斷
   unbindHWND_();
 }
 
@@ -200,7 +234,6 @@ LRESULT urania::WMHandler::operator()(urania::WndMessage* msg)
     return
       msg->window->onPaint(
         [this](BasicWindow* bw, PaintDevice* pd){ this->onPaint(bw, pd); },
-        //bind(&WMHandler::onPaint, this, _1, _2),
         msg->wparam, msg->lparam);
     break;
 

@@ -1,14 +1,38 @@
-/**************************************************************************
+/*
+ * Copyright 2002-2021 oZ/acy (名賀月晃嗣)
+ * Redistribution and use in source and binary forms, 
+ *     with or without modification, 
+ *   are permitted provided that the following conditions are met:
  *
- *  pdev2.cpp
- *  by oZ/acy (名賀月晃嗣)
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
  *
- *  class urania::PaintDevice の実装定義その弐
- *  圖形文字描畫及びそのヘルパ
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
  *
- *  履歴
- *    2016.2.27  修正
- *    2019.8.29  修正
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, 
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+/*
+ * @file pdev2.cpp
+ * @author oZ/acy (名賀月晃嗣)
+ *
+ * class urania::PaintDevice の実装定義(2)
+ * 圖形文字描畫及びそのヘルパ
+ *
+ * @date 2016.2.27  修正
+ * @date 2019.8.29  修正
  */
 #include <cstring>
 #include "paintdev.h"
@@ -128,7 +152,6 @@ urania::PaintDevice::text(
 {
   ::SetTextColor(hdc_, col.getColorref());
   auto ptxt = std::make_unique<wchar_t[]>(str.length());
-  //wchar_t *ptxt = new wchar_t[str.length()];
   std::wcscpy(ptxt.get(), str.c_str());
 
   RECT rc = {x, y, x, y};
@@ -146,7 +169,6 @@ urania::PaintDevice::text(
     hdc_, ptxt.get(), -1, &rc,
     DT_NOCLIP | DT_NOPREFIX | DT_TABSTOP | DT_EXPANDTABS, &dtp);
 
-  //delete[] ptxt;
   return polymnia::Point(rc.right, rc.bottom);
 }
 
@@ -162,7 +184,6 @@ urania::PaintDevice::text(
 {
   ::SetTextColor(hdc_, col.getColorref());
   auto ptxt = std::make_unique<wchar_t>(str.length());
-  //wchar_t *ptxt = new wchar_t[str.length()];
   std::wcscpy(ptxt.get(), str.c_str());
 
   RECT rc = {x, y, x + ww, y};
@@ -184,7 +205,6 @@ urania::PaintDevice::text(
     | DT_TABSTOP | DT_EXPANDTABS,
     &dtp);
 
-  //delete[] ptxt;
   return polymnia::Point(rc.right, rc.bottom);
 }
 
@@ -207,7 +227,6 @@ urania::PaintDevice::changeFont(
 
   paf |= ro ? FF_ROMAN : FF_MODERN;
   int wf = fx ? (size / 2) : 0;
-
 
   HFONT tf
    = CreateFont(

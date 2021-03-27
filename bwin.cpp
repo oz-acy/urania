@@ -1,11 +1,36 @@
-/**************************************************************************
+/*
+ * Copyright 2002-2021 oZ/acy (名賀月晃嗣)
+ * Redistribution and use in source and binary forms, 
+ *     with or without modification, 
+ *   are permitted provided that the following conditions are met:
  *
- *  bwin.cpp
- *  by oZ/acy (名賀月晃嗣)
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
  *
- *  Window用基底クラス 實裝
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
  *
- *    2016.2.28  修正
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, 
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+/*
+ * @file bwin.cpp
+ * @author oZ/acy (名賀月晃嗣)
+ * @brief Window用基底クラスの實裝
+ *
+ * @date 2016.2.28  修正
+ *
  */
 #include <algorithm>
 #include <sstream>
@@ -21,7 +46,7 @@ std::vector<urania::BasicWindow::WC_> urania::BasicWindow::vwc_S;
  *  BasicWindow::registWC_()
  *  WNDCLASS登録 & WNDCLASS名を返す
  *  同じ内容のWNDCLASSの二重登録を阻止する
- *==========================================*/
+ */
 std::wstring urania::BasicWindow::registWC_
 (const urania::BasicWindow::WC_& wc)
 {
@@ -40,19 +65,19 @@ std::wstring urania::BasicWindow::registWC_
     wc2.wcname_ = std::wstring(L"URANIAWNDCLS") + tmp.str();
 
     // WNDCLASS Structure
-    WNDCLASS wndcls =
-    {
-      CS_HREDRAW | CS_VREDRAW,
-      wc2.proc_,
-      0,
-      sizeof(Window*),
-      getHI_(),
-      NULL,
-      NULL,
-      NULL,
-      nullptr,
-      wc2.wcname_.c_str()
-    };
+    WNDCLASS wndcls
+      = {
+          CS_HREDRAW | CS_VREDRAW,
+          wc2.proc_,
+          0,
+          sizeof(Window*),
+          getHI_(),
+          NULL,
+          NULL,
+          NULL,
+          nullptr,
+          wc2.wcname_.c_str()
+        };
 
     // Icon の設定
     if (wc2.icon_id_ != DEFAULT_RC)
@@ -116,7 +141,7 @@ std::wstring urania::BasicWindow::registWC_
 /*=========================================
  *  BasicWindow::createWindow0_()
  *  ウィンドウの生成
- *=======================================*/
+ */
 void urania::BasicWindow::createWindow0_(const urania::BasicWindow::D0_& de)
 {
   HWND hwnd;
@@ -176,9 +201,9 @@ void urania::BasicWindow::createWindow0_(const urania::BasicWindow::D0_& de)
 /*===================================================================
  *  BasicWindow::winproc_()
  *  BasicWindowと結合しているHWND用のWindow Procedure
- *=================================================================*/
-LRESULT CALLBACK urania::BasicWindow::winproc_(
-  HWND hw, UINT msg, WPARAM wp, LPARAM lp)
+ */
+LRESULT CALLBACK 
+urania::BasicWindow::winproc_(HWND hw, UINT msg, WPARAM wp, LPARAM lp)
 {
   BasicWindow* pw = (BasicWindow*)GetWindowLongPtr(hw, 0);
 

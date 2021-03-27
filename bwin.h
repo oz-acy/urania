@@ -1,12 +1,38 @@
-/**********************************************************************//**
+/*
+ * Copyright 2002-2021 oZ/acy (名賀月晃嗣)
+ * Redistribution and use in source and binary forms, 
+ *     with or without modification, 
+ *   are permitted provided that the following conditions are met:
  *
- *  @file bwin.h
- *  @author oZ/acy (名賀月晃嗣)
- *  @brief Window用基底クラス
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
  *
- *  @date 2016.2.29   修正
- *  @date 2018.12.26  修正
- *  @date 2019.8.30   修正
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, 
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+/**
+ * @file bwin.h
+ * @author oZ/acy (名賀月晃嗣)
+ * @brief Window用基底クラス
+ *
+ * @date 2016.2.29   修正
+ * @date 2018.12.26  修正
+ * @date 2019.8.30   修正
+ *
  */
 #ifndef INCLUDE_GUARD_URANIA_BASICWINDOW_H
 #define INCLUDE_GUARD_URANIA_BASICWINDOW_H
@@ -48,15 +74,14 @@ public:
     bool border_only;  /* 境界だけ? */
     bool can_resize;  /* リサイズ可能? */
 
-
     D0_()
-    : pwnd(nullptr), hm(nullptr), winproc(nullptr),
-      x(CW_USEDEFAULT), w(CW_USEDEFAULT),
-      icon(DEFAULT_RC), cursor(DEFAULT_RC), bkcolor(BG_WHITE),
-      maxbox(false), minbox(false),
-      h_scrollbar(false), v_scrollbar(false), popup(false),
-      border_only(false), can_resize(false)
-    {}
+      : pwnd(nullptr), hm(nullptr), winproc(nullptr),
+        x(CW_USEDEFAULT), w(CW_USEDEFAULT),
+        icon(DEFAULT_RC), cursor(DEFAULT_RC), bkcolor(BG_WHITE),
+        maxbox(false), minbox(false),
+        h_scrollbar(false), v_scrollbar(false), popup(false),
+        border_only(false), can_resize(false)
+      {}
   };
 
 
@@ -183,8 +208,7 @@ public:
   /// @param[in] rect 再描畫領域に設定する長方形
   void invalidate(const polymnia::Rect& rect)
   {
-    if (hw_)
-    {
+    if (hw_) {
       ::RECT r;
       r.left = rect.x1;
       r.right = rect.x2;
@@ -335,6 +359,7 @@ LRESULT urania::BasicWindow::onPaint(PT_&& proc, WPARAM wp, LPARAM lp)
 
   return 0;
 }
+
 
 
 

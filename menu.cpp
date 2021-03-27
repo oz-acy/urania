@@ -1,35 +1,59 @@
-/**************************************************************************
+/*
+ * Copyright 2002-2021 oZ/acy (名賀月晃嗣)
+ * Redistribution and use in source and binary forms, 
+ *     with or without modification, 
+ *   are permitted provided that the following conditions are met:
  *
- *  menu.cpp
- *  by oZ/acy (名賀月晃嗣)
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
  *
- *  urania::Menu の實裝
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
  *
- *  履歴
- *    2016.2.28  修正
- *    2019.8.30  修正
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, 
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+/*
+ * @file menu.cpp
+ * @author oZ/acy (名賀月晃嗣)
+ * @brief urania::Menuの實裝
+ *
+ * @date 2016.2.28  修正
+ * @date 2019.8.30  修正
+ * @date 2021.3.26  修正
+ *
  */
 #include "menu.h"
 #include "system.h"
 
-urania::RCP_Menu urania::Menu::create(int rc)
+std::shared_ptr<urania::Menu> urania::Menu::create(int rc)
 {
-  RCP_Menu qm(new Menu);
+  std::shared_ptr<Menu> qm(new Menu);
   qm->link_(::LoadMenu(System::hi_S, MAKEINTRESOURCE(rc)));
   return qm;
 }
 
-
-urania::RCP_Menu urania::Menu::getSub(unsigned id)
+std::shared_ptr<urania::Menu> urania::Menu::getSub(unsigned id)
 {
   if (!hmenu_)
-    return RCP_Menu();
+    return std::shared_ptr<Menu>();
 
   HMENU sub = ::GetSubMenu(hmenu_, id);
   if (!sub)
-    return RCP_Menu();
+    return std::shared_ptr<Menu>();
 
-  RCP_Menu mn(new Menu);
+  std::shared_ptr<Menu> mn(new Menu);
   mn->attach_(sub);
   return mn;
 }
@@ -67,8 +91,8 @@ bool urania::Menu::getItemCheck(unsigned cmdid)
 
 void urania::Menu::enableItem(unsigned cmdid)
 {
-   if (hmenu_)
-     ::EnableMenuItem(hmenu_, cmdid, MF_BYCOMMAND|MF_ENABLED);
+  if (hmenu_)
+    ::EnableMenuItem(hmenu_, cmdid, MF_BYCOMMAND|MF_ENABLED);
 }
 
 

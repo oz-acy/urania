@@ -1,9 +1,33 @@
-/**************************************************************************
+/*
+ * Copyright 2002-2021 oZ/acy (名賀月晃嗣)
+ * Redistribution and use in source and binary forms, 
+ *     with or without modification, 
+ *   are permitted provided that the following conditions are met:
  *
- *  menudesc.cpp
- *  by oZ/acy (名賀月晃嗣)
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
  *
- *  class urania::MenuDesc、class urania::Menu(一部) の實裝
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, 
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+/*
+ * @file menudesc.cpp
+ * @author oZ/acy (名賀月晃嗣)
+ * @brief class urania::MenuDesc、class urania::Menu(一部) の實裝
  *
  */
 #include "menu.h"
@@ -37,7 +61,6 @@ HMENU urania::MenuDesc::createHandle_() const
   HMENU hmenu = CreateMenu();
   for (auto n : node_)
     addPopupMenu_(hmenu, n);
-
   //for (unsigned i = 0; i < node_.size(); i++)
   //  addPopupMenu_(hmenu, node_[i]);
 
@@ -101,10 +124,10 @@ bool urania::MenuDesc::Node_::addPopup(const std::wstring& s,int i)
 
 
 //// urania::Menu ////////
-
-urania::RCP_Menu urania::Menu::create(const urania::MenuDesc& desc)
+std::shared_ptr<urania::Menu>
+urania::Menu::create(const urania::MenuDesc& desc)
 {
-  RCP_Menu qm(new Menu);
+  std::shared_ptr<Menu> qm(new Menu);
   qm->link_(desc.createHandle_());
   return qm;
 }

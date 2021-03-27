@@ -1,20 +1,44 @@
-/**********************************************************************//**
+/*
+ * Copyright 2002-2021 oZ/acy (名賀月晃嗣)
+ * Redistribution and use in source and binary forms, 
+ *     with or without modification, 
+ *   are permitted provided that the following conditions are met:
  *
- *  @file paintdev.h
- *  @author oZ/acy (名賀月晃嗣)
- *  @brief Windows DC 描畫用クラス
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
  *
- *  @date 2016.3.2   修正
- *  @date 2019.8.29  修正
- *  @date 2021.3.23
- *    PaintDevice::blt()の仕樣を一部變更。PaintDevice::stretchBlt()を追加。
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, 
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+/**
+ * @file paintdev.h
+ * @author oZ/acy (名賀月晃嗣)
+ * @brief Windows DC 描畫用クラス
+ *
+ * @date 2016.3.2   修正
+ * @date 2019.8.29  修正
+ * @date 2021.3.23
+ *   PaintDevice::blt()の仕樣を一部變更。PaintDevice::stretchBlt()を追加。
  *
  */
 #ifndef INCLUDE_GUARD_URANIA_PAINTDEVICE_H
 #define INCLUDE_GUARD_URANIA_PAINTDEVICE_H
 
 #include <windows.h>
-#include <themis/inttype.h>
 #include <polymnia/picture.h>
 
 namespace urania
@@ -23,13 +47,13 @@ namespace urania
   class Color
   {
   public:
-    themis::UByte b;
-    themis::UByte g;
-    themis::UByte r;
+    std::uint8_t b;
+    std::uint8_t g;
+    std::uint8_t r;
 
   public:
     constexpr Color() : b(0), g(0), r(0) {}
-    constexpr Color(themis::UByte rr, themis::UByte gg, themis::UByte bb)
+    constexpr Color(std::uint8_t rr, std::uint8_t gg, std::uint8_t bb)
       : b(bb), g(gg), r(rr) {}
     constexpr Color(const polymnia::RgbColor& org)
       : b(org.b), g(org.g), r(org.r) {}
@@ -47,9 +71,7 @@ namespace urania
     constexpr COLORREF getColorref() const
     {
       return
-        (themis::UDWord)r
-        | ((themis::UDWord)g << 8)
-        | ((themis::UDWord)b << 16);
+        (std::uint8_t)r | ((std::uint8_t)g << 8) | ((std::uint8_t)b << 16);
     }
 
     constexpr operator polymnia::RgbColor() const
@@ -111,7 +133,7 @@ public:
  *  PaintDevice互換メモリ上假想デバイス(256 palette color)
  */
 class urania::PaintMemDeviceIndexed
-  : public polymnia::ImageBuffer<themis::UByte>
+  : public polymnia::ImageBuffer<std::uint8_t>
 {
   friend class urania::PaintDevice;
 
@@ -287,7 +309,7 @@ public:
   int height() const { return height_; }
 
 
-  /// 轉送する。
+  /// @brief 轉送
   /// @param dx 轉送對象左上角のX座標
   /// @param dy 轉送對象左上角のX座標
   /// @param src 轉送元
@@ -299,7 +321,7 @@ public:
     int dx, int dy, const urania::PaintMemDevice* src, int sx, int sy,
     int w, int h);
 
-  /// 轉送する。
+  /// @brief 轉送
   /// @param dx 轉送對象左上角のX座標
   /// @param dy 轉送對象左上角のX座標
   /// @param src 轉送元
@@ -312,7 +334,7 @@ public:
     int dx, int dy, const urania::PaintMemDevice* src, int sx, int sy,
     int w, int h, const polymnia::Rect& mask);
 
-  /// 轉送する。
+  /// @brief 轉送
   /// @param dx 轉送對象左上角のX座標
   /// @param dy 轉送對象左上角のX座標
   /// @param src 轉送元
@@ -324,7 +346,7 @@ public:
     int dx, int dy, urania::PaintMemDeviceIndexed* src,
     int sx, int sy, int w, int h);
 
-  /// 轉送する。
+  /// @brief 轉送
   /// @param dx 轉送對象左上角のX座標
   /// @param dy 轉送對象左上角のX座標
   /// @param src 轉送元
@@ -337,30 +359,35 @@ public:
     int dx, int dy, urania::PaintMemDeviceIndexed* src,
     int sx, int sy, int w, int h, const polymnia::Rect& mask);
 
-
+  /// @brief 轉送
+  ///
   /// 轉送元の全領域から自己の全領域に轉送する。
   /// 領域の大きさが異なる場合は擴大縮小される。
   /// @param src 轉送元
   void stretchBlt(const urania::PaintMemDevice* src);
 
+  /// @brief 轉送
+  ///
   /// 轉送元の全領域から自己の全領域に轉送する。
   /// 領域の大きさが異なる場合は擴大縮小される。
   /// @param src 轉送元
   void stretchBlt(urania::PaintMemDeviceIndexed* src);
 
+  /// @brief 轉送
+  ///
   /// 轉送元の全領域から自己の全領域に轉送する。
   /// 領域の大きさが異なる場合はアスペクト比を保存しつつ擴大縮小される。
   /// 轉送元と自己のアスペクト比が異なる場合、餘白が生じる。
   /// @param src 轉送元
   void blt(const urania::PaintMemDevice* src);
 
+  /// @brief 轉送
+  ///
   /// 轉送元の全領域から自己の全領域に轉送する。
   /// 領域の大きさが異なる場合はアスペクト比を保存しつつ擴大縮小される。
   /// 轉送元と自己のアスペクト比が異なる場合、餘白が生じる。
   /// @param src 轉送元
   void blt(urania::PaintMemDeviceIndexed* src);
-
-
 
 
   /// システムカラーを取得する。

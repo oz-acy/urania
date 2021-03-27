@@ -1,13 +1,39 @@
-/**************************************************************************//**
+/*
+ * Copyright 2002-2021 oZ/acy (名賀月晃嗣)
+ * Redistribution and use in source and binary forms, 
+ *     with or without modification, 
+ *   are permitted provided that the following conditions are met:
  *
- *  @file menu.h
- *  @author oZ/acy
- *  @brief メニュー記述・操作系クラス
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
  *
- *  @date 2016.2.28  修正
- *  @date 2019.8.30  修正
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, 
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
  */
-
+/**
+ * @file menu.h
+ * @author oZ/acy
+ * @brief メニュークラス
+ *
+ * @date 2016.2.28  修正
+ * @date 2019.8.30  修正
+ * @date 2021.3.26  修正
+ *
+ */
 #ifndef INCLUDE_GUARD_URANIA_MENU_H
 #define INCLUDE_GUARD_URANIA_MENU_H
 
@@ -96,9 +122,6 @@ class urania::Menu : themis::Noncopyable<urania::Menu>
   friend class urania::Window;
 
 private:
-  typedef std::shared_ptr<urania::Menu> PP_;
-
-private:
   HMENU hmenu_;
   bool dst_;
 
@@ -151,13 +174,13 @@ public:
   ~Menu() { kill_(); }
 
   /// MenuDescからMenuを生成する。
-  static PP_ create(const urania::MenuDesc& desc);
+  static std::shared_ptr<urania::Menu> create(const urania::MenuDesc& desc);
 
   /// リソースIDからMenuを生成する。
-  static PP_ create(int rc);
+  static std::shared_ptr<urania::Menu> create(int rc);
 
   /// サブメニューを取得する。
-  PP_ getSub(unsigned id);
+  std::shared_ptr<urania::Menu> getSub(unsigned id);
 
 
   /// 指定項目にチェックをつける。
@@ -181,11 +204,13 @@ public:
 };
 
 
-namespace urania
-{
-  using RCP_Menu = std::shared_ptr<Menu>;
-  //typedef std::shared_ptr<Menu> RCP_Menu;
-}
+//namespace urania
+//{
+//  using RCP_Menu = std::shared_ptr<Menu>;
+//  //typedef std::shared_ptr<Menu> RCP_Menu;
+//}
+
+
 
 
 #endif // INCLUDE_GUARD_URANIA_MENU_H

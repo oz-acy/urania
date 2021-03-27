@@ -1,11 +1,38 @@
-/**********************************************************************//**
+/*
+ * Copyright 2002-2021 oZ/acy (名賀月晃嗣)
+ * Redistribution and use in source and binary forms, 
+ *     with or without modification, 
+ *   are permitted provided that the following conditions are met:
  *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, 
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+/**
  * @file wbase.h
  * @author oZ/acy (名賀月晃嗣)
- * @brief HWND管理用の基底クラス
+ * @brief HWND管理基底クラス
+ *
  * @date 2018.2.27 修正
  * @date 2018.12.24 修正
  * @date 2019.8.30 修正
+ * @date 2021.3.26 コメントを修正
  */
 #ifndef INCLUDE_GUARD_URANIA_WINDOW_BASE_H
 #define INCLUDE_GUARD_URANIA_WINDOW_BASE_H
@@ -18,7 +45,7 @@
 /*--------------------------------------*//**
  *  @brief Window、Dialog共通基底クラス
  *
- *  HWNDの管理・操作等を行う。
+ *  HWNDの管理や操作を行ふ。
  */
 class urania::WndBase : themis::Noncopyable<urania::WndBase>
 {
@@ -211,7 +238,7 @@ public:
       ::ShowWindow(hw_, SW_MINIMIZE);
   }
 
-  /// @brief ウィンドウを「元に戻」す
+  /// @brief ウィンドウを「元に戾」す
   void normalize()
   {
     if (hw_)
@@ -221,7 +248,7 @@ public:
   //========================================================
   /// @brief ウィンドウの移動
   ///
-  /// 移動先はウィンドウの左上の位置(x, y)で指定する。
+  /// ウィンドウを移動する。移動先はウィンドウの左上の位置(x, y)で指定する。
   /// @param x 移動先のx座標
   /// @param y 移動先のy座標
   //========================================================
@@ -232,10 +259,12 @@ public:
   }
 
   //==============================================
-  /// @brief メッセージを投げる
+  /// @brief メッセージ送出
+  ///
+  /// ウィンドウにメッセージを投げる。
   /// @param msg メッセージ
-  /// @param wp メッセージのパラメータ(WPARAM)
-  /// @param lp メッセージのパラメータ(LPARAM)
+  /// @param wp メッセージのパラメタ(WPARAM)
+  /// @param lp メッセージのパラメタ(LPARAM)
   //==============================================
   void postMessage(UINT msg, WPARAM wp, LPARAM lp)
   {
@@ -323,7 +352,7 @@ public:
   //////////////////////////////////////////////
   //  コントロール生成系
   //////////////////////////////////////////////
-  /// @brief エディットボックスを生成
+  /// @brief エディットボックス生成
   /// @param id コントロールID
   /// @param de コントロールの位置、幅、高さの指定
   void createEditBox(int id, const urania::CtrlDesc& de)
@@ -334,7 +363,7 @@ public:
       reinterpret_cast<HMENU>(id), getHI_(), nullptr);
   }
 
-  /// @brief 複數行エディットボックスを生成
+  /// @brief 複數行エディットボックスの生成
   /// @param id コントロールID
   /// @param de コントロールの位置、幅、高さの指定
   void createMultiLineEditBox(int id, const urania::CtrlDesc& de)
@@ -346,7 +375,7 @@ public:
       reinterpret_cast<HMENU>(id), getHI_(), nullptr);
   }
 
-  /// @brief リストボックスを生成
+  /// @brief リストボックス生成
   /// @param id コントロールID
   /// @param de コントロールの位置、幅、高さの指定
   void createListBox(int id, const urania::CtrlDesc& de)
@@ -358,7 +387,7 @@ public:
       reinterpret_cast<HMENU>(id), getHI_(), nullptr);
   }
 
-  /// @brief コンボボックスを生成
+  /// @brief コンボボックス生成
   /// @param id コントロールID
   /// @param de コントロールの位置、幅、高さの指定
   void createComboBox(int id, const urania::CtrlDesc& de)
@@ -371,7 +400,7 @@ public:
       reinterpret_cast<HMENU>(id), getHI_(), nullptr);
   }
 
-  /// @brief ボタンを生成
+  /// @brief ボタン生成
   /// @param id コントロールID
   /// @param str ボタンに表示する文字列
   /// @param de コントロールの位置、幅、高さの指定
@@ -384,7 +413,7 @@ public:
       reinterpret_cast<HMENU>(id), getHI_(), nullptr);
   }
 
-  /// @brief ラベルを生成
+  /// @brief ラベル生成
   /// @param id コントロールID
   /// @param str ラベルに表示する文字列
   /// @param de コントロールの位置、幅、高さの指定
@@ -396,7 +425,7 @@ public:
       reinterpret_cast<HMENU>(id), getHI_(), nullptr);
   }
   
-  /// @brief チェックボックスを生成
+  /// @brief チェックボックス生成
   /// @param id コントロールID
   /// @param str チェックボックスに表示する文字列
   /// @param de コントロールの位置、幅、高さの指定
@@ -409,7 +438,7 @@ public:
       reinterpret_cast<HMENU>(id), getHI_(), nullptr);
   }
 
-  // 2018.12.24 定義意圖不明によりコメントアウト
+  // 2018.12.24 定義意圖不明につきコメントアウト
   //void createActiveButton(
   //  int id, const std::wstring& str, const urania::CtrlDesc& de);
 
@@ -418,12 +447,12 @@ public:
   ///////////////////////////////
   //  EditBox操作系
   ///////////////////////////////
-  /// @brief エディットボックスの内容を取得
+  /// @brief エディットボックスの内容の取得
   /// @param id コントロールID
   /// @return 内容
   std::wstring getTextEB(int id);
 
-  /// @brief エディットボックスの内容を設定
+  /// @brief エディットボックスの内容の設定
   /// @param id コントロールID
   /// @param txt 設定する内容
   void setEBText(int id, const std::wstring& txt)
@@ -432,7 +461,7 @@ public:
     ::SendMessage(w, WM_SETTEXT, 0, (LPARAM)(txt.c_str()));
   }
 
-  /// @brief エディットボックスの内容を消去
+  /// @brief エディットボックスの内容の消去
   /// @param id コントロールID
   void clearEB(int id)
   {
@@ -440,7 +469,7 @@ public:
     ::SendMessage(w, WM_CLEAR, 0, 0);
   }
 
-  /// @brief 選擇文字列をクリップボードにコピー
+  /// @brief クリップボードへの選擇文字列のコピー
   /// @param id コントロールID
   void copyEB(int id)
   {
@@ -448,7 +477,7 @@ public:
     ::SendMessage(w, WM_COPY, 0, 0);
   }
 
-  /// @brief 選擇文字列をクリップボードにコピーし削除
+  /// @brief 選擇文字列のクリップボードへのコピー及び削除
   /// @param id コントロールID
   void cutEB(int id)
   {
@@ -456,7 +485,7 @@ public:
     ::SendMessage(w, WM_CUT, 0, 0);
   }
 
-  /// @brief クリップボードから文字列をペースト
+  /// @brief クリップボードからの文字列のペースト
   /// @param id コントロールID
   void pasteEB(int id)
   {
@@ -464,9 +493,9 @@ public:
     ::SendMessage(w, WM_PASTE, 0, 0);
   }
 
-  /// @brief 直前の動作を取り消し可能かどうか確認する
+  /// @brief 直前動作の取り消しの可否の確認
   /// @param id コントロールID
-  /// @return trueなら取り消し可能、falseなら不可能
+  /// @return 取り消し可能であればtrue、さもなくばfalse
   bool canUndoEB(int id)
   {
     HWND w = ::GetDlgItem(hw_, id);
@@ -476,7 +505,7 @@ public:
       return false;
   }
 
-  /// @brief 直前の動作を取り消す
+  /// @brief 直前動作の取り消し
   /// @param id コントロールID
   void undoEB(int id)
   {
@@ -484,13 +513,13 @@ public:
     ::SendMessage(w, EM_UNDO, 0, 0);
   }
 
-  /// @brief 複數行エディットボックスの一行を取得
+  /// @brief 複數行エディットボックスからの一行の取得
   /// @param id コントロールID
   /// @param li 取得する行の番號(0-based)
   /// @return 指定した行の文字列
   std::wstring getLineTextEB(int id, int li);
 
-  /// @brief 複數行エディットボックスの行數を取得
+  /// @brief 複數行エディットボックスの行數の取得
   /// @param id コントロールID
   /// @return 行數
   int countLineEB(int id)
@@ -503,13 +532,13 @@ public:
   ///////////////////////////////////
   //  ListBox操作系
   ///////////////////////////////////
-  /// @brief リストボックスの項目を取得
+  /// @brief リストボックスの項目の取得
   /// @param id コントロールID
   /// @param no 項目番號(0-based)
   /// @return 項目の文字列
   std::wstring getItemLB(int id, int no);
 
-  /// @brief リストボックスに項目を追加
+  /// @brief リストボックスへの項目の追加
   /// @param id コントロールID
   /// @param txt 插入する項目の文字列
   void addItemLB(int id, const std::wstring& txt)
@@ -518,7 +547,7 @@ public:
     ::SendMessage(w, LB_ADDSTRING, 0, (LPARAM)(txt.c_str()));
   }
 
-  /// @brief リストボックスに項目を插入
+  /// @brief リストボックスへの項目の插入
   /// @param id コントロールID
   /// @param no 插入位置
   /// @param txt 插入する項目の文字列
@@ -528,7 +557,7 @@ public:
     ::SendMessage(w, LB_INSERTSTRING, no, (LPARAM)(txt.c_str()));
   }
 
-  /// @brief リストボックスの項目を削除
+  /// @brief リストボックスの項目の削除
   /// @param id コントロールID
   /// @param no 削除位置
   void deleteItemLB(int id, int no)
@@ -537,7 +566,7 @@ public:
     ::SendMessage(w, LB_DELETESTRING, no, 0);
   }
 
-  /// @brief リストボックスの項目数を取得
+  /// @brief リストボックスの項目數の取得
   /// @param id コントロールID
   int countItemLB(int id)
   {
@@ -545,7 +574,7 @@ public:
     return ::SendMessage(w, LB_GETCOUNT, 0, 0);
   }
 
-  /// @brief 選擇中のリストボックスの項目番號を取得
+  /// @brief 選擇中のリストボックスの項目番號の取得
   /// @param id コントロールID
   /// @return 選擇中の項目の番號(0-based)、但し失敗時は-1
   int getCurrentLB(int id)
@@ -558,7 +587,7 @@ public:
       return r;
   }
 
-  /// @brief リストボックスの選擇項目を設定
+  /// @brief リストボックスの選擇項目の設定
   /// @param id コントロールID
   /// @param no 選擇する項目の番號(0-based)
   void setCurrentLB(int id, int no)
@@ -567,7 +596,7 @@ public:
     ::SendMessage(w, LB_SETCURSEL, no, 0);
   }
 
-  /// @brief リストボックスの内容を消去
+  /// @brief リストボックスの内容の消去
   /// @param id コントロールID
   void clearLB(int id)
   {
@@ -575,10 +604,10 @@ public:
     ::SendMessage(w, LB_RESETCONTENT, 0, 0);
   }
 
-  /// @brief リストボックスの内容を指定ディレクトリの内容に設定
+  /// @brief リストボックスへの指定ディレクトリの内容の反映
   /// @param id コントロールID
   /// @param path ディレクトリのパス
-  /// @param flag 列擧するファイルの屬性を指定
+  /// @param flag 列擧するファイルの屬性の指定
   ///
   /// flagに指定するのは以下の値の組み合はせ。
   ///   - DDL_ARCHIVE
@@ -595,13 +624,13 @@ public:
   ////////////////////////////
   //  ComboBox操作系
   ////////////////////////////
-  /// @brief コンボボックスの項目を取得
+  /// @brief コンボボックスの項目の取得
   /// @param id コントロールID
   /// @param no 項目番號(0-based)
   /// @return 項目の文字列
   std::wstring getItemCB(int id, int no);
 
-  /// @brief コンボボックスに項目を追加
+  /// @brief コンボボックスへの項目の追加
   /// @param id コントロールID
   /// @param txt 插入する項目の文字列
   void addItemCB(int id, const std::wstring& txt)
@@ -610,7 +639,7 @@ public:
     ::SendMessage(w,CB_ADDSTRING, 0, (LPARAM)(txt.c_str()));
   }
 
-  /// @brief コンボボックスに項目を插入
+  /// @brief コンボボックスへの項目の插入
   /// @param id コントロールID
   /// @param no 插入位置
   /// @param txt 插入する項目の文字列
@@ -620,7 +649,7 @@ public:
     ::SendMessage(w,CB_INSERTSTRING,no,(LPARAM)(txt.c_str()));
   }
 
-  /// @brief コンボボックスの項目を削除
+  /// @brief コンボボックスの項目の削除
   /// @param id コントロールID
   /// @param no 削除位置
   void deleteItemCB(int id, int no)
@@ -629,7 +658,7 @@ public:
     ::SendMessage(w,CB_DELETESTRING,no,0);
   }
 
-  /// @brief コンボボックスの項目数を取得
+  /// @brief コンボボックスの項目數の取得
   /// @param id コントロールID
   int countItemCB(int id)
   {
@@ -637,7 +666,7 @@ public:
     return ::SendMessage(w,CB_GETCOUNT,0,0);
   }
 
-  /// @brief 選擇中のコンボボックスの項目番號を取得
+  /// @brief コンボボックスの選擇中の項目の番號の取得
   /// @param id コントロールID
   /// @return 選擇中の項目の番號(0-based)、但し失敗時は-1
   int getCurrentCB(int id)
@@ -650,7 +679,7 @@ public:
       return r;
   }
 
-  /// @brief コンボボックスの選擇項目を設定
+  /// @brief コンボボックスの選擇項目の設定
   /// @param id コントロールID
   /// @param no 選擇する項目の番號(0-based)
   void setCurrentCB(int id, int no)
@@ -659,7 +688,7 @@ public:
     ::SendMessage(w, CB_SETCURSEL, no, 0);
   }
 
-  /// @brief コンボボックスの内容を消去
+  /// @brief コンボボックスの内容の消去
   /// @param id コントロールID
   void clearCB(int id)
   {
@@ -667,10 +696,10 @@ public:
     ::SendMessage(w, CB_RESETCONTENT, 0, 0);
   }
 
-  /// @brief コンボボックスの内容を指定ディレクトリの内容に設定
+  /// @brief コンボボックスへの指定ディレクトリの内容の反映
   /// @param id コントロールID
   /// @param path ディレクトリのパス
-  /// @param flag 列擧するファイルの屬性を指定
+  /// @param flag 列擧するファイルの屬性の指定
   ///
   /// flagに指定するのは以下の値の組み合はせ。
   ///   - DDL_ARCHIVE
@@ -687,7 +716,7 @@ public:
   //================================
   //  CheckBox 等の状態取得
   //================================
-  /// @brief チェックボックスなどのチェックの有無を取得
+  /// @brief チェックボックスなどのチェックの有無の取得
   /// @param id コントロールID
   /// @return チェックされてゐればtrue、さもなくばfalse
   bool isChecked(int id)
@@ -699,18 +728,18 @@ public:
   ////////////////////////////////////////
   //  横スクロールバー操作系
   ////////////////////////////////////////
-  /// @brief 水平スクロールバーの位置を取得
+  /// @brief 水平スクロールバーの位置の取得
   int getPosHSB()
   {
     return getPosSB(ID_SBH);
   }
-  /// @brief 水平スクロールバーの位置を設定
+  /// @brief 水平スクロールバーの位置の設定
   void setPosHSB(int pos)
   {
     setPosSB(ID_SBH, pos);
   }
 
-  /// @brief 水平スクロールバーの範圍を取得
+  /// @brief 水平スクロールバーの範圍の取得
   /// @param[out] min 最小値
   /// @param[out] max 最大値
   /// @param[out] page ページサイズ
@@ -721,7 +750,7 @@ public:
     //  ::GetScrollRange(hw_, SB_HORZ, &min, &max);
   }
 
-  /// @brief 水平スクロールバーの範圍を設定
+  /// @brief 水平スクロールバーの範圍の設定
   /// @param min 最小値
   /// @param max 最大値
   /// @param page ページサイズ
@@ -730,13 +759,13 @@ public:
     setRangeSB(ID_SBH, min, max, page);
   }
 
-  /// @brief 水平スクロールバーを有效化
+  /// @brief 水平スクロールバーの有效化
   void enableHSB()
   {
     enableSB(ID_SBH);
   }
 
-  /// @brief 水平スクロールバーを無效化
+  /// @brief 水平スクロールバーの無效化
   void disableHSB()
   {
     disableSB(ID_SBH);
@@ -746,19 +775,19 @@ public:
   ///////////////////////////////////////////////
   //  縦スクロールバー操作系
   ///////////////////////////////////////////////
-  /// @brief 垂直スクロールバーの位置を取得
+  /// @brief 垂直スクロールバーの位置の取得
   int getPosVSB()
   {
     return getPosSB(ID_SBV);
   }
 
-  /// @brief 垂直スクロールバーの位置を設定
+  /// @brief 垂直スクロールバーの位置の設定
   void setPosVSB(int pos)
   {
     setPosSB(ID_SBV, pos);
   }
 
-  /// @brief 垂直スクロールバーの範圍を取得
+  /// @brief 垂直スクロールバーの範圍の取得
   /// @param[out] min 最小値
   /// @param[out] max 最大値
   /// @param[out] page ページサイズ
@@ -767,7 +796,7 @@ public:
     getRangeSB(ID_SBV, min, max, page);
   }
 
-  /// @brief 垂直スクロールバーの範圍を設定
+  /// @brief 垂直スクロールバーの範圍の設定
   /// @param min 最小値
   /// @param max 最大値
   /// @param page ページサイズ
@@ -776,13 +805,13 @@ public:
     setRangeSB(ID_SBV, min, max, page);
   }
 
-  /// @brief 垂直スクロールバーを有效化
+  /// @brief 垂直スクロールバーの有效化
   void enableVSB()
   {
     enableSB(ID_SBV);
   }
 
-  /// @brief 垂直スクロールバーを無效化
+  /// @brief 垂直スクロールバーの無效化
   void disableVSB()
   {
     disableSB(ID_SBV);
@@ -791,23 +820,23 @@ public:
   /////////////////////////////////////////////////////
   //  共通 (2012.5.13以降追加; 2016.2.27改名)
   /////////////////////////////////////////////////////
-  /// @brief スクロールバーの位置を取得
+  /// @brief スクロールバーの位置の取得
   /// @param id コントロールID
   int getPosSB(int id);
 
-  /// @brief スクロールバーの位置を設定
+  /// @brief スクロールバーの位置の設定
   /// @param id コントロールID
   /// @param pos 位置
   void setPosSB(int id, int pos);
 
-  /// @brief スクロールバーの範圍を取得
+  /// @brief スクロールバーの範圍の取得
   /// @param[in] id コントロールID
   /// @param[out] min 最小値
   /// @param[out] max 最大値
   /// @param[out] page ページサイズ
   void getRangeSB(int id, int& min, int& max, int& page);
 
-  /// @brief スクロールバーの範圍を設定
+  /// @brief スクロールバーの範圍の設定
   /// @param id コントロールID
   /// @param min 最小値
   /// @param max 最大値
@@ -817,7 +846,7 @@ public:
   ////////////////////////////////////////////////
   // ID付スクロールバー用 (2016.2.27再實裝)
   ////////////////////////////////////////////////
-  /// @brief スクロールバーを有效化
+  /// @brief スクロールバーの有效化
   /// @param id コントロールID
   void enableSB(int id)
   {
@@ -834,7 +863,7 @@ public:
     }
   }
 
-  /// @brief スクロールバーを無效化
+  /// @brief スクロールバーの無效化
   /// @param id コントロールID
   void disableSB(int id)
   {

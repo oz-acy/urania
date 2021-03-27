@@ -1,23 +1,45 @@
-/**************************************************************************
+/*
+ * Copyright 2002-2021 oZ/acy (名賀月晃嗣)
+ * Redistribution and use in source and binary forms, 
+ *     with or without modification, 
+ *   are permitted provided that the following conditions are met:
  *
- *  cmndlg.cpp
- *  by oZ/acy
- *  (c) 2002-2016 oZ/acy.  ALL RIGHTS RESERVED.
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
  *
- *  コモンダイアログラッパークラス定義
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
  *
- *  履歴
- *    2016.2.29  FileDialogクラスに一本化
- *************************************************************************/
-
-#include <cstring>
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, 
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+/*
+ * @file cmndlg.cpp
+ * @author oZ/acy
+ * @brief コモンダイアログラッパークラス定義
+ *
+ * @date 2016.2.29  FileDialogクラスに一本化
+ * @date 2021.3.27  修正
+ *
+ */
 #include <sstream>
 #include "cmndlg.h"
 
 
 /*===========================================
  *  FileDialog::FileDialog()
- *=========================================*/
+ */
 urania::FileDialog::FileDialog(
   const std::wstring& flt, const std::wstring& ext)
 : name_(L""), initDir_(L""), filter_(flt), defExt_(ext)
@@ -32,70 +54,6 @@ urania::FileDialog::FileDialog(
       *it = L'\0';
   }
 }
-
-
-/*===========================================
- *  FileDialog::getFilePath()
- *=========================================*/
-std::wstring urania::FileDialog::getFilePath() const
-{
-  return name_;
-}
-
-
-/*===========================================
- *  FileDialog::getFileName()
- *=========================================*/
-std::wstring urania::FileDialog::getFileName() const
-{
-  return name_ + ofn_.nFileOffset;
-}
-
-
-/*===========================================
- *  FileDialog::getFileExt()
- *=========================================*/
-std::wstring urania::FileDialog::getFileExt() const
-{
-  if (!ofn_.nFileExtension)
-    return L"";
-  else
-    return name_ + ofn_.nFileExtension;
-}
-
-
-/*===========================================
- *  FileDialog::getFileDir()
- *=========================================*/
-std::wstring urania::FileDialog::getFileDir() const
-{
-  wchar_t tmp[MAX_PATH];
-  wcsncpy(tmp, name_, ofn_.nFileOffset);
-  tmp[ofn_.nFileOffset] = L'\0';
-  return tmp;
-}
-
-
-/*===========================================
- *  FileDialogBase::setFilePath()
- *=========================================*/
-void urania::FileDialog::setFilePath(const std::wstring& path)
-{
-  wcsncpy(name_, path.c_str(), MAX_PATH);
-  name_[MAX_PATH - 1] = L'\0';
-}
-
-
-/*===========================================
- *  FileDialogBase::setInitDir()
- *=========================================*/
-void urania::FileDialog::setInitDir(const std::wstring& path)
-{
-  wcsncpy(initDir_, path.c_str(), MAX_PATH);
-  initDir_[MAX_PATH - 1] = L'\0';
-}
-
-
 
 
 /*===========================================

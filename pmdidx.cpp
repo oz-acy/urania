@@ -1,13 +1,38 @@
-/**************************************************************************
+/*
+ * Copyright 2002-2021 oZ/acy (名賀月晃嗣)
+ * Redistribution and use in source and binary forms, 
+ *     with or without modification, 
+ *   are permitted provided that the following conditions are met:
  *
- *  pmdidx.cpp
- *  by oZ/acy (名賀月晃嗣)
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
  *
- *  class urania::PaintMemDeviceIndexed の實裝
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
  *
- *  履歴
- *    2016.3.2   修正
- *    2019.8.29  修正
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, 
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+/*
+ * @file pmdidx.cpp
+ * @author oZ/acy (名賀月晃嗣)
+ * @brief class urania::PaintMemDeviceIndexed の實裝
+ *
+ * @date 2016.3.2  修正
+ * @date 2019.8.29 修正
+ * @date 2021.3.26 修正
+ *
  */
 #include <cstring>
 #include <algorithm>
@@ -53,30 +78,32 @@ HPALETTE createPalHandle_(const urania::Color col[])
 
 
 urania::PaintMemDeviceIndexed::PaintMemDeviceIndexed(unsigned w, unsigned h)
-  : polymnia::ImageBuffer<themis::UByte>(w, h, 0),
+  : polymnia::ImageBuffer<std::uint8_t>(w, h, 0),
     hdc_(NULL), hpal_(NULL), oldbmp_(NULL)
 {
   using namespace themis;
   using namespace polymnia;
   using namespace std;
 
-  int oo = w_ * sizeof(UByte);
-  offset_ = (oo % 4) ? (oo / 4 + 1) * 4 / sizeof(UByte) : oo / sizeof(UByte);
+  int oo = w_ * sizeof(std::uint8_t);
+  offset_
+    = (oo % 4) ?
+        (oo / 4 + 1) * 4 / sizeof(std::uint8_t) : oo / sizeof(std::uint8_t);
 
   HBITMAP hBitmapNew;
   HDC hTmpDC;
   struct
   {
-    BITMAPINFOHEADER Header;
-    RGBQUAD ColorTable[256];
-  }BmpInfo;
+      BITMAPINFOHEADER Header;
+      RGBQUAD ColorTable[256];
+  } BmpInfo;
 
 
   //パレットの初期化
   for (int i = 0; i < 256; i++) {
-    pal_[i].r = (UByte)( ((i>>5) & 7)*255/7 );
-    pal_[i].g = (UByte)( ((i>>2) & 7)*255/7 );
-    pal_[i].b = (UByte)( (i & 3)*255/3 );
+    pal_[i].r = (std::uint8_t)(((i >> 5) & 7) * 255 / 7);
+    pal_[i].g = (std::uint8_t)(((i >> 2) & 7) * 255 / 7);
+    pal_[i].b = (std::uint8_t)((i & 3) * 255 / 3);
   }
   hpal_ = createPalHandle_(pal_);
 
@@ -124,10 +151,9 @@ urania::PaintMemDeviceIndexed::PaintMemDeviceIndexed(unsigned w, unsigned h)
   oldbmp_ = (HBITMAP)SelectObject(hdc_, hBitmapNew);
 
   //メモリ領域のクリア
-  memset(buf_, 0, sizeof(UByte) * offset_ * h_);
+  //memset(buf_, 0, sizeof(UByte) * offset_ * h_);
+  std::fill_n(buf_, offset_ * h_, 0);
 }
-
-
 
 
 urania::PaintMemDeviceIndexed::~PaintMemDeviceIndexed()
@@ -147,12 +173,8 @@ urania::PaintMemDeviceIndexed::~PaintMemDeviceIndexed()
 }
 
 
-
-
 void urania::PaintMemDeviceIndexed::updatePalette()
 {
-  using namespace std;
-
   HPALETTE h_old, h_neu;
 
   h_old = hpal_;
@@ -166,8 +188,7 @@ void urania::PaintMemDeviceIndexed::updatePalette()
     DeleteObject(h_old);
 
   RGBQUAD rgbq[256];
-  for (int i = 0; i < 256; i++)
-  {
+  for (int i = 0; i < 256; i++) {
     rgbq[i].rgbRed = pal_[i].r;
     rgbq[i].rgbGreen = pal_[i].g;
     rgbq[i].rgbBlue = pal_[i].b;
@@ -175,10 +196,8 @@ void urania::PaintMemDeviceIndexed::updatePalette()
   }
 
   SetDIBColorTable(hdc_, 0, 256, rgbq);
-  copy(pal_, pal_ + 256, oldpal_);
+  std::copy(pal_, pal_ + 256, oldpal_);
 }
-
-
 
 
 std::unique_ptr<urania::PaintMemDeviceIndexed>
@@ -199,8 +218,6 @@ urania::PaintMemDeviceIndexed::create(unsigned w, unsigned h)
 }
 
 
-
-
 std::unique_ptr<urania::PaintMemDeviceIndexed>
 urania::PaintMemDeviceIndexed::duplicate(const polymnia::PictureIndexed* pct)
 {
@@ -214,42 +231,39 @@ urania::PaintMemDeviceIndexed::duplicate(const polymnia::PictureIndexed* pct)
   if (!vd)
     return nullptr;
 
-  const UByte* src = pct->buffer();
-  UByte* res = vd->buffer();
+  const std::uint8_t* src = pct->buffer();
+  std::uint8_t* res = vd->buffer();
 
   int o = pct->offset();
   int oo = vd->offset_;
   for (int i=0, p = 0, q = 0; i < hh; ++i, p += o, q += oo)
-    std::copy(src + p, src + p + ww, res + q);
+    std::copy_n(src + p, ww, res + q);
 
   const RgbColor* sp = pct->paletteBuffer();
   Color* rp = vd->paletteBuffer();
-  std::copy(sp, sp + 256, rp);
+  std::copy_n(sp, 256, rp);
   vd->updatePalette();
 
   return vd;
 }
 
 
-
-
 std::unique_ptr<polymnia::PictureIndexed>
 urania::PaintMemDeviceIndexed::duplicatePictureIndexed() const
 {
-  using namespace themis;
   using namespace polymnia;
 
   auto pct = PictureIndexed::create(w_, h_);
   if (!pct)
     return nullptr;
 
-  UByte* res = pct->buffer();
+  std::uint8_t* res = pct->buffer();
   int oo = pct->offset();
   for (int i = 0, p = 0, q = 0; i < h_; i++, p += offset_, q += oo)
-    std::copy(buf_ + p, buf_ + p + w_, res + q);
+    std::copy_n(buf_ + p, w_, res + q);
 
   RgbColor* rp = pct->paletteBuffer();
-  std::copy(pal_, pal_ + 256, rp);
+  std::copy_n(pal_, 256, rp);
 
   return pct;
 }
@@ -261,8 +275,8 @@ urania::PaintMemDeviceIndexed::clone() const
   auto res = create(w_, h_);
   if (!res)
     return nullptr;
-  std::copy(buf_, buf_ + h_ * offset_, res->buf_);
-  std::copy(pal_, pal_ + 256, res->pal_);
+  std::copy_n(buf_, h_ * offset_, res->buf_);
+  std::copy_n(pal_, 256, res->pal_);
   return res;
 }
 

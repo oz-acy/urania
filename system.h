@@ -1,7 +1,33 @@
+/*
+ * Copyright 2001-2021 oZ/acy (名賀月晃嗣)
+ * Redistribution and use in source and binary forms, 
+ *     with or without modification, 
+ *   are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, 
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
 /**
  * @file system.h
- * @brief システム周り
  * @author oZ/acy
+ * @brief システム管理
  *
  * @date 14 Feb 2004  System::getLongPathName() を追加
  * @date 27 Feb 2008  System::getDesktopWidth() を追加
@@ -13,6 +39,7 @@
  * @date 27 Feb 2016  ファイル名變更、メソッド名變更
  * @date 1 Oct 2016   不要なfriend classを削除
  * @date 30 Aug 2019  インクルードガードを修正
+ * @date 24 Mar 2021  System::messageLoop()の仕樣を修正
  */
 #ifndef INCLUDE_GUARD_URANIA_SYSTEM_H
 #define INCLUDE_GUARD_URANIA_SYSTEM_H
@@ -24,7 +51,7 @@
 
 
 /**
- * システム周りのあれこれ
+ * システム管理クラス
  */
 class urania::System
 {
@@ -38,33 +65,56 @@ private:
   System() =delete; //インスタンス生成禁止
 
 public:
-  /// 利用開始する。最初に一度だけ呼ぶ。
+  /// 利用する際に、最初に一度だけ呼ぶ。
   /// @param[in] hi HINSTANCE値。WinMain()の1つ目の引數を渡す。
   static void start(HINSTANCE hi)
   {
     hi_S = hi;
   }
 
-  /// メッセージキューに終了を投げる。
+  /// @brief 終了指令
+  ///
+  /// メッセージキューに終了メッセージを投げる。
+  /// メッセージループは、終了メッセージを受け取ると直ちに繰り返しを終了し、
+  /// 指定された終了コードを返す。
+  ///
+  /// @param r 終了コード
   static void quit(int r)
   {
     ::PostQuitMessage(r);
   }
 
-  /// メッセージループ
-  static void messageLoop();
+  /// @brief メッセージループ
+  ///
+  /// メッセージをキューから取り出し、プロシージャに投げる處理を繰り返す。
+  /// 取り出したメッセージが終了メッセージのときは、繰り返しを終了し、
+  /// 終了コードを返す。
+  ///
+  /// @return 終了コード
+  static int messageLoop();
 
-  /// コールバック附のメッセージループ。
+  /// @brief コールバック附メッセージループ
+  ///
+  /// メッセージをキューから取り出し、プロシージャに投げる處理を繰り返す。
+  /// 但し、アイドル狀態(メッセージが來ない期間)にはコールバックを呼び出す。
+  /// 取り出したメッセージが終了メッセージのときは、繰り返しを終了し、
+  /// 終了コードを返す。
+  ///
   /// @param f
   ///   アイドル状態の時に呼び出されるコールバック函數。
   ///   引數を取らず、bool値を返す。
   ///   falseを返した場合、次にメッセージを處理するまでコールバックしない。
-  template<class Func_> static void messageLoop(Func_ f);
+  ///
+  /// @return 終了コード
+  template<class Func_> static int messageLoop(Func_ f);
 
 
   // メッセージボックス系
 
-  /// @brief 警告用のメッセージボックスを表示する
+  /// @brief 警告メッセージボックス
+  ///
+  /// 警告用のメッセージボックスを表示する。
+  /// 
   /// @param[in] title タイトル
   /// @param[in] msg メッセージ
   static void alert(const std::wstring& title, const std::wstring& msg)
@@ -72,7 +122,10 @@ public:
     ::MessageBox(NULL, msg.c_str(), title.c_str(), MB_OK | MB_ICONEXCLAMATION);
   }
 
-  /// @brief 通知用のメッセージボックスを表示する
+  /// @brief 通知用メッセージボックス
+  ///
+  /// 通知用のメッセージボックスを表示する。
+  ///
   /// @param[in] title タイトル
   /// @param[in] msg メッセージ
   static void notify(const std::wstring& title, const std::wstring& msg)
@@ -80,13 +133,10 @@ public:
     ::MessageBox(NULL, msg.c_str(), title.c_str(), MB_OK);
   }
 
-  //=======================================================
-  //  static askYesNoCancel()
-  //  Yes, No, キャンセル三擇のメッセージボックスを表示 
-  //
-  //  戻り値: 1: OK, 2: NO, 3: CANCEL のいづれか
-  //=======================================================
-  /// @brief Yes, No, キャンセル三擇のメッセージボックスを表示
+  /// @brief 三擇メッセージボックス
+  ///
+  /// はい、いいえ、キャンセルの三擇のメッセージボックスを表示する。
+  ///
   /// @param[in] title タイトル
   /// @param[in] msg メッセージ
   /// @return 1: OK, 2: NO, 3: CANCEL のいづれか
@@ -106,7 +156,10 @@ public:
     }
   }
 
-  /// @brief はい、いいえ二擇のメッセージボックスを表示
+  /// @brief 二擇メッセージボックス
+  ///
+  /// はい、いいえの二擇のメッセージボックスを表示する。
+  ///
   /// @param[in] title タイトル
   /// @param[in] msg メッセージ
   /// @return true: Yes, false: No のいづれか
@@ -120,27 +173,24 @@ public:
   }
 
 
-
   // カーソル系
-  /// @brief カーソルを表示する
+  /// カーソルを表示狀態にする。
   static void showCursor()
     { 
       ::ShowCursor(TRUE);
     }
-  /// @brief カーソルを非表示にする
+  /// カーソルを非表示狀態にする。
   static void hideCursor()
     {
       ::ShowCursor(FALSE);
     }
 
-  // ファイル名關聯
-  /// @brief 「長いファイル名」を取得する
+  /// 「長いファイル名」を取得する。
   static std::wstring getLongPathName(const std::wstring& path);
 
-  // コマンドライン引數取得
-  /// @brief コマンドライン引數を取得する
+  /// コマンドライン引數を取得する。
   static std::vector<std::string> getCmdLineArgs();
-  /// @brief コマンドライン引數を取得する
+  /// コマンドライン引數を取得する。
   static std::vector<std::wstring> getCmdLineArgsW();
 
   // ワイド文字列・マルチバイト文字列變換 (Win32API使用)
@@ -150,7 +200,6 @@ public:
   static std::wstring strcpyMultiByteToWide(const std::string& ws);
 
 
-  // デスクトップ情報取得
   /// デスクトップの幅を取得する。
   static int getDesktopWidth()
   {
@@ -166,22 +215,23 @@ public:
     ::GetWindowRect(NULL, &rc);
     return rc.bottom - rc.top;
   }
-
 };
 
 
 template<class Func_>
 inline
-void urania::System::messageLoop(Func_ f)
+int urania::System::messageLoop(Func_ f)
 {
   MSG msg;
   static bool idle = true;
 
   for (;;) {
     if (::PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
-      if (msg.message==WM_QUIT) {
-        ::PostQuitMessage(0);
-        return;
+      if (msg.message == WM_QUIT) {
+        return msg.wParam;
+        //舊
+        //::PostQuitMessage(0);
+        //return;
       }
 
       ::TranslateMessage(&msg);
@@ -197,6 +247,8 @@ void urania::System::messageLoop(Func_ f)
       ::WaitMessage();
     }
   }
+
+  return -1; //到達不能の筈だが念の爲
 }
 
 

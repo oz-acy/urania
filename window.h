@@ -1,5 +1,30 @@
-/**********************************************************************//**
+/*
+ * Copyright 2002-2021 oZ/acy (名賀月晃嗣)
+ * Redistribution and use in source and binary forms, 
+ *     with or without modification, 
+ *   are permitted provided that the following conditions are met:
  *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, 
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+/**
  * @file window.h
  * @author oZ/acy (名賀月晃嗣)
  * @brief ウィンドウクラス
@@ -11,6 +36,7 @@
  *  Windows::msgHandler_を生ポインタからunique_ptrに變更。
  * @date 2019.8.30
  *  豫約されてゐる識別子に該當してゐたものを修正。
+ * @date 2021.3.27  修正
  */
 #ifndef INCLUDE_GUARD_URANIA_WINDOW_H
 #define INCLUDE_GUARD_URANIA_WINDOW_H
@@ -24,11 +50,9 @@
 
 namespace urania
 {
-
 struct WndMessage;
 class WMHandler;
 class WindowFactory;
-
 
 } // end of namesace urania
 
@@ -235,7 +259,7 @@ public:
 
 protected:
   std::unique_ptr<urania::WMHandler> msgHandler_; ///< メッセージハンドラ
-  urania::RCP_Menu menu_; ///< 関連づけられたメニュー
+  std::shared_ptr<urania::Menu> menu_; ///< 関連づけられたメニュー
   bool dad_;  ///< trueならDrag&Dropを受け附ける
 
 protected:
@@ -246,16 +270,24 @@ protected:
 public:
   ~Window() { deleting_(); }
 
-  urania::RCP_Menu getMenu() const { return menu_; }
-  void setMenu(const urania::RCP_Menu& m) { linkMenu_(m); }
+  std::shared_ptr<urania::Menu> getMenu() const { return menu_; }
+  void setMenu(const std::shared_ptr<urania::Menu>& m) { linkMenu_(m); }
+  void setMenu(std::shared_ptr<urania::Menu>&& m) { linkMenu_(m); }
 
 protected:
   /// 各Windowのメッセージ処理プロシージャ
   virtual LRESULT wproc_(UINT msg, WPARAM wp, LPARAM lp) override;
 
-  static HMENU getHM_(const urania::RCP_Menu& mn) { return mn->hmenu_; }
+  static HMENU getHM_(const std::shared_ptr<urania::Menu>& mn)
+    { return mn->hmenu_; }
 
-  HMENU linkMenu_(const urania::RCP_Menu& mn)
+  HMENU linkMenu_(const std::shared_ptr<urania::Menu>& mn)
+  {
+    menu_ = mn;
+    return mn->giveHM_();
+  }
+
+  HMENU linkMenu_(std::shared_ptr<urania::Menu>&& mn)
   {
     menu_ = mn;
     return mn->giveHM_();
