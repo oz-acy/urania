@@ -32,6 +32,7 @@
  * @date 2016.2.29   修正
  * @date 2018.12.26  修正
  * @date 2019.8.30   修正
+ * @date 2021.4.4    修正
  *
  */
 #ifndef INCLUDE_GUARD_URANIA_BASICWINDOW_H
@@ -174,7 +175,7 @@ protected:
   /// @param[in] lp メッセージのパラメータ(LPARAM)
   static LRESULT CALLBACK winproc_(HWND hw, UINT msg, WPARAM wp, LPARAM lp);
 
-  static std::wstring registWC_(const WC_& wc);
+  static std::wstring registerWC_(const WC_& wc);
 
 
 public:

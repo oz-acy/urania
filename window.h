@@ -37,6 +37,7 @@
  * @date 2019.8.30
  *  豫約されてゐる識別子に該當してゐたものを修正。
  * @date 2021.3.27  修正
+ * @date 2021.4.4   修正
  */
 #ifndef INCLUDE_GUARD_URANIA_WINDOW_H
 #define INCLUDE_GUARD_URANIA_WINDOW_H
@@ -93,7 +94,7 @@ public:
   /// @brief コマンドに對するハンドラを登録する
   /// @param cmdid コマンドのID
   /// @param c ハンドラ
-  void regist(int cmdid, CmdHandler c) { cmap_[cmdid] = c; }
+  void setCommand(int cmdid, CmdHandler c) { cmap_[cmdid] = c; }
 
   /// @brief メッセージに應じたハンドラを呼び出す
   /// @param msg メッセージ

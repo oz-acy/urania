@@ -32,6 +32,7 @@
  * @date 2016.3.2  修正
  * @date 2019.8.29 修正
  * @date 2021.3.26 修正
+ * @date 2021.4.1  修正
  *
  */
 #include <cstring>
@@ -88,7 +89,7 @@ urania::PaintMemDeviceIndexed::PaintMemDeviceIndexed(unsigned w, unsigned h)
   int oo = w_ * sizeof(std::uint8_t);
   offset_
     = (oo % 4) ?
-        (oo / 4 + 1) * 4 / sizeof(std::uint8_t) : oo / sizeof(std::uint8_t);
+        (oo / (4 * sizeof(std::uint8_t)) + 1) * 4 : oo / sizeof(std::uint8_t);
 
   HBITMAP hBitmapNew;
   HDC hTmpDC;

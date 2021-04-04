@@ -43,11 +43,10 @@ std::vector<urania::BasicWindow::WC_> urania::BasicWindow::vwc_S;
 
 
 /*============================================
- *  BasicWindow::registWC_()
- *  WNDCLASS登録 & WNDCLASS名を返す
- *  同じ内容のWNDCLASSの二重登録を阻止する
+ *  WNDCLASSを登録し、WNDCLASS名を返す。
+ *  同じ内容のWNDCLASSの二重登録を阻止する。
  */
-std::wstring urania::BasicWindow::registWC_
+std::wstring urania::BasicWindow::registerWC_
 (const urania::BasicWindow::WC_& wc)
 {
   std::vector<WC_>::iterator it = std::find(vwc_S.begin(), vwc_S.end(), wc);
@@ -156,7 +155,7 @@ void urania::BasicWindow::createWindow0_(const urania::BasicWindow::D0_& de)
     wc.proc_ = de.winproc;
   else
     wc.proc_ = winproc_;
-  std::wstring wcname = registWC_(wc);
+  std::wstring wcname = registerWC_(wc);
 
   // Window Style の設定
   if (de.can_resize)

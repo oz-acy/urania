@@ -33,6 +33,7 @@
  * @date 2016.3.2  修正
  * @date 2019.8.29 修正
  * @date 2021.3.26 修正
+ * @date 2021.4.1  修正
  *
  */
 #include <algorithm>
@@ -42,9 +43,9 @@
 urania::PaintMemDevice::PaintMemDevice(unsigned w, unsigned h)
   : polymnia::ImageBuffer<urania::Color>(w, h, 0), hdc_(NULL), oldbmp_(NULL)
 {
-  int s = sizeof(Color);
   int oo = w_ * sizeof(Color);
-  offset_ = (oo % (4 * s)) ? (oo / (4 * s) + 1) * 4  :  oo / s;
+  offset_
+    = (oo % 4) ? (oo / (4 * sizeof(Color)) + 1) * 4  :  oo / sizeof(Color);
 
   HBITMAP hBitmapNew;
   HDC hTmpDC;
