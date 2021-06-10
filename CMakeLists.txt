@@ -13,11 +13,9 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # 依存するライブラリ
 find_package(themis REQUIRED)
 find_package(polymnia REQUIRED)
-#find_package(ZLIB REQUIRED)
-#find_package(PNG REQUIRED)
-#find_package(JPEG REQUIRED)
 
 
+# ソースファイルとヘッダファイル
 set(URANIA_SOURCES
   system.cpp
   msgloop.cpp
@@ -50,23 +48,16 @@ set(URANIA_HEADERS
 )
 
 
-
-
-#SET(CMAKE_CXX_FLAGS "-Wall -std=c++17 -O3 -DWINVER=0x500 -D_UNICODE -DUNICODE")
-##SET(CMAKE_CXX_FLAGS "-Wall -std=c++14 -O3 -DWINVER=0x500 -D_UNICODE -DUNICODE")
-#include_directories("${CMAKE_INSTALL_PREFIX}/include")
-
-
 # Release版ライブラリ
 add_library(urania STATIC ${URANIA_SOURCES})
 
 set_target_properties(urania
   PROPERTIES PUBLIC_HEADER "${URANIA_HEADERS}"
 )
-target_link_libraries(urania polymnia themis)
+target_link_libraries(urania PRIVATE polymnia themis)
 
 target_compile_options(urania PRIVATE
-  $<$<CXX_COMPILER_ID:Clang>:-Wall -O3>
+  #$<$<CXX_COMPILER_ID:Clang>:-Wall -O3>
   $<$<CXX_COMPILER_ID:GNU>:-Wall -O3>
   $<$<CXX_COMPILER_ID:MSVC>:/W4 /Ot>
 )
@@ -74,9 +65,21 @@ target_compile_options(urania PRIVATE
 target_compile_definitions(urania PRIVATE NDEBUG _UNICODE UNICODE WINVER=0x500)
 
 
+# DEBUG版ライブラリ
+add_library(urania-debug STATIC ${URANIA_SOURCES})
+target_link_libraries(urania-debug PRIVATE polymnia-debug themis)
+
+target_compile_options(urania-debug PRIVATE
+  #$<$<CXX_COMPILER_ID:Clang>:-Wall -O3>
+  $<$<CXX_COMPILER_ID:GNU>:-Wall -g3 -ggdb>
+  $<$<CXX_COMPILER_ID:MSVC>:/W4>
+)
+
+target_compile_definitions(urania-debug PRIVATE _UNICODE UNICODE WINVER=0x500)
 
 
-install(TARGETS urania
+# インストール設定
+install(TARGETS urania urania-debug
   EXPORT urania-export
   ARCHIVE DESTINATION lib
   INCLUDES DESTINATION include

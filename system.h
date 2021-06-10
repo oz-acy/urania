@@ -223,7 +223,7 @@ inline
 int urania::System::messageLoop(Func_ f)
 {
   MSG msg;
-  static bool idle = true;
+  bool idle = true;
 
   for (;;) {
     if (::PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
