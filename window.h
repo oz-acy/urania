@@ -31,13 +31,17 @@
  *
  * @date 2016.2.28  修正
  * @date 2016.10.11
- *  WMsgHandlerクラスにonLButtonDown()、onMButtonDown()、onRButtonDown()を追加。
+ *   WMsgHandlerにonLButtonDown()、onMButtonDown()、onRButtonDown()を追加。
  * @date 2018.12.25
- *  Windows::msgHandler_を生ポインタからunique_ptrに變更。
+ *   Windows::msgHandler_を生ポインタからunique_ptrに變更。
  * @date 2019.8.30
- *  豫約されてゐる識別子に該當してゐたものを修正。
+ *   豫約されてゐる識別子に該當してゐたものを修正。
  * @date 2021.3.27  修正
  * @date 2021.4.4   修正
+ *
+ * @date 2021.6.11
+ *   依據ライブラリをthemis+polymniaからeunomiaに切り替へるための修正
+ *
  */
 #ifndef INCLUDE_GUARD_URANIA_WINDOW_H
 #define INCLUDE_GUARD_URANIA_WINDOW_H
@@ -73,7 +77,7 @@ struct urania::WndMessage
 /**
  * @brief メッセージハンドラ基底
  */
-class urania::WMHandler : themis::Noncopyable<urania::WMHandler>
+class urania::WMHandler : eunomia::Noncopyable<urania::WMHandler>
 {
 public:
   /// @brief コマンドハンドラ
@@ -89,7 +93,7 @@ private:
 
 public:
   /// 解體子
-  virtual ~WMHandler() {}
+  virtual ~WMHandler() = default;
 
   /// @brief コマンドに對するハンドラを登録する
   /// @param cmdid コマンドのID
@@ -151,9 +155,10 @@ public:
     Window* win, int x, int y, bool ctrl, bool shft, bool lb, bool mb, bool rb)
     { return false; }
 
+  /// @brief マウス中ボタン押下時のハンドラ
+  ///
   /// マウス中ボタンが押下されたときに呼び出されるハンドラ。
   /// ライブラリのユーザは適宜オーバーライドして必要な處理を實裝する。
-  /// @brief マウス中ボタン押下時のハンドラ
   /// @param win ウィンドウ
   /// @param x X座標
   /// @param y Y座標
@@ -264,7 +269,7 @@ protected:
   bool dad_;  ///< trueならDrag&Dropを受け附ける
 
 protected:
-  Window() : msgHandler_(), dad_(false) {}
+  Window() noexcept : msgHandler_(), dad_(false) {}
   void init_(HWND hw) override;
   void uninit_() override;
 
@@ -333,7 +338,7 @@ public:
   bool resizeable;  ///< ウィンドウの大きさを變更可能にする場合はtrue
 
 public:
-  WindowFactory()
+  WindowFactory() noexcept
     : x(CW_USEDEFAULT), w(CW_USEDEFAULT),
       icon(DEFAULT_RC), cursor(DEFAULT_RC), bkcolor(BG_WHITE),
       drag_and_drop(false), maxbox(false), minbox(false),

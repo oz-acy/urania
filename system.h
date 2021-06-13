@@ -40,6 +40,10 @@
  * @date 1 Oct 2016   不要なfriend classを削除
  * @date 30 Aug 2019  インクルードガードを修正
  * @date 24 Mar 2021  System::messageLoop()の仕樣を修正
+ * @date 13 Jun 2021
+ *   System::getCmdLineArgs() を削除
+ *   System::getCmdLineArgsW(const wchar_t*) を追加 
+ *
  */
 #ifndef INCLUDE_GUARD_URANIA_SYSTEM_H
 #define INCLUDE_GUARD_URANIA_SYSTEM_H
@@ -174,33 +178,44 @@ public:
 
 
   // カーソル系
+  /// @brief カーソル表示化
+  ///
   /// カーソルを表示狀態にする。
   static void showCursor()
     { 
       ::ShowCursor(TRUE);
     }
+  /// @brief カーソル非表示化
+  ///
   /// カーソルを非表示狀態にする。
   static void hideCursor()
     {
       ::ShowCursor(FALSE);
     }
 
-  /// 「長いファイル名」を取得する。
+  /// @brief 「長いファイル名」の取得
   static std::wstring getLongPathName(const std::wstring& path);
 
-  /// コマンドライン引數を取得する。
-  static std::vector<std::string> getCmdLineArgs();
-  /// コマンドライン引數を取得する。
+  // コマンドライン引數を取得する。
+  // 廢用
+  //static std::vector<std::string> getCmdLineArgs();
+
+
+  /// @brief コマンドライン引數の取得
   static std::vector<std::wstring> getCmdLineArgsW();
 
+  /// @brief コマンドライン引數の取得
+  /// @param cmdline コマンドライン文字列
+  static std::vector<std::wstring> getCmdLineArgsW(const wchar_t* cmdline);
+
   // ワイド文字列・マルチバイト文字列變換 (Win32API使用)
-  /// @brief ワイド文字列をマルチバイト文字列に變換する
+  /// @brief ワイド文字列からマルチバイト文字列への變換
   static std::string strcpyWideToMultiByte(const std::wstring& ws);
-  /// @brief マルチバイト文字列をワイド文字列に變換する
+  /// @brief マルチバイト文字列からワイド文字列への變換
   static std::wstring strcpyMultiByteToWide(const std::string& ws);
 
 
-  /// デスクトップの幅を取得する。
+  /// @brief デスクトップの幅の取得
   static int getDesktopWidth()
   {
     RECT rc;
@@ -208,7 +223,7 @@ public:
     return rc.right - rc.left;
   }
 
-  /// デスクトップの高さを取得する。
+  /// @brief デスクトップの高さの取得
   static int getDesktopHeight()
   {
     RECT rc;
@@ -216,6 +231,8 @@ public:
     return rc.bottom - rc.top;
   }
 };
+
+
 
 
 template<class Func_>

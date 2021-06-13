@@ -34,6 +34,9 @@
  * @date 2019.8.30  各クラスのcreate()の返却型をunique_ptrに修正
  * @date 2021.3.27  修正
  *
+ * @date 2021.6.12
+ *   依據ライブラリをthemis+polymniaからeunomiaに切り替へるための修正
+ *
  */
 #ifndef INCLUDE_GUARD_URANIA_COMMONDLG_H
 #define INCLUDE_GUARD_URANIA_COMMONDLG_H
@@ -47,20 +50,14 @@
  *
  * 各種コモンダイアログを操作するクラスの抽象基底となるクラス。
  */
-class urania::CommonDialogBase : themis::Noncopyable<urania::CommonDialogBase>
+class urania::CommonDialogBase : eunomia::Noncopyable<urania::CommonDialogBase>
 {
 protected:
-  static HWND getHW__(const urania::WndBase* wb)
-  {
-    return wb->hw_;
-  }
+  CommonDialogBase() = default;
 
 public:
-  CommonDialogBase() {}
-  virtual ~CommonDialogBase() =0;
+  virtual ~CommonDialogBase() = default;
 };
-
-inline urania::CommonDialogBase::~CommonDialogBase() {}
 
 
 /**
@@ -81,8 +78,6 @@ protected:
   FileDialog(const std::wstring& flt, const std::wstring& ext);
 
 public:
-  virtual ~FileDialog() {}
-
   bool doModalOpenFile(const urania::WndBase* win);
   bool doModalSaveFile(const urania::WndBase* win);
 

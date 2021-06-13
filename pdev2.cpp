@@ -146,7 +146,7 @@ void urania::PaintDevice::dotset(int x, int y, const urania::Color& col)
  *  テキストを描画
  *   返値 : 描画長方形の右下角座標
  */
-polymnia::Point
+eunomia::Point
 urania::PaintDevice::text(
   int x, int y, const std::wstring& str, const urania::Color& col)
 {
@@ -169,7 +169,7 @@ urania::PaintDevice::text(
     hdc_, ptxt.get(), -1, &rc,
     DT_NOCLIP | DT_NOPREFIX | DT_TABSTOP | DT_EXPANDTABS, &dtp);
 
-  return polymnia::Point(rc.right, rc.bottom);
+  return eunomia::Point(rc.right, rc.bottom);
 }
 
 
@@ -178,7 +178,7 @@ urania::PaintDevice::text(
  *  テキストを描画(幅指定バージョン)
  *   返値 : 描画長方形の右下角座標
  */
-polymnia::Point
+eunomia::Point
 urania::PaintDevice::text(
   int x, int y, int ww, const std::wstring& str, const urania::Color& col)
 {
@@ -205,7 +205,7 @@ urania::PaintDevice::text(
     | DT_TABSTOP | DT_EXPANDTABS,
     &dtp);
 
-  return polymnia::Point(rc.right, rc.bottom);
+  return eunomia::Point(rc.right, rc.bottom);
 }
 
 

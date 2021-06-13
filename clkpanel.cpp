@@ -52,7 +52,7 @@ std::unique_ptr<urania::ClickPanel> urania::ClickPanel::create(
    de.w = w;
    de.h = h;
 
-   panel->pw_ = getHW_(par);
+   panel->pw_ = getHWND(par);
    de.pwnd = panel->pw_;
    panel->id_ = id;
    de.hm = reinterpret_cast<HMENU>(id);

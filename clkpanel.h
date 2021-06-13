@@ -69,7 +69,7 @@ private:
 public:
   ~ClickPanel() {}
 
-  /// クリックパネルを生成する。
+  /// @brief クリックパネルの生成
   /// @param x パネルの位置(X座標)
   /// @param y パネルの位置(Y座標)
   /// @param w パネルの幅

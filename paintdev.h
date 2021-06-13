@@ -34,12 +34,16 @@
  * @date 2021.3.23
  *   PaintDevice::blt()の仕樣を一部變更。PaintDevice::stretchBlt()を追加。
  *
+ * @date 2021.6.11
+ *   依據ライブラリをthemis+polymniaからeunomiaに切り替へるための修正
+ *
  */
 #ifndef INCLUDE_GUARD_URANIA_PAINTDEVICE_H
 #define INCLUDE_GUARD_URANIA_PAINTDEVICE_H
 
 #include <windows.h>
-#include <polymnia/picture.h>
+#include <eunomia/picture.h>
+#include <eunomia/picture_indexed.h>
 
 namespace urania
 {
@@ -47,36 +51,41 @@ namespace urania
   class Color
   {
   public:
-    std::uint8_t b;
-    std::uint8_t g;
-    std::uint8_t r;
+    std::uint8_t blue;
+    std::uint8_t green;
+    std::uint8_t red;
 
   public:
-    constexpr Color() : b(0), g(0), r(0) {}
-    constexpr Color(std::uint8_t rr, std::uint8_t gg, std::uint8_t bb)
-      : b(bb), g(gg), r(rr) {}
-    constexpr Color(const polymnia::RgbColor& org)
-      : b(org.b), g(org.g), r(org.r) {}
-    constexpr explicit Color(COLORREF cr)
-      : b(GetBValue(cr)), g(GetGValue(cr)), r(GetRValue(cr)) {}
+    constexpr Color() noexcept : blue(0), green(0), red(0) {}
+    constexpr Color(std::uint8_t r, std::uint8_t g, std::uint8_t b) noexcept
+      : blue(b), green(g), red(r)
+      {}
+    constexpr Color(const eunomia::RgbColour& org) noexcept
+      : blue(org.blue), green(org.green), red(org.red)
+      {}
+    constexpr explicit Color(COLORREF cr) noexcept
+      : blue(GetBValue(cr)), green(GetGValue(cr)), red(GetRValue(cr))
+      {}
 
-    Color& operator=(const polymnia::RgbColor& org)
+    Color& operator=(const eunomia::RgbColour& org) noexcept
     {
-      r = org.r;
-      g = org.g;
-      b = org.b;
+      red = org.red;
+      green = org.green;
+      blue = org.blue;
       return *this;
     }
 
-    constexpr COLORREF getColorref() const
+    constexpr COLORREF getColorref() const noexcept
     {
       return
-        (std::uint8_t)r | ((std::uint8_t)g << 8) | ((std::uint8_t)b << 16);
+        (std::uint8_t)red
+        | ((std::uint8_t)green << 8)
+        | ((std::uint8_t)blue << 16);
     }
 
-    constexpr operator polymnia::RgbColor() const
+    constexpr operator eunomia::RgbColour() const noexcept
     {
-      return polymnia::RgbColor(r, g, b);
+      return eunomia::RgbColour(red, green, blue);
     }
   };
 
@@ -86,14 +95,16 @@ namespace urania
   class PaintMemDevice;
   class PaintMemDeviceIndexed;
 
-}//end of namespace urania
+
+}// end of namespace urania
+
 
 
 
 /**
- *  PaintDevice互換メモリ上假想デバイス(24bit color)
+ * @brief PaintDevice互換メモリ上假想デバイス(24bit color)
  */
-class urania::PaintMemDevice : public polymnia::ImageBuffer<urania::Color>
+class urania::PaintMemDevice : public eunomia::ImageBuffer<urania::Color>
 {
   friend class urania::PaintDevice;
 
@@ -108,22 +119,26 @@ protected:
 public:
   ~PaintMemDevice();
 
-  /// PaintMemDeviceを生成する。
+  /// @brief 生成
   /// @param w 幅
   /// @param h 高さ
   /// @return 生成したオブジェクトを保持するunique_ptr
   static std::unique_ptr<PaintMemDevice> create(unsigned w, unsigned h);
 
+  /// @brief PictureからのPaintMemDeviceの複製
+  ///
   /// Pictureを複製したPaintMemDeviceを生成する。
-  /// @param pct 複製元Picture
+  /// @param pct 複製元のPicture
   /// @return 生成したオブジェクトを保持するunique_ptr
-  static std::unique_ptr<PaintMemDevice>
-  duplicate(const polymnia::Picture* pct);
+  static
+  std::unique_ptr<PaintMemDevice> duplicate(const eunomia::Picture& pct);
 
+  /// @brief Picture複製
+  ///
   /// 内容を複製したPictureを生成する。
-  std::unique_ptr<polymnia::Picture> duplicatePicture() const;
+  std::unique_ptr<eunomia::Picture> duplicatePicture() const;
 
-  /// 複製する。
+  /// @brief 複製
   std::unique_ptr<PaintMemDevice> clone() const;
 };
 
@@ -132,8 +147,7 @@ public:
 /**
  *  PaintDevice互換メモリ上假想デバイス(256 palette color)
  */
-class urania::PaintMemDeviceIndexed
-  : public polymnia::ImageBuffer<std::uint8_t>
+class urania::PaintMemDeviceIndexed : public eunomia::ImageBuffer<std::uint8_t>
 {
   friend class urania::PaintDevice;
 
@@ -142,35 +156,39 @@ protected:
   urania::Color pal_[256];
   HPALETTE hpal_;
   HBITMAP oldbmp_;
-  polymnia::RgbColor oldpal_[256];
+  urania::Color oldpal_[256];
 
   PaintMemDeviceIndexed(unsigned ww, unsigned hh);
 
  public:
   ~PaintMemDeviceIndexed();
 
-  /// PaintMemDeviceIndexedを生成する。
+  /// @brief 生成
   /// @param w 幅
   /// @param h 高さ
   /// @return 生成したオブジェクトを保持するunique_ptr
   static std::unique_ptr<PaintMemDeviceIndexed> create(unsigned w, unsigned h);
 
+  /// @brief PictureIndexedからのPaintMemDeviceIndexedの複製
+  /// 
   /// PictureIndexedを複製したPaintMemDeviceIndexedを生成する。
   /// @param pct 複製元Picture
   /// @return 生成したオブジェクトを保持するunique_ptr
   static std::unique_ptr<PaintMemDeviceIndexed>
-  duplicate(const polymnia::PictureIndexed* pct);
+  duplicate(const eunomia::PictureIndexed& pct);
 
+  /// @brief PictureIndexed複製
+  ///
   /// 内容を複製したPictureIndexedを生成する。
-  std::unique_ptr<polymnia::PictureIndexed> duplicatePictureIndexed() const;
+  std::unique_ptr<eunomia::PictureIndexed> duplicatePictureIndexed() const;
 
-  /// 複製する。
+  /// @brief 複製
   std::unique_ptr<PaintMemDeviceIndexed> clone() const;
 
   urania::Color& palette(int id) { return pal_[id]; }
   const urania::Color& palette(int id) const { return pal_[id]; }
-  urania::Color* paletteBuffer() { return pal_; }
-  const urania::Color* paletteBuffer() const { return pal_; }
+  urania::Color* paletteBuffer() noexcept { return pal_; }
+  const urania::Color* paletteBuffer() const noexcept { return pal_; }
 
   /// パレットハンドルを更新する。
   void updatePalette();
@@ -181,7 +199,7 @@ protected:
 /**
  *  Windowsデバイスコンテキストのラッパー
  */
-class urania::PaintDevice : themis::Noncopyable<urania::PaintDevice>
+class urania::PaintDevice : eunomia::Noncopyable<urania::PaintDevice>
 {
 public:
   typedef void (*DestProc)(HDC, void*);
@@ -214,7 +232,6 @@ public:
   /// @param h  デバイスの高さ
   /// @return オブジェクトを保持するunique_ptr
   static
-  // urania::PaintDevice*
   std::unique_ptr<PaintDevice>
   create(HDC dc, DestProc dp, void* a, int w, int h);
 
@@ -274,7 +291,7 @@ public:
   /// @param str 描畫する文字列
   /// @param col 描畫色
   /// @return 描畫長方形の右下角の座標
-  polymnia::Point
+  eunomia::Point
   text(int x, int y, const std::wstring& str, const urania::Color& col);
 
   /// 幅を指定してテキストを描畫する。
@@ -284,7 +301,7 @@ public:
   /// @param str 描畫する文字列
   /// @param col 描畫色
   /// @return 描畫長方形の右下角の座標
-  polymnia::Point
+  eunomia::Point
   text(int x, int y, int w, const std::wstring& str, const urania::Color& col);
 
   /// フォントを變更する。
@@ -310,68 +327,46 @@ public:
 
 
   /// @brief 轉送
-  /// @param dx 轉送對象左上角のX座標
-  /// @param dy 轉送對象左上角のX座標
   /// @param src 轉送元
-  /// @param sx 轉送元左上角のX座標
-  /// @param sy 轉送元左上角のY座標
+  /// @param sx 轉送元左上X座標
+  /// @param sy 轉送元左上Y座標
   /// @param w 轉送幅
   /// @param h 轉送高さ
+  /// @param dx 左上X座標
+  /// @param dy 左上Y座標
+  /// @param cliprect 被轉送可能領域。std::nulloptの場合は畫像全體。
   void blt(
-    int dx, int dy, const urania::PaintMemDevice* src, int sx, int sy,
-    int w, int h);
+    const urania::PaintMemDevice& src, int sx, int sy, int w, int h,
+    int dx, int dy,
+    const std::optional<eunomia::Rect>& cliprect = std::nullopt);
 
   /// @brief 轉送
-  /// @param dx 轉送對象左上角のX座標
-  /// @param dy 轉送對象左上角のX座標
   /// @param src 轉送元
-  /// @param sx 轉送元左上角のX座標
-  /// @param sy 轉送元左上角のY座標
+  /// @param sx 轉送元左上のX座標
+  /// @param sy 轉送元左上のY座標
   /// @param w 轉送幅
   /// @param h 轉送高さ
-  /// @param mask 被轉送可能領域
+  /// @param dx 左上X座標
+  /// @param dy 左上Y座標
+  /// @param cliprect 被轉送可能領域。std::nulloptの場合は畫像全體。
   void blt(
-    int dx, int dy, const urania::PaintMemDevice* src, int sx, int sy,
-    int w, int h, const polymnia::Rect& mask);
-
-  /// @brief 轉送
-  /// @param dx 轉送對象左上角のX座標
-  /// @param dy 轉送對象左上角のX座標
-  /// @param src 轉送元
-  /// @param sx 轉送元左上角のX座標
-  /// @param sy 轉送元左上角のY座標
-  /// @param w 轉送幅
-  /// @param h 轉送高さ
-  void blt(
-    int dx, int dy, urania::PaintMemDeviceIndexed* src,
-    int sx, int sy, int w, int h);
-
-  /// @brief 轉送
-  /// @param dx 轉送對象左上角のX座標
-  /// @param dy 轉送對象左上角のX座標
-  /// @param src 轉送元
-  /// @param sx 轉送元左上角のX座標
-  /// @param sy 轉送元左上角のY座標
-  /// @param w 轉送幅
-  /// @param h 轉送高さ
-  /// @param mask 被轉送可能領域
-  void blt(
-    int dx, int dy, urania::PaintMemDeviceIndexed* src,
-    int sx, int sy, int w, int h, const polymnia::Rect& mask);
+    urania::PaintMemDeviceIndexed& src, int sx, int sy, int w, int h,
+    int dx, int dy,
+    const std::optional<eunomia::Rect>& cliprect = std::nullopt);
 
   /// @brief 轉送
   ///
   /// 轉送元の全領域から自己の全領域に轉送する。
   /// 領域の大きさが異なる場合は擴大縮小される。
   /// @param src 轉送元
-  void stretchBlt(const urania::PaintMemDevice* src);
+  void stretchBlt(const urania::PaintMemDevice& src);
 
   /// @brief 轉送
   ///
   /// 轉送元の全領域から自己の全領域に轉送する。
   /// 領域の大きさが異なる場合は擴大縮小される。
   /// @param src 轉送元
-  void stretchBlt(urania::PaintMemDeviceIndexed* src);
+  void stretchBlt(urania::PaintMemDeviceIndexed& src);
 
   /// @brief 轉送
   ///
@@ -379,7 +374,7 @@ public:
   /// 領域の大きさが異なる場合はアスペクト比を保存しつつ擴大縮小される。
   /// 轉送元と自己のアスペクト比が異なる場合、餘白が生じる。
   /// @param src 轉送元
-  void blt(const urania::PaintMemDevice* src);
+  void blt(const urania::PaintMemDevice& src);
 
   /// @brief 轉送
   ///
@@ -387,10 +382,10 @@ public:
   /// 領域の大きさが異なる場合はアスペクト比を保存しつつ擴大縮小される。
   /// 轉送元と自己のアスペクト比が異なる場合、餘白が生じる。
   /// @param src 轉送元
-  void blt(urania::PaintMemDeviceIndexed* src);
+  void blt(urania::PaintMemDeviceIndexed& src);
 
 
-  /// システムカラーを取得する。
+  /// @brief システムカラーの取得
   /// @param id システムカラーID。<urania/decl.h>に定義する。
   /// @return 設定されてゐる色
   static urania::Color getSysColor(int id)
@@ -398,7 +393,7 @@ public:
     return Color(::GetSysColor(id));
   }
 
-  /// システムカラーを設定する。
+  /// @brief システムカラーの設定
   /// @param id システムカラーID。<urania/decl.h>に定義する。
   /// @param col 設定する色
   static void setSysColor(int id, const urania::Color& col);
@@ -408,6 +403,7 @@ private:
   void changeBrush_(const urania::Color& col);
   void changePen_(const urania::Color& col);
 };
+
 
 
 

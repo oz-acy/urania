@@ -33,38 +33,39 @@
  * @date 2018.12.24 修正
  * @date 2019.8.30 修正
  * @date 2021.3.26 コメントを修正
+ *
+ * @date 2021.6.11
+ *   依據ライブラリをthemis+polymniaからeunomiaに切り替へるための修正
+ *
  */
 #ifndef INCLUDE_GUARD_URANIA_WINDOW_BASE_H
 #define INCLUDE_GUARD_URANIA_WINDOW_BASE_H
 
-#include <themis/noncopyable.h>
-#include <polymnia/ibuf.h>
+#include <eunomia/noncopyable.h>
+#include <eunomia/rect.h>
 #include "system.h"
 
 
-/*--------------------------------------*//**
- *  @brief Window、Dialog共通基底クラス
+/**
+ * @brief HWND管理用基底クラス
  *
- *  HWNDの管理や操作を行ふ。
+ * WindowとDialogの基底となり、HWNDの管理や操作を行ふ。
  */
-class urania::WndBase : themis::Noncopyable<urania::WndBase>
+class urania::WndBase : eunomia::Noncopyable<urania::WndBase>
 {
-  friend class urania::System;
-  friend class urania::CommonDialogBase;
-
 protected:
-  HWND hw_;
+  HWND hw_;  ///< 管理對象のHWND
 
 private:
-  bool dst_;  // trueならオブジェクト破棄時にHWNDを破棄する
+  bool dst_;  ///< trueであればオブジェクト解體時にHWNDを破棄する。
 
 public:
-  WndBase() : hw_(NULL), dst_(false) {}
-  virtual ~WndBase() {}
+  WndBase() noexcept : hw_(NULL), dst_(false) {}
+  virtual ~WndBase() = default;
 
 
 protected:
-  /// @brief HWNDを強固に連結
+  /// @brief HWNDの強固な連結
   ///
   /// WndBaseオブジェクトとHWNDを強固に結び附け、
   /// オブジェクト破棄時にHWNDを同時に破棄する。
@@ -87,7 +88,7 @@ protected:
     detach_();
   }
 
-  /// @brief HWNDを連結
+  /// @brief HWNDの連結
   ///
   /// WndBaseオブジェクトとHWNDを結び附ける。
   /// オブジェクト破棄時にHWNDを破棄しない。
@@ -99,8 +100,7 @@ protected:
 
   /// @brief HWNDの切り離し
   ///
-  /// WndBaseオブジェクトとHWNDを切り離す。
-  /// HWNDを破棄しない。
+  /// WndBaseオブジェクトとHWNDを切り離すが、HWNDを破棄しない。
   void detach_()
   {
     hw_ = NULL;
@@ -110,32 +110,29 @@ protected:
 
   /// @brief メッセージ處理系初期化
   ///
-  /// ウィンドウが作成されたときに呼び出され、
-  /// オブジェクトとHWNDを結合し、
-  /// その他の處理を行ふ。
+  /// ウィンドウが作成されたときに呼び出される。
+  /// オブジェクトとHWNDを結合し、及びその他の處理を行ふ。
   /// 派生クラスで實裝する。
   virtual void init_(HWND) =0;
 
   /// @brief メッセージ處理系初期化解除
   ///
-  /// ウィンドウが破棄されたときに呼び出され、
-  /// HWNDからオブジェクトへの結合を切斷し、
-  /// その他の處理を行ふ。
+  /// ウィンドウが破棄される/たときに呼び出される。
+  /// HWNDからオブジェクトへの結合を切斷し、及びその他の處理を行ふ。
   /// 派生クラスで實裝する。
   virtual void uninit_() =0;
 
   /// @brief ウィンドウ破棄の實處理
-  /// destroy()から呼び出される下請け。
+  ///
+  /// destroy()から呼び出される。
   /// ウィンドウを破棄するための處理を、派生クラスで實裝する。
   virtual void destroyWindow_() =0;
 
   /// @brief オブジェクト側からHWNDを破棄
   ///
-  /// (オブジェクト破棄時に)連結してゐるHWNDを破棄する。
-  /// インスタンス生成可能な派生クラスの
-  /// デストラクタは、
-  /// 先祖クラスのデストラクタが
-  /// deleting_()を呼び出す場合を除き、
+  /// (オブジェクト解體時に)連結してゐるHWNDを破棄する。
+  /// インスタンス生成可能な派生クラスの解體子は、
+  /// 先祖クラスの解體子がdeleting_()を呼び出す場合を除き、
   /// deleting_()を呼び出すべし。
   void deleting_()
   {
@@ -147,7 +144,7 @@ protected:
 
   /// @brief HWNDが破棄された時の後處理
   ///
-  /// HWNDが破棄されたときに呼び出され、
+  /// HWNDが破棄されたときに呼び出される。
   /// オブジェクトとHWNDの間の結合を切斷する。
   void destroyed_()
   {
@@ -165,26 +162,20 @@ protected:
   {
     return System::hi_S;
   }
-  /// @brief 派生クラスがHWNDを取得するための"カプセル破り"
-  static HWND getHW_(urania::WndBase* wb)
+
+
+public:
+  /// @brief HWNDの取得
+  ///
+  /// WndBaseオブジェクトに結び附いたHWNDを取得する。
+  /// @param wb 對象のWndBaseオブジェクトへのポインタ
+  /// @return wbに結び附いたHWND
+  static HWND getHWND(const urania::WndBase* wb)
   {
     if (wb)
       return wb->hw_;
     else
       return NULL;
-  }
-
-public:
-  //////////////////////////////////////////////////////
-  /// @brief HWNDを取得
-  ///
-  /// WndBaseオブジェクトに結び附いたHWNDを取得する。
-  /// @param wb 對象のWndBaseオブジェクトへのポインタ
-  /// @return wbに結び附いたHWND
-  //////////////////////////////////////////////////////
-  static HWND getHWND(urania::WndBase* wb)
-  {
-    return wb->hw_;
   }
 
 public:
@@ -203,42 +194,42 @@ public:
       ::SendMessage(hw_, WM_SETTEXT, 0, (ULONG_PTR)(ttl.c_str()));
   }
 
-  /// @brief ウィンドウを閉ぢる
+  /// @brief ウィンドウの閉止
   void close()
   {
     if (hw_)
       ::PostMessage(hw_, WM_CLOSE, 0, 0);
   }
 
-  /// @brief ウィンドウを表示
+  /// @brief ウィンドウの表示
   void show()
   {
     if (hw_)
       ::ShowWindow(hw_, SW_SHOW);
   }
 
-  /// @brief ウィンドウを隱す
+  /// @brief ウィンドウの隱蔽
   void hide()
   {
     if (hw_)
       ::ShowWindow(hw_, SW_HIDE);
   }
 
-  /// @brief ウィンドウ最大化
+  /// @brief ウィンドウの最大化
   void maximize()
   {
     if (hw_)
       ::ShowWindow(hw_, SW_MAXIMIZE);
   }
 
-  /// @brief ウィンドウ最小化
+  /// @brief ウィンドウの最小化
   void minimize()
   {
     if (hw_)
       ::ShowWindow(hw_, SW_MINIMIZE);
   }
 
-  /// @brief ウィンドウを「元に戾」す
+  /// @brief ウィンドウの復原
   void normalize()
   {
     if (hw_)
@@ -285,7 +276,7 @@ public:
     ::GetWindowRect(hw_, &rc);
     return rc.right - rc.left;
   }
-  /// @brief ウィンドウ幅を取得
+  /// @brief ウィンドウ幅の取得
   int width() { return getWidth(); }
 
   /// @brief ウィンドウの高さを取得
@@ -297,10 +288,10 @@ public:
     ::GetWindowRect(hw_, &rc);
     return rc.bottom - rc.top;
   }
-  /// @brief ウィンドウの高さを取得
+  /// @brief ウィンドウの高さの取得
   int height() { return getHeight(); }
 
-  /// @brief ウィンドウの幅と高さを取得
+  /// @brief ウィンドウの幅と高さの取得
   /// @param[out] w 幅
   /// @param[out] h 高さ
   /// @return 成功時はtrue、失敗時はfalse
@@ -354,94 +345,90 @@ public:
   //////////////////////////////////////////////
   /// @brief エディットボックス生成
   /// @param id コントロールID
-  /// @param de コントロールの位置、幅、高さの指定
-  void createEditBox(int id, const urania::CtrlDesc& de)
+  /// @param re コントロールの位置、幅、高さの指定
+  void createEditBox(int id, const eunomia::AnotherRect& re)
   {
     CreateWindow(
       L"EDIT", L"", WS_CHILD | WS_VISIBLE | WS_BORDER,
-      de.x, de.y, de.w, de.h, hw_,
-      reinterpret_cast<HMENU>(id), getHI_(), nullptr);
+      re.x, re.y, re.width, re.height,
+      hw_, reinterpret_cast<HMENU>(id), getHI_(), nullptr);
   }
 
   /// @brief 複數行エディットボックスの生成
   /// @param id コントロールID
-  /// @param de コントロールの位置、幅、高さの指定
-  void createMultiLineEditBox(int id, const urania::CtrlDesc& de)
+  /// @param re コントロールの位置、幅、高さの指定
+  void createMultiLineEditBox(int id, const eunomia::AnotherRect& re)
   {
     CreateWindow(L"EDIT", L"",
       WS_CHILD | WS_VISIBLE | WS_BORDER | ES_MULTILINE | ES_NOHIDESEL |
       ES_WANTRETURN | ES_AUTOVSCROLL | WS_VSCROLL,
-      de.x, de.y, de.w, de.h, hw_, 
-      reinterpret_cast<HMENU>(id), getHI_(), nullptr);
+      re.x, re.y, re.width, re.height,
+      hw_, reinterpret_cast<HMENU>(id), getHI_(), nullptr);
   }
 
   /// @brief リストボックス生成
   /// @param id コントロールID
-  /// @param de コントロールの位置、幅、高さの指定
-  void createListBox(int id, const urania::CtrlDesc& de)
+  /// @param re コントロールの位置、幅、高さの指定
+  void createListBox(int id, const eunomia::AnotherRect& re)
   {
     CreateWindow(
       L"LISTBOX", L"",
       WS_CHILD | WS_VISIBLE | WS_BORDER | LBS_DISABLENOSCROLL | WS_VSCROLL,
-      de.x, de.y, de.w, de.h, hw_,
-      reinterpret_cast<HMENU>(id), getHI_(), nullptr);
+      re.x, re.y, re.width, re.height,
+      hw_, reinterpret_cast<HMENU>(id), getHI_(), nullptr);
   }
 
   /// @brief コンボボックス生成
   /// @param id コントロールID
-  /// @param de コントロールの位置、幅、高さの指定
-  void createComboBox(int id, const urania::CtrlDesc& de)
+  /// @param re コントロールの位置、幅、高さの指定
+  void createComboBox(int id, const eunomia::AnotherRect& re)
   {
     CreateWindow(
       L"COMBOBOX", L"",
         WS_CHILD | WS_VISIBLE | WS_VSCROLL
       | CBS_DISABLENOSCROLL | CBS_DROPDOWNLIST,
-      de.x, de.y, de.w, de.h, hw_,
-      reinterpret_cast<HMENU>(id), getHI_(), nullptr);
+      re.x, re.y, re.width, re.height,
+      hw_, reinterpret_cast<HMENU>(id), getHI_(), nullptr);
   }
 
   /// @brief ボタン生成
   /// @param id コントロールID
   /// @param str ボタンに表示する文字列
-  /// @param de コントロールの位置、幅、高さの指定
+  /// @param re コントロールの位置、幅、高さの指定
   void createPushButton(
-    int id, const std::wstring& str, const urania::CtrlDesc& de)
+    int id, const std::wstring& str, const eunomia::AnotherRect& re)
   {
     CreateWindow(
       L"BUTTON", str.c_str(), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-      de.x, de.y, de.w, de.h, hw_,
-      reinterpret_cast<HMENU>(id), getHI_(), nullptr);
+      re.x, re.y, re.width, re.height,
+      hw_, reinterpret_cast<HMENU>(id), getHI_(), nullptr);
   }
 
   /// @brief ラベル生成
   /// @param id コントロールID
   /// @param str ラベルに表示する文字列
-  /// @param de コントロールの位置、幅、高さの指定
-  void createLabel(int id, const std::wstring& str, const urania::CtrlDesc& de)
+  /// @param re コントロールの位置、幅、高さの指定
+  void createLabel(
+    int id, const std::wstring& str, const eunomia::AnotherRect& re)
   {
     CreateWindow(
       L"STATIC", str.c_str(), WS_CHILD | WS_VISIBLE | SS_LEFT,
-      de.x, de.y, de.w, de.h, hw_,
-      reinterpret_cast<HMENU>(id), getHI_(), nullptr);
+      re.x, re.y, re.width, re.height,
+      hw_, reinterpret_cast<HMENU>(id), getHI_(), nullptr);
   }
   
   /// @brief チェックボックス生成
   /// @param id コントロールID
   /// @param str チェックボックスに表示する文字列
-  /// @param de コントロールの位置、幅、高さの指定
+  /// @param re コントロールの位置、幅、高さの指定
   void createCheckBox(
-    int id, const std::wstring& str, const urania::CtrlDesc& de)
+    int id, const std::wstring& str, const eunomia::AnotherRect& re)
   {
     CreateWindow(
       L"BUTTON", str.c_str(), WS_CHILD | WS_VISIBLE | BS_AUTOCHECKBOX,
-      de.x, de.y, de.w, de.h, hw_,
-      reinterpret_cast<HMENU>(id), getHI_(), nullptr);
+      re.x, re.y, re.width, re.height,
+      hw_, reinterpret_cast<HMENU>(id), getHI_(), nullptr);
   }
-
-  // 2018.12.24 定義意圖不明につきコメントアウト
-  //void createActiveButton(
-  //  int id, const std::wstring& str, const urania::CtrlDesc& de);
-
 
 
   ///////////////////////////////
@@ -609,7 +596,7 @@ public:
   /// @param path ディレクトリのパス
   /// @param flag 列擧するファイルの屬性の指定
   ///
-  /// flagに指定するのは以下の値の組み合はせ。
+  /// flagに指定するのは(Win32APIの定義する)以下の値の組み合はせ。
   ///   - DDL_ARCHIVE
   ///   - DDL_DDL_DIRECTORY
   ///   - DDL_DRIVES
@@ -701,7 +688,7 @@ public:
   /// @param path ディレクトリのパス
   /// @param flag 列擧するファイルの屬性の指定
   ///
-  /// flagに指定するのは以下の値の組み合はせ。
+  /// flagに指定するのは(Win32APIの定義する)以下の値の組み合はせ。
   ///   - DDL_ARCHIVE
   ///   - DDL_DDL_DIRECTORY
   ///   - DDL_DRIVES
@@ -746,8 +733,6 @@ public:
   void getRangeHSB(int& min, int& max, int& page)
   {
     getRangeSB(ID_SBH, min, max, page);
-    //if (hw_)
-    //  ::GetScrollRange(hw_, SB_HORZ, &min, &max);
   }
 
   /// @brief 水平スクロールバーの範圍の設定

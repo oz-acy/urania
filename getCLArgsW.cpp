@@ -30,25 +30,35 @@
  *
  * @date 27 Feb 2016  getCmdLineArgs()のwchar_t版を作成
  * @date 26 Mar 2021  修正
+ * @date 12 Jun 2021  修正
  *
  */
 #include <algorithm>
 #include "system.h"
 
 // もしかしてコンパイラ依存??
-extern int __argc;
-extern wchar_t** __wargv;
+// 利用しない方針で書き換へる
+//extern int __argc;
+//extern wchar_t** __wargv;
 
 
-/*===========================================
-*  コマンドライン引數を取得(wchar_t版)
-*/
 std::vector<std::wstring> urania::System::getCmdLineArgsW()
 {
-  std::vector<std::wstring> args(__argc);
-  std::copy_n(__wargv, __argc, args.begin());
-  //for (int i = 0; i < __argc; i++)
-  //  args[i] = __wargv[i];
+  return getCmdLineArgsW(::GetCommandLineW());
+}
+
+
+std::vector<std::wstring>
+urania::System::getCmdLineArgsW(const wchar_t* cmdline)
+{
+  int argc;
+  auto argv = ::CommandLineToArgvW(cmdline, &argc);
+
+  std::vector<std::wstring> args(argc);
+  std::copy_n(argv, argc, args.begin());
+
+  //std::vector<std::wstring> args(__argc);
+  //std::copy_n(__wargv, __argc, args.begin());
 
   return args;
 }

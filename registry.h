@@ -53,9 +53,8 @@ enum RegRootKey {
 };
 
 
-/*----------------------------------------------------------
- *  class RegistryBase
- *  レジストリ操作クラス基底
+/**
+ * @brief レジストリ操作基底
  */
 class RegistryBase
 {
@@ -63,10 +62,10 @@ private:
   HKEY key_;
 
 protected:
-  RegistryBase() : key_(NULL) {}
+  RegistryBase() noexcept : key_(NULL) {}
 
-  void setKey_(HKEY k) { key_ = k; }
-  HKEY getKey_() const { return key_; }
+  void setKey_(HKEY k) noexcept { key_ = k; }
+  HKEY getKey_() const noexcept { return key_; }
 
 public:
   ~RegistryBase()
@@ -75,39 +74,34 @@ public:
       ::RegCloseKey(key_);
   }
 
+  explicit operator bool() const noexcept { return key_ != NULL; }
+  bool operator!() const noexcept { return !bool(*this); }
+
 protected:
   static HKEY getRoot_(RegRootKey k);
 };
 
 
-/*-----------------------------------------------------------
- *  class RegistryReader
- *  レジストリ讀込クラス
+/**
+ * @brief レジストリ讀込クラス
  */
 class RegistryReader : public RegistryBase
 {
 public:
   RegistryReader(RegRootKey root, const std::wstring& path);
 
-  operator bool() const { return getKey_() != NULL; }
-  bool operator!() const { return getKey_() == NULL; }
-
   DWORD getDwordData(const std::wstring& name);
   std::wstring getStringData(const std::wstring& name);
 };
 
 
-/*-----------------------------------------------------------
- *  class RegistryWriter
- *  レジストリ書込クラス
+/**
+ * @brief レジストリ書込クラス
  */
 class RegistryWriter : public RegistryBase
 {
 public:
   RegistryWriter(RegRootKey root, const std::wstring& path);
-
-  operator bool() const { return getKey_() != NULL; }
-  bool operator!() const { return getKey_() == NULL; }
 
   void setDwordData(const std::wstring& name, DWORD val);
   void setStringData(const std::wstring& name, const std::wstring& val);
@@ -115,6 +109,8 @@ public:
 
 
 }// end of namespace urania
+
+
 
 
 #endif // INCLUDE_GUARD_URANIA_REGISTRY_H

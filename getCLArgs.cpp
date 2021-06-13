@@ -32,6 +32,7 @@
  * @date 30 Mar 2008  修正
  * @date 27 Feb 2016  修正
  * @date 26 Mar 2021  修正
+ * @date 12 Jun 2021  今後の利用が見込めないので廢用とする
  *
  */
 #include <algorithm>
@@ -49,9 +50,6 @@ std::vector<std::string> urania::System::getCmdLineArgs()
 {
   std::vector<std::string> args(__argc);
   std::copy_n(__argv, __argc, args.begin());
-  //for (int i = 0; i < __argc; i++)
-  //  args[i] = __argv[i];
-
   return args;
 }
 

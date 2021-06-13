@@ -33,6 +33,9 @@
  * @date 2019.8.30  修正
  * @date 2021.3.26  修正
  *
+ * @date 2021.6.11
+ *   依據ライブラリをthemis+polymniaからeunomiaに切り替へるための修正
+ *
  */
 #ifndef INCLUDE_GUARD_URANIA_MENU_H
 #define INCLUDE_GUARD_URANIA_MENU_H
@@ -41,11 +44,11 @@
 #include <string>
 #include <memory>
 #include <windows.h>
-#include <themis/noncopyable.h>
+#include <eunomia/noncopyable.h>
 #include "decl.h"
 
 
-///  メニュー記述用クラス
+/// @brief メニュー記述用クラス
 class urania::MenuDesc
 {
   friend class urania::Menu;
@@ -67,20 +70,20 @@ public:
     std::wstring name_;
     int id_;
 
-    Node_() : id_(MN_SEPARATOR) {}
-    Node_(const std::wstring& s) : name_(s), id_(MN_BRANCH) {}
-    Node_(const std::wstring& s, int i) : name_(s), id_(i) {}
+    Node_() noexcept : id_(MN_SEPARATOR) {}
+    Node_(const std::wstring& s) noexcept : name_(s), id_(MN_BRANCH) {}
+    Node_(const std::wstring& s, int i) noexcept : name_(s), id_(i) {}
 
   public:
-    ~Node_() {}
+    ~Node_() = default;
 
-    /// 區切り線を追加する。
+    /// @brief 區切り線の追加
     bool addSeparator();
 
-    /// ポップアップ項目(メニューツリーの枝部分)を追加する。
+    /// @brief ポップアップ項目(メニューツリーの枝部分)の追加
     bool addPopup(const std::wstring& s);
 
-    /// 選擇項目(メニューツリーの葉部分)を追加する。
+    /// @brief 選擇項目(メニューツリーの葉部分)の追加
     /// @param s 表示文字列
     /// @param i ID
     bool addPopup(const std::wstring& s, int i);
@@ -93,13 +96,13 @@ private:
   std::vector<Node_> node_;
 
 public:
-  MenuDesc(){}
-  ~MenuDesc(){}
+  MenuDesc() = default;
+  ~MenuDesc() = default;
 
-  /// ポップアップ項目(メニューツリーの枝部分)を追加する。
+  /// @brief ポップアップ項目(メニューツリーの枝部分)の追加
   bool addPopup(const std::wstring& s);
 
-  /// 選擇項目(メニューツリーの葉部分)を追加する。
+  /// @brief 選擇項目(メニューツリーの葉部分)の追加
   /// @param s 表示文字列
   /// @param i ID
   bool addPopup(const std::wstring& s, int i);
@@ -108,16 +111,18 @@ public:
   const Node_& operator[](int i) const { return node_[i]; }
 
 private:
-  /// MenuDescの内容を反映したメニューを生成する。
+  /// @brief MenuDescの内容を反映したメニューの生成
   HMENU createHandle_() const;
 
+  /// @brief ポップアップメニューの生成
+  ///
   /// createHandle_()の下請けとしてポップアップメニューを生成する。
   static void addPopupMenu_(HMENU pm, const Node_& item);
 };
 
 
-///  メニューハンドル(HMENU)のラッパー
-class urania::Menu : themis::Noncopyable<urania::Menu>
+/// @brief メニューハンドル(HMENU)のラッパー
+class urania::Menu : eunomia::Noncopyable<urania::Menu>
 {
   friend class urania::Window;
 
@@ -127,6 +132,8 @@ private:
 
   Menu() : hmenu_(NULL), dst_(false) {}
 
+  ///  @brief HMENUの強固な連結
+  ///
   ///  ObjectとHMENUを強固に連結する。
   ///  Object破棄時にMENUも破棄するやうにする。
   void link_(HMENU h)
@@ -136,6 +143,8 @@ private:
       dst_ = true;
   }
 
+  ///  @brief HMENUの切り離し
+  ///
   ///  HMENUとObjectを切り離す。
   ///  もしlink_()されてゐればHMENUを破棄する。
   void kill_()
@@ -145,7 +154,8 @@ private:
      detach_();
   }
 
-
+  ///  @brief HMENUの弱い連結
+  ///
   ///  ObjectとHMENUを弱く連結する。
   ///  Object破棄時にHMENUを破棄しない。
   void attach_(HMENU h)
@@ -154,6 +164,8 @@ private:
     hmenu_ = h;
   }
 
+  ///  @brief HMENUとの連結の切斷
+  ///
   ///  HMENUとの連結を切る。HMENUの破棄はしない。
   void detach_()
   {
@@ -161,8 +173,10 @@ private:
     dst_ = false;
   }
 
+  /// @brief HMENUの移讓
+  ///
   ///  Windowにハンドルを渡し、
-  ///  link_()状態からattach_()状態に遷移
+  ///  link_()状態からattach_()状態に遷移する。
   HMENU giveHM_()
   {
     dst_ = false;
@@ -173,42 +187,39 @@ private:
 public:
   ~Menu() { kill_(); }
 
+  /// @brief 生成
+  ///
   /// MenuDescからMenuを生成する。
   static std::shared_ptr<urania::Menu> create(const urania::MenuDesc& desc);
 
+  /// @brief 生成
+  ///
   /// リソースIDからMenuを生成する。
   static std::shared_ptr<urania::Menu> create(int rc);
 
-  /// サブメニューを取得する。
+  /// @brief サブメニューの取得
   std::shared_ptr<urania::Menu> getSub(unsigned id);
 
 
-  /// 指定項目にチェックをつける。
+  /// @brief 指定項目のチェックの設定
   void checkItem(unsigned cmdid);
 
-  /// 指定項目のチェックを外す。
+  /// @brief 指定項目のチェックの解除
   void uncheckItem(unsigned cmdid);
 
-  /// 指定項目のチェックの有無を得る。
+  /// @brief 指定項目のチェックの有無の取得
   bool getItemCheck(unsigned cmdid);
 
 
-  /// 項目を選擇可能にする。
+  /// @brief 項目の選擇可能化
   void enableItem(unsigned cmdid);
 
-  /// 項目を選擇不可にする。
+  /// @brief 項目の選擇不可能化
   void disableItem(unsigned cmdid);
 
-  /// 項目を淡色表示(選擇不可)にする。
+  /// @brief 項目の淡色表示(選擇不可能)化
   void grayItem(unsigned cmdid);
 };
-
-
-//namespace urania
-//{
-//  using RCP_Menu = std::shared_ptr<Menu>;
-//  //typedef std::shared_ptr<Menu> RCP_Menu;
-//}
 
 
 

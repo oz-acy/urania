@@ -32,6 +32,9 @@
  * @date 2016.2.29  FileDialogクラスに一本化
  * @date 2021.3.27  修正
  *
+ * @date 2021.6.11
+ *   依據ライブラリをthemis+polymniaからeunomiaに切り替へるための修正
+ *
  */
 #include <sstream>
 #include "cmndlg.h"
@@ -64,7 +67,7 @@ bool urania::FileDialog::doModalOpenFile(const urania::WndBase* win)
   if (!win)
     ofn_.hwndOwner = NULL;
   else
-    ofn_.hwndOwner = getHW__(win);
+    ofn_.hwndOwner = WndBase::getHWND(win);
 
   if (initDir_[0])
     ofn_.lpstrInitialDir = initDir_;
@@ -90,7 +93,7 @@ bool urania::FileDialog::doModalSaveFile(const urania::WndBase* win)
   if (!win)
     ofn_.hwndOwner = NULL;
   else
-    ofn_.hwndOwner = getHW__(win);
+    ofn_.hwndOwner = WndBase::getHWND(win);
 
   if (initDir_[0])
     ofn_.lpstrInitialDir = initDir_;

@@ -34,6 +34,9 @@
  * @date 2019.8.30   修正
  * @date 2021.4.4    修正
  *
+ * @date 2021.6.11
+ *   依據ライブラリをthemis+polymniaからeunomiaに切り替へるための修正
+ *
  */
 #ifndef INCLUDE_GUARD_URANIA_BASICWINDOW_H
 #define INCLUDE_GUARD_URANIA_BASICWINDOW_H
@@ -56,26 +59,26 @@ public:
   //-------------------
   struct D0_
   {
-    std::wstring title;  /* タイトル */
-    HWND pwnd;  /* 親ウィンドウ */
-    HMENU hm;  /* メニュー */
-    WNDPROC winproc;  /* ウィンドウプロシージャ */
+    std::wstring title;  // タイトル
+    HWND pwnd;  // 親ウィンドウ
+    HMENU hm;  // メニュー
+    WNDPROC winproc;  // ウィンドウプロシージャ
 
-    int x, y, w, h;  /* ウィンドウの位置、大きさ */
+    int x, y, w, h;  // ウィンドウの位置、幅、高さ
 
-    unsigned icon;  /* アイコンのリソース番号 */
-    unsigned cursor;  /* カーソルのリソース番号 */
-    unsigned bkcolor;  /* 背景色の番号(?) */
+    unsigned icon;  // アイコンのリソースID
+    unsigned cursor;  //* カーソルのリソースID
+    unsigned bkcolor;  // 背景色ID
 
-    bool maxbox;  /* 最大化ボックス付き? */
-    bool minbox;  /* 最小化ボックス付き? */
-    bool h_scrollbar;  /* 横スクロールバー付き? */
-    bool v_scrollbar;  /* 縦スクロールバー付き? */
-    bool popup;  /* ポップアップウィンドウ? */
-    bool border_only;  /* 境界だけ? */
-    bool can_resize;  /* リサイズ可能? */
+    bool maxbox;  // 最大化ボックスの有無
+    bool minbox;  // 最小化ボックスの有無
+    bool h_scrollbar;  // 橫スクロールバーの有無
+    bool v_scrollbar;  // 縱スクロールバーの有無
+    bool popup;  // ポップアップウィンドウか否か
+    bool border_only;  // 境界のみか否か
+    bool can_resize;  // 大きさ變更の可否
 
-    D0_()
+    D0_() noexcept
       : pwnd(nullptr), hm(nullptr), winproc(nullptr),
         x(CW_USEDEFAULT), w(CW_USEDEFAULT),
         icon(DEFAULT_RC), cursor(DEFAULT_RC), bkcolor(BG_WHITE),
@@ -102,23 +105,23 @@ private:
     //========================================================================
     //  WNDCLASS登録の要不要を決めるための operator==() と operator!=()
     //========================================================================
-    bool operator==(const WC_& my) const
+    bool operator==(const WC_& other) const noexcept
     {
-      if (icon_id_ != my.icon_id_)
+      if (icon_id_ != other.icon_id_)
         return false;
-      if (cursor_id_ != my.cursor_id_)
+      if (cursor_id_ != other.cursor_id_)
         return false;
-      if (bkcolor_ != my.bkcolor_)
+      if (bkcolor_ != other.bkcolor_)
         return false;
-      if (proc_ != my.proc_)
+      if (proc_ != other.proc_)
         return false;
 
       return true;
     }
 
-    bool operator!=(const WC_& my) const
+    bool operator!=(const WC_& other) const noexcept
     {
-      return !(*this == my);
+      return !(*this == other);
     }
   };
 
@@ -127,7 +130,7 @@ private:
   static std::vector<WC_> vwc_S;  // WNDCLASS情報ベクタ
 
 protected:
-  BasicWindow() {}
+  BasicWindow() = default;
 
   void createWindow0_(const D0_& de);
 
@@ -179,7 +182,7 @@ protected:
 
 
 public:
-  ~BasicWindow() {}
+  ~BasicWindow() = default;
 
   /// @brief ウィンドウ更新(再描畫要求)
   ///
@@ -207,14 +210,14 @@ public:
   /// ウィンドウのクライアント領域の指定した範圍を
   /// 再描畫が必要な領域に設定する。
   /// @param[in] rect 再描畫領域に設定する長方形
-  void invalidate(const polymnia::Rect& rect)
+  void invalidate(const eunomia::Rect& rect)
   {
     if (hw_) {
       ::RECT r;
-      r.left = rect.x1;
-      r.right = rect.x2;
-      r.top = rect.y1;
-      r.bottom = rect.y2;
+      r.left = rect.left;
+      r.right = rect.right;
+      r.top = rect.top;
+      r.bottom = rect.bottom;
 
       ::InvalidateRect(hw_, &r, FALSE);
     }
@@ -259,7 +262,7 @@ public:
   }
 
 
-  /// @brief クライアント領域の幅と高さを取得
+  /// @brief クライアント領域の幅と高さの取得
   /// @param[out] w 幅
   /// @param[out] h 高さ
   /// @return 成功時はtrue、さもなくばfalse

@@ -41,11 +41,12 @@
 
 
 urania::PaintMemDevice::PaintMemDevice(unsigned w, unsigned h)
-  : polymnia::ImageBuffer<urania::Color>(w, h, 0), hdc_(NULL), oldbmp_(NULL)
+  : eunomia::ImageBuffer<urania::Color>(w, h, (w * sizeof(Color) + 3) & ~3), 
+    hdc_(NULL), oldbmp_(NULL)
 {
-  int oo = w_ * sizeof(Color);
-  offset_
-    = (oo % 4) ? (oo / (4 * sizeof(Color)) + 1) * 4  :  oo / sizeof(Color);
+  //int oo = w_ * sizeof(Color);
+  //offset_
+  //  = (oo % 4) ? (oo / (4 * sizeof(Color)) + 1) * 4  :  oo / sizeof(Color);
 
   HBITMAP hBitmapNew;
   HDC hTmpDC;
@@ -56,7 +57,8 @@ urania::PaintMemDevice::PaintMemDevice(unsigned w, unsigned h)
   } BmpInfo;
 
   BmpInfo.Header.biSize = sizeof(BITMAPINFOHEADER);
-  BmpInfo.Header.biWidth = offset_;
+  //BmpInfo.Header.biWidth = offset_;
+  BmpInfo.Header.biWidth = w_;
   BmpInfo.Header.biHeight = -h_;
   BmpInfo.Header.biPlanes = 1;
   BmpInfo.Header.biBitCount = 24;
@@ -86,18 +88,15 @@ urania::PaintMemDevice::PaintMemDevice(unsigned w, unsigned h)
 
   oldbmp_ = (HBITMAP)SelectObject(hdc_, hBitmapNew);
 
-  //バッファ内容の初期化
-  //memset(buf_, 0, sizeof(Color) * offset_ * h_); // 今更流石にこれは無い
-  std::fill_n(buf_, offset_ * h_, Color(0, 0, 0));
-  
+  // 内容の初期化
+  clear(Color(0, 0, 0));
 }
 
 
 urania::PaintMemDevice::~PaintMemDevice()
 {
   HBITMAP hbmp;
-  if (hdc_ && oldbmp_) {
-    // hdc_が確保されている場合には開放する
+  if (hdc_ && oldbmp_) {  // hdc_が確保されている場合には開放する
     hbmp = (HBITMAP)SelectObject(hdc_, oldbmp_);
     DeleteObject(hbmp);
     DeleteDC(hdc_);
@@ -122,43 +121,46 @@ urania::PaintMemDevice::create(unsigned w, unsigned h)
 
 
 std::unique_ptr<urania::PaintMemDevice>
-urania::PaintMemDevice::duplicate(const polymnia::Picture* pct)
+urania::PaintMemDevice::duplicate(const eunomia::Picture& pct)
 {
-  int ww = pct->width();
-  int hh = pct->height();
+  int ww = pct.width();
+  int hh = pct.height();
 
   auto vd = create(ww, hh);
   if (!vd)
     return nullptr;
 
-  const polymnia::RgbColor* src = pct->buffer();
-  Color* res = vd->buffer();
+  vd->blt(pct, 0, 0, ww, hh, 0, 0);
 
-  int o = pct->offset();
-  int oo = vd->offset_;
-  for (int j = 0, p = 0, q = 0; j < hh; j++, p += o, q += oo)
-    for (int i = 0; i < ww; i++)
-      res[q + i] = src[p + i];
+
+  //const polymnia::RgbColour* src = pct->buffer();
+  //Color* res = vd->buffer();
+
+  //int o = pct->offset();
+  //int oo = vd->offset_;
+  //for (int j = 0, p = 0, q = 0; j < hh; j++, p += o, q += oo)
+  //  for (int i = 0; i < ww; i++)
+  //    res[q + i] = src[p + i];
 
   return vd;
 }
 
 
-std::unique_ptr<polymnia::Picture>
+std::unique_ptr<eunomia::Picture>
 urania::PaintMemDevice::duplicatePicture() const
 {
-  using namespace polymnia;
-
-  auto pct = Picture::create(w_, h_);
+  auto pct = eunomia::Picture::create(w_, h_);
   if (!pct)
     return nullptr;
 
-  RgbColor* res = pct->buffer();
-  int oo = pct->offset();
-  for (int j = 0, p = 0, q = 0; j < h_; j++, p += offset_, q += oo)
+  pct->blt(*this, 0, 0, w_, h_, 0, 0);
+
+  //RgbColor* res = pct->buffer();
+  //int oo = pct->offset();
+  //for (int j = 0, p = 0, q = 0; j < h_; j++, p += offset_, q += oo)
     //for (int i = 0; i < w_; i++)
     //  res[q + i] = buf_[p + i];
-    std::copy_n(buf_ + p, w_, res + q);
+  //  std::copy_n(buf_ + p, w_, res + q);
 
   return pct;
 }
@@ -169,7 +171,8 @@ std::unique_ptr<urania::PaintMemDevice> urania::PaintMemDevice::clone() const
   auto res = create(w_, h_);
   if (!res)
     return nullptr;
-  std::copy(buf_, buf_ + h_ * offset_, res->buf_);
+  res->blt(*this, 0, 0, w_, h_, 0, 0);
+  //std::copy(buf_, buf_ + h_ * offset_, res->buf_);
   return res;
 }
 

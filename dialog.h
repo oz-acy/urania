@@ -33,6 +33,8 @@
  * @date 2016.10.1  修正 friend classを削除
  * @date 2019.8.30  修正
  *
+ * @date 2021.6.13  メッセージハンドラと初期化子の型を公開型に變更
+ *
  */
 #ifndef INCLUDE_GUARD_URANIA_DIALOG_H
 #define INCLUDE_GUARD_URANIA_DIALOG_H
@@ -45,114 +47,107 @@
  */
 class urania::Dialog : public urania::WndBase
 {
-//  friend class urania::System;
   friend class urania::Window;
 
-private:
-  /// メッセージハンドラの型
-  using H_ = BOOL (*)(urania::Dialog*, UINT, WPARAM, LPARAM);
+public:
+  /// @brief メッセージハンドラ
+  using MsgHandler = BOOL (*)(urania::Dialog*, UINT, WPARAM, LPARAM);
 
-  /// 初期化函數の型
-  using Ini_ = void (*)(urania::Dialog*);
+  /// @brief 初期化子/初期化解除子
+  using Initializer = void (*)(urania::Dialog*);
 
 protected:
-  Ini_ ini_;
-  Ini_ uini_;
-  H_ handler_;
+  Initializer ini_;
+  Initializer uini_;
+  MsgHandler handler_;
   bool modal_;
   void* app_;
 
-  Dialog(Ini_ i, Ini_ u, H_ h, bool m, void* a)
+  Dialog(Initializer i, Initializer u, MsgHandler h, bool m, void* a)
   : ini_(i), uini_(i), handler_(h), modal_(m), app_(a) {}
 
   void init_(HWND hw) override;
   void uninit_() override;
   void destroyWindow_() override;
 
-
 public:
   ~Dialog() { deleting_(); }
 
-  /// Modalなダイアログを作成する。
+  /// @brief Modalなダイアログの作成
   /// @param rid リソースID
-  /// @param ini イニシャライザ。nullptrも可。
-  ///            プロトタイプは void (*ini)(urania::Dialog*);
-  /// @param ui アンイニシャライザ。nullptrも可。
-  ///           プロトタイプは void (*ui)(urania::Dialog*);
-  /// @param hnd メッセージハンドラ。
-  ///      プロトタイプは BOOL (*hnd)(urania::Dialog*, UINT, WPARAM, LPARAM);
-  /// @param app 任意のポインタ(void*)。
-  ///      設定しておくと getAppData() で參照できる。
+  /// @param ini 初期化子。nullptrも可。
+  /// @param ui 初期化解除子。nullptrも可。
+  /// @param hnd メッセージハンドラ
+  /// @param app
+  ///   任意のポインタ(void\*)。設定しておくと getAppData() で參照できる。
   /// @return ダイアログの返した整數値
-  static int doModal(int rid, Ini_ ini, Ini_ ui, H_ hnd, void* app =nullptr);
-
-  /// Modelessなダイアログを作成する。
-  /// @param rid リソースID
-  /// @param ini イニシャライザ。nullptrも可。
-  ///          プロトタイプは void (*ini)(urania::Dialog*);
-  /// @param ui アンイニシャライザ。nullptrも可。
-  ///           プロトタイプは void (*ui)(urania::Dialog*);
-  /// @param hnd メッセージハンドラ。
-  ///      プロトタイプは BOOL (*hnd)(urania::Dialog*, UINT, WPARAM, LPARAM);
-  /// @param app 任意のポインタ(void*)。
-  ///        設定しておくと getAppData() で參照できる。
-  /// @return 作成されたダイアログへのポインタ
   static
-  // urania::Dialog* 
+  int
+  doModal(
+    int rid, Initializer ini, Initializer ui, MsgHandler hnd,
+    void* app = nullptr);
+
+  /// @brief Modelessなダイアログの作成
+  /// @param rid リソースID
+  /// @param ini 初期化子。nullptrも可。
+  /// @param ui 初期化解除子。nullptrも可。
+  /// @param hnd メッセージハンドラ
+  /// @param app
+  ///   任意のポインタ(void\*)。設定しておくと getAppData() で參照できる。
+  /// @return 作成されたダイアログを保持するunique_ptr
+  static
   std::unique_ptr<Dialog>
   doModeless(
-    int rid, Ini_ ini, Ini_ ui, H_ hnd, void* app =nullptr);
+    int rid, Initializer ini, Initializer ui, MsgHandler hnd,
+    void* app = nullptr);
 
-  /// 所有者附のModalなダイアログを作成する。
+  /// @brief 所有者附のModalなダイアログの作成
   /// @param rid リソースID
   /// @param par 所有者
-  /// @param ini イニシャライザ。nullptrも可。
-  ///            プロトタイプは void (*ini)(urania::Dialog*);
-  /// @param ui アンイニシャライザ。nullptrも可。
-  ///             プロトタイプは void (*ui)(urania::Dialog*);
-  /// @param hnd メッセージハンドラ。
-  ///      プロトタイプは BOOL (*hnd)(urania::Dialog*, UINT, WPARAM, LPARAM);
-  /// @param app 任意のポインタ(void*)。
-  ///     設定しておくと getAppData() で參照できる。
+  /// @param ini 初期化子。nullptrも可。
+  /// @param ui 初期化解除子。nullptrも可。
+  /// @param hnd メッセージハンドラ
+  /// @param app
+  ///   任意のポインタ(void\*)。設定しておくと getAppData() で參照できる。
   /// @return ダイアログの返した整數値
-  static int doOwnedModal(
-    int rid, WndBase* par, Ini_ ini, Ini_ ui, H_ hnd, void* app =nullptr);
+  static
+  int
+  doOwnedModal(
+    int rid, WndBase* par, Initializer ini, Initializer ui, MsgHandler hnd,
+    void* app = nullptr);
 
-  /// 所有者附のModelessなダイアログを作成する。
+  /// 所有者附のModelessなダイアログの作成
   /// @param rid リソースID
   /// @param par 所有者
-  /// @param ini イニシャライザ。nullptrも可。
-  ///            プロトタイプは void (*ini)(urania::Dialog*);
-  /// @param ui アンイニシャライザ。nullptrも可。
-  ///           プロトタイプは void (*ui)(urania::Dialog*);
-  /// @param hnd メッセージハンドラ。
-  ///       プロトタイプは BOOL (*hnd)(urania::Dialog*, UINT, WPARAM, LPARAM);
-  /// @param app 任意のポインタ(void*)。
-  ///    設定しておくと getAppData() で參照できる。
-  /// @return 作成されたダイアログへのポインタ
+  /// @param ini 初期化子。nullptrも可。
+  /// @param ui 初期化解除子。nullptrも可。
+  /// @param hnd メッセージハンドラ
+  /// @param app
+  ///   任意のポインタ(void\*)。設定しておくと getAppData() で參照できる。
+  /// @return 作成されたダイアログを保持するunique_ptr
   static
-  // urania::Dialog* 
   std::unique_ptr<Dialog>
   doOwnedModeless(
-    int rid, WndBase* par, Ini_ ini, Ini_ ui, H_ hnd, void* app =nullptr);
+    int rid, WndBase* par, Initializer ini, Initializer ui, MsgHandler hnd,
+    void* app = nullptr);
 
 
-  /// Modalなダイアログを終了する。
+  /// @brief Modalなダイアログの終了
   /// @param i doModal() あるいは doOwnedModal() に返す整數値
   void endModal(int i);
 
-
-  /// 作成時に設定されたポインタを返す。
-  /// @return 作成時に設定されたポインタ(void*)。
+  /// @brief 作成時設定のポインタの取得
+  /// @return 作成時に設定された任意のポインタ(void*)
   void* getAppData() { return app_; }
 
 protected:
-  /// 各Dialogのメッセージ処理プロシージャ
+  /// @brief 各Dialogのメッセージ處理「プロシージャ」
   virtual BOOL dproc_(UINT msg, WPARAM wp, LPARAM lp);
 
-  /// Dialogと結合しているDialogBox用のDlgProc
+  /// @brief Dialogと結合しているDialogBox用のDlgProc
   static BOOL CALLBACK dlgproc_(HWND hw, UINT msg, WPARAM wp, LPARAM lp);
 };
+
 
 
 

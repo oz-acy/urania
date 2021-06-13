@@ -31,6 +31,9 @@
  * @date 2016.2.29  修正 (クロージャの實裝をbindから[this](){}に變更)
  * @date 2019.8.30  修正 豫約されてゐる識別子に該當してゐたものを修正
  *
+ * @date 2021.6.11
+ *   依據ライブラリをthemis+polymniaからeunomiaに切り替へるための修正
+ *
  */
 #include <cstdlib>
 #include <algorithm>
@@ -73,7 +76,7 @@ urania::WindowFactory::factory_(
 
   // 親又はオーナーWindowとMenu又は子WindowIDの設定
   if (par)
-    de0.pwnd = res->getHW_(par);
+    de0.pwnd = res->getHWND(par);
 
   if (par && cid)
     de0.hm = reinterpret_cast<HMENU>(cid);

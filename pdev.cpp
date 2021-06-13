@@ -31,9 +31,12 @@
  * class urania::PaintDevice の實裝定義(1)
  * コンストラクタ、デストラクタ、システムカラー系、クリア及び轉送處理
  *
- *  @date 2016.3.2  修正
- *  @date 2021.3.23
- *    PaintDevice::blt()の一部の仕樣を變更。PaintDevice::stretchBlt()を追加。
+ * @date 2016.3.2  修正
+ * @date 2021.3.23
+ *   PaintDevice::blt()の一部の仕樣を變更。PaintDevice::stretchBlt()を追加。
+ * @date 2021.6.11
+ *   依據ライブラリをthemis+polymniaからeunomiaに切り替へるための修正
+ *
  */
 #include "paintdev.h"
 #include <cstring>
@@ -89,12 +92,6 @@ urania::PaintDevice::create(HDC dc, DestProc dp, void* a, int w, int h)
 }
 
 
-/*====================================================================
- *  PaintDevice::setSysColor()
- *  システムカラー設定
- *  @param id   システムカラーのID(decl.hでenum定義)
- *  @param col  設定する色(BGR)
- */
 void urania::PaintDevice::setSysColor(int id, const urania::Color& col)
 {
   int i[1] = { id };
@@ -103,11 +100,6 @@ void urania::PaintDevice::setSysColor(int id, const urania::Color& col)
 }
 
 
-/*=====================================================
- *  PaintDevice::clear()
- *  描畫領域のクリア
- *  @param col  クリアするのに用ゐる色
- */
 void urania::PaintDevice::clear(const urania::Color& col)
 {
   HBRUSH br = CreateSolidBrush(col.getColorref());
@@ -117,82 +109,94 @@ void urania::PaintDevice::clear(const urania::Color& col)
 }
 
 
-/*=====================================================
- *  PaintDevice::blt()  × 4
- *  描畫内容の轉送
- *
- *  @param dx, dy  轉送先左上角座標
- *  @param src     轉送元Object
- *  @param sx, sy  轉送元左上角座標
- *  @param w, h    轉送する幅と高さ
- *  @param mask    マスクする領域
- */
-void
-urania::PaintDevice::blt(
-  int dx, int dy, const urania::PaintMemDevice* src, int sx, int sy,
-  int w, int h, const polymnia::Rect& mask)
-{
-  polymnia::imp_::Clip_ clip(sx, sy, w, h, dx, dy, mask);
-  if (clip)
-    BitBlt(
-      hdc_, clip.dx, clip.dy, clip.w, clip.h, src->hdc_, clip.sx, clip.sy,
-      SRCCOPY);
-}
+
 
 void
 urania::PaintDevice::blt(
-  int dx, int dy, const urania::PaintMemDevice* src, int sx, int sy,
-  int w, int h)
+  const urania::PaintMemDevice& src, int sx, int sy, int w, int h,
+  int dx, int dy, const std::optional<eunomia::Rect>& cliprect)
 {
-  polymnia::Rect rect(0, 0, width_, height_);
-  blt(dx, dy, src, sx, sy, w, h, rect);
-}
+  eunomia::implement_::Clipper_
+    clipper(
+      sx, sy, src.width(), src.height(), w, h,
+      dx, dy, width(), height(), cliprect);
 
-void
-urania::PaintDevice::blt(
-  int dx, int dy, urania::PaintMemDeviceIndexed* src, int sx, int sy,
-  int w, int h, const polymnia::Rect& mask)
-{
-  polymnia::imp_::Clip_ clip(sx, sy, w, h, dx, dy, mask);
-  if (clip)
-  {
-    src->updatePalette();
+  if (clipper) {
     BitBlt(
-      hdc_, clip.dx, clip.dy, clip.w, clip.h, src->hdc_, clip.sx, clip.sy,
-      SRCCOPY);
+      hdc_, clipper.dx, clipper.dy, clipper.w, clipper.h,
+      src.hdc_, clipper.sx, clipper.sy, SRCCOPY);
   }
+
+  //polymnia::imp_::Clip_ clip(sx, sy, w, h, dx, dy, mask);
+  //if (clip)
+  //  BitBlt(
+  //    hdc_, clip.dx, clip.dy, clip.w, clip.h, src->hdc_, clip.sx, clip.sy,
+  //    SRCCOPY);
 }
+
+//void
+//urania::PaintDevice::blt(
+//  int dx, int dy, const urania::PaintMemDevice* src, int sx, int sy,
+//  int w, int h)
+//{
+//  polymnia::Rect rect(0, 0, width_, height_);
+//  blt(dx, dy, src, sx, sy, w, h, rect);
+//}
 
 void
 urania::PaintDevice::blt(
-  int dx, int dy, urania::PaintMemDeviceIndexed* src, int sx, int sy,
-  int w, int h)
+  urania::PaintMemDeviceIndexed& src, int sx, int sy, int w, int h,
+  int dx, int dy, const std::optional<eunomia::Rect>& cliprect)
+  //int dx, int dy, urania::PaintMemDeviceIndexed* src, int sx, int sy,
+  //int w, int h, const polymnia::Rect& mask)
 {
-  polymnia::Rect rect(0, 0, width_, height_);
-  blt(dx, dy, src, sx, sy, w, h, rect);
+  eunomia::implement_::Clipper_
+    clipper(
+      sx, sy, src.width(), src.height(), w, h,
+      dx, dy, width(), height(), cliprect);
+
+  if (clipper) {
+    src.updatePalette();
+    BitBlt(
+      hdc_, clipper.dx, clipper.dy, clipper.w, clipper.h,
+      src.hdc_, clipper.sx, clipper.sy, SRCCOPY);
+  }
+
+
+  //polymnia::imp_::Clip_ clip(sx, sy, w, h, dx, dy, mask);
+  //if (clip)
+  //{
+  //  src->updatePalette();
+  //  BitBlt(
+  //    hdc_, clip.dx, clip.dy, clip.w, clip.h, src->hdc_, clip.sx, clip.sy,
+  //    SRCCOPY);
+  //}
 }
 
+//void
+//urania::PaintDevice::blt(
+//  int dx, int dy, urania::PaintMemDeviceIndexed* src, int sx, int sy,
+//  int w, int h)
+//{
+//  polymnia::Rect rect(0, 0, width_, height_);
+//  blt(dx, dy, src, sx, sy, w, h, rect);
+//}
 
-/*=====================================================
- *  PaintDevice::stretchBlt()  × 2
- *  描畫内容の轉送。但し擴大縮小する。アスペクト比は保存されない。
- *
- *  @param src  轉送元
- */
-void urania::PaintDevice::stretchBlt(const urania::PaintMemDevice* src)
+
+void urania::PaintDevice::stretchBlt(const urania::PaintMemDevice& src)
 {
   SetStretchBltMode(hdc_, COLORONCOLOR);
   StretchBlt(
-    hdc_, 0, 0, width_, height_, src->hdc_, 0, 0, src->width(), src->height(),
+    hdc_, 0, 0, width_, height_, src.hdc_, 0, 0, src.width(), src.height(),
     SRCCOPY);
 }
 
-void urania::PaintDevice::stretchBlt(urania::PaintMemDeviceIndexed* src)
+void urania::PaintDevice::stretchBlt(urania::PaintMemDeviceIndexed& src)
 {
-  src->updatePalette();
+  src.updatePalette();
   SetStretchBltMode(hdc_, COLORONCOLOR);
   StretchBlt(
-    hdc_, 0, 0, width_, height_, src->hdc_, 0, 0, src->width(), src->height(),
+    hdc_, 0, 0, width_, height_, src.hdc_, 0, 0, src.width(), src.height(),
     SRCCOPY);
 }
 
@@ -204,40 +208,41 @@ void urania::PaintDevice::stretchBlt(urania::PaintMemDeviceIndexed* src)
  *
  *  @param src 轉送元
  */
-void urania::PaintDevice::blt(const urania::PaintMemDevice* src)
+void urania::PaintDevice::blt(const urania::PaintMemDevice& src)
 {
   auto w = width_;
   auto h = height_;
 
-  if ((double)w / (double)src->width() > (double)h / (double)src->height())
-    w = src->width() * h / src->height();
-  else if ((double)w / (double)src->width() < (double)h / (double)src->height())
-    h = src->height() * w / src->width();
+  if ((double)w / (double)src.width() > (double)h / (double)src.height())
+    w = src.width() * h / src.height();
+  else if ((double)w / (double)src.width() < (double)h / (double)src.height())
+    h = src.height() * w / src.width();
 
   //clear(polymnia::RgbColor(255, 255, 255));
   SetStretchBltMode(hdc_, COLORONCOLOR);
   StretchBlt(
-    hdc_, 0, 0, w, h, src->hdc_, 0, 0, src->width(), src->height(),
+    hdc_, 0, 0, w, h, src.hdc_, 0, 0, src.width(), src.height(),
     SRCCOPY);
 }
 
-void urania::PaintDevice::blt(urania::PaintMemDeviceIndexed* src)
+void urania::PaintDevice::blt(urania::PaintMemDeviceIndexed& src)
 {
   auto w = width_;
   auto h = height_;
 
-  if ((double)w / (double)src->width() > (double)h / (double)src->height())
-    w = src->width() * h / src->height();
-  else if ((double)w / (double)src->width() < (double)h / (double)src->height())
-    h = src->height() * w / src->width();
+  if ((double)w / (double)src.width() > (double)h / (double)src.height())
+    w = src.width() * h / src.height();
+  else if ((double)w / (double)src.width() < (double)h / (double)src.height())
+    h = src.height() * w / src.width();
 
-  src->updatePalette();
+  src.updatePalette();
   //clear(polymnia::RgbColor(255, 255, 255));
   SetStretchBltMode(hdc_, COLORONCOLOR);
   StretchBlt(
-    hdc_, 0, 0, w, h, src->hdc_, 0, 0, src->width(), src->height(),
+    hdc_, 0, 0, w, h, src.hdc_, 0, 0, src.width(), src.height(),
     SRCCOPY);
 }
+
 
 
 

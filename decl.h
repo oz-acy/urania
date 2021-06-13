@@ -32,6 +32,9 @@
  * @date 2016.2.27  ファイル名變更
  * @date 2016.2.29  ファイルダイアログ關係の變更
  *
+ * @date 2021.6.11
+ *   依據ライブラリをthemis+polymniaからeunomiaに切り替へるための修正
+ *
  */
 #ifndef INCLUDE_GUARD_URANIA_DECL_H
 #define INCLUDE_GUARD_URANIA_DECL_H
@@ -43,9 +46,7 @@ namespace urania
   class WndBase;
     class BasicWindow;
       class Window;
-//        class MDIFrame;
-//        class MDIChild;
-      class Dialog;
+    class Dialog;
 
   class CommonDialogBase;
     class FileDialog;
@@ -57,15 +58,6 @@ namespace urania
   class PaintMemDevice;
   class PaintMemDevicePal;
 
-
-  /// @brief コントロールの位置、幅、高さを指定する構造體
-  struct CtrlDesc
-  {
-    int x; ///< コントロールのx座標
-    int y; ///< コントロールのy座標
-    int w; ///< コントロールの幅
-    int h; ///< コントロールの高さ
-  };
 
   enum // window style
   {
@@ -104,20 +96,6 @@ namespace urania
     SYSC_INACTIVECAPTIONTEXT, // 非アクティブキャプションのテキスト
     SYSC_BTNHIGHLIGHT,        // 選択されたボタン
   };
-
-/*廢用 Win32 API の DDL_hogehogeを直接用ゐるべし
-  enum //ComboBox & ListBox   DIR OPTION
-  {
-    CTD_READWRITE = 0x0100, //読み書き両用
-    CTD_READONRY = 0x0001,  //読み取り専用
-    CTD_HIDDEN = 0x0002,    //隠しファイル
-    CTD_SYSTEM = 0x0004,    //システムファイル
-    CTD_DIRECTORY = 0x0010, //ディレクトリ
-    CTD_ARCHIVE = 0x0020,   //アーカイブファイル
-    CTD_DRIVE = 0x4000,     //ドライブ
-    CTD_EXCLUSIVE = 0x8000  //指定タイプ以外を排除
-  };
-*/
 
   enum // WC_ & WCIN_ 用定数定義  for Icon&Cursorリソース
   {

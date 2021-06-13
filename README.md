@@ -1,4 +1,4 @@
-# project Urania
+# LIBURANIA
 
 ## これはなに?
 C++によるWin32APIのラッパー。
@@ -27,14 +27,18 @@ C++によるWin32APIのラッパー。
 
 
 ## 依存してゐるライブラリ
+<!--
 * [libthemis](https://github.com/oz-acy/themis)
 * [libpolymnia](https://github.com/oz-acy/polymnia)
+-->
+* [libeunomia](https://github.com/oz-acy/eunomia)
 
 
-## 使ひ方
-まづ、依存ライブラリをインストールする。
 
-それから、CMakeを用ゐてインストールする。
+## 利用方法
+
+### 導入
+CMakeを用ゐてインストールする。([libeunomia](https://github.com/oz-acy/eunomia)の導入は大前提。)
 
 ```bash
 $ cmake -G "Unix Makefiles" .
@@ -44,21 +48,15 @@ $ make install
 
 ジェネレータは環境に應じて適宜變更すること。他にもcmakeにあれこれオプション指定する必要があるかもしれない。
 
-利用するときには、CMakeLists.txtに
-```CMake
-find_package(themis REQUIRED)
-find_package(polymnia REQUIRED)
-find_package(urania REQUIRED)
-# ...
-target_link_libraries(targetname urania polymnia themis ...)
-```
-のやうに書けば、include pathやlibrary pathを設定し、ライブラリをリンクしてくれる、はず。
+ヘッダファイルは${prefix}/include/uraniaの下にインストールされる。
 
-ヘッダファイルのincludeは
-```C++
-#include <urania/window.h>
-```
-のやうにする。
+ライブラリを利用するときには、CMakeを用ゐるのであれば find_package(urania) すれば色々捗る、はず。
+
+
+### リファレンス
+Doxygenを用ゐて生成したリファレンスを
+<https://www.hiemalis.org/~acy/swlib/urania/>
+に置いてゐる。
 
 
 ## ライセンス
@@ -68,4 +66,4 @@ target_link_libraries(targetname urania polymnia themis ...)
 ## 作者
 oZ/acy (名賀月晃嗣)
 * <acy@hiemalis.org>
-* <http://www.hiemalis.org>
+* <https://www.hiemalis.org>

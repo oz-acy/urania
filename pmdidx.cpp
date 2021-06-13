@@ -62,11 +62,10 @@ HPALETTE createPalHandle_(const urania::Color col[])
     PALETTEENTRY aEntries[256];
   } PAL = { 0x300, 256 };
 
-  for (i=0; i<256; i++)
-  {
-    PAL.aEntries[i].peRed = col[i].r;
-    PAL.aEntries[i].peGreen = col[i].g;
-    PAL.aEntries[i].peBlue = col[i].b;
+  for (i = 0; i < 256; i++) {
+    PAL.aEntries[i].peRed = col[i].red;
+    PAL.aEntries[i].peGreen = col[i].green;
+    PAL.aEntries[i].peBlue = col[i].blue;
     PAL.aEntries[i].peFlags = PC_RESERVED;
   }
 
@@ -79,17 +78,14 @@ HPALETTE createPalHandle_(const urania::Color col[])
 
 
 urania::PaintMemDeviceIndexed::PaintMemDeviceIndexed(unsigned w, unsigned h)
-  : polymnia::ImageBuffer<std::uint8_t>(w, h, 0),
+  : eunomia::ImageBuffer<std::uint8_t>(
+      w, h, (w * sizeof(std::uint8_t) + 3) & ~3),
     hdc_(NULL), hpal_(NULL), oldbmp_(NULL)
 {
-  using namespace themis;
-  using namespace polymnia;
-  using namespace std;
-
-  int oo = w_ * sizeof(std::uint8_t);
-  offset_
-    = (oo % 4) ?
-        (oo / (4 * sizeof(std::uint8_t)) + 1) * 4 : oo / sizeof(std::uint8_t);
+  //int oo = w_ * sizeof(std::uint8_t);
+  //offset_
+  //  = (oo % 4) ?
+  //      (oo / (4 * sizeof(std::uint8_t)) + 1) * 4 : oo / sizeof(std::uint8_t);
 
   HBITMAP hBitmapNew;
   HDC hTmpDC;
@@ -102,15 +98,16 @@ urania::PaintMemDeviceIndexed::PaintMemDeviceIndexed(unsigned w, unsigned h)
 
   //パレットの初期化
   for (int i = 0; i < 256; i++) {
-    pal_[i].r = (std::uint8_t)(((i >> 5) & 7) * 255 / 7);
-    pal_[i].g = (std::uint8_t)(((i >> 2) & 7) * 255 / 7);
-    pal_[i].b = (std::uint8_t)((i & 3) * 255 / 3);
+    pal_[i].red = (std::uint8_t)(((i >> 5) & 7) * 255 / 7);
+    pal_[i].green = (std::uint8_t)(((i >> 2) & 7) * 255 / 7);
+    pal_[i].blue = (std::uint8_t)((i & 3) * 255 / 3);
   }
   hpal_ = createPalHandle_(pal_);
 
   ////
   BmpInfo.Header.biSize = sizeof(BITMAPINFOHEADER);
-  BmpInfo.Header.biWidth = offset_;
+  //BmpInfo.Header.biWidth = offset_;
+  BmpInfo.Header.biWidth = w_;
   BmpInfo.Header.biHeight = -h_;
   BmpInfo.Header.biPlanes = 1;
   BmpInfo.Header.biBitCount = 8;
@@ -123,9 +120,9 @@ urania::PaintMemDeviceIndexed::PaintMemDeviceIndexed(unsigned w, unsigned h)
 
   //パレットをカラーテーブルにコピー
   for (int i=0; i < 256; i++) {
-    BmpInfo.ColorTable[i].rgbRed = pal_[i].r;
-    BmpInfo.ColorTable[i].rgbGreen = pal_[i].g;
-    BmpInfo.ColorTable[i].rgbBlue = pal_[i].b;
+    BmpInfo.ColorTable[i].rgbRed = pal_[i].red;
+    BmpInfo.ColorTable[i].rgbGreen = pal_[i].green;
+    BmpInfo.ColorTable[i].rgbBlue = pal_[i].blue;
     BmpInfo.ColorTable[i].rgbReserved = 0;
   }
 
@@ -151,9 +148,12 @@ urania::PaintMemDeviceIndexed::PaintMemDeviceIndexed(unsigned w, unsigned h)
 
   oldbmp_ = (HBITMAP)SelectObject(hdc_, hBitmapNew);
 
+  // 内容の初期化 パレット0で塗り潰す
+  clear(0);
+
   //メモリ領域のクリア
   //memset(buf_, 0, sizeof(UByte) * offset_ * h_);
-  std::fill_n(buf_, offset_ * h_, 0);
+  //std::fill_n(buf_, offset_ * h_, 0);
 }
 
 
@@ -190,14 +190,14 @@ void urania::PaintMemDeviceIndexed::updatePalette()
 
   RGBQUAD rgbq[256];
   for (int i = 0; i < 256; i++) {
-    rgbq[i].rgbRed = pal_[i].r;
-    rgbq[i].rgbGreen = pal_[i].g;
-    rgbq[i].rgbBlue = pal_[i].b;
+    rgbq[i].rgbRed = pal_[i].red;
+    rgbq[i].rgbGreen = pal_[i].green;
+    rgbq[i].rgbBlue = pal_[i].blue;
     rgbq[i].rgbReserved = 0;
   }
 
   SetDIBColorTable(hdc_, 0, 256, rgbq);
-  std::copy(pal_, pal_ + 256, oldpal_);
+  std::copy_n(pal_, 256, oldpal_);
 }
 
 
@@ -220,51 +220,63 @@ urania::PaintMemDeviceIndexed::create(unsigned w, unsigned h)
 
 
 std::unique_ptr<urania::PaintMemDeviceIndexed>
-urania::PaintMemDeviceIndexed::duplicate(const polymnia::PictureIndexed* pct)
+urania::PaintMemDeviceIndexed::duplicate(const eunomia::PictureIndexed& pct)
 {
-  using namespace themis;
-  using namespace polymnia;
-
-  int ww = pct->width();
-  int hh = pct->height();
+  int ww = pct.width();
+  int hh = pct.height();
 
   auto vd = create(ww,hh);
   if (!vd)
     return nullptr;
 
-  const std::uint8_t* src = pct->buffer();
-  std::uint8_t* res = vd->buffer();
-
-  int o = pct->offset();
-  int oo = vd->offset_;
-  for (int i=0, p = 0, q = 0; i < hh; ++i, p += o, q += oo)
-    std::copy_n(src + p, ww, res + q);
-
-  const RgbColor* sp = pct->paletteBuffer();
+  // パレットの轉寫と更新
+  const eunomia::RgbColour* sp = pct.paletteBuffer();
   Color* rp = vd->paletteBuffer();
   std::copy_n(sp, 256, rp);
   vd->updatePalette();
+
+  // 内容の轉寫
+  vd->blt(pct, 0, 0, ww, hh, 0, 0);
+
+  //const std::uint8_t* src = pct->buffer();
+  //std::uint8_t* res = vd->buffer();
+
+  //int o = pct->offset();
+  //int oo = vd->offset_;
+  //for (int i=0, p = 0, q = 0; i < hh; ++i, p += o, q += oo)
+  //  std::copy_n(src + p, ww, res + q);
+
+  //const RgbColor* sp = pct->paletteBuffer();
+  //Color* rp = vd->paletteBuffer();
+  //std::copy_n(sp, 256, rp);
+  //vd->updatePalette();
 
   return vd;
 }
 
 
-std::unique_ptr<polymnia::PictureIndexed>
+std::unique_ptr<eunomia::PictureIndexed>
 urania::PaintMemDeviceIndexed::duplicatePictureIndexed() const
 {
-  using namespace polymnia;
-
-  auto pct = PictureIndexed::create(w_, h_);
+  auto pct = eunomia::PictureIndexed::create(w_, h_);
   if (!pct)
     return nullptr;
 
-  std::uint8_t* res = pct->buffer();
-  int oo = pct->offset();
-  for (int i = 0, p = 0, q = 0; i < h_; i++, p += offset_, q += oo)
-    std::copy_n(buf_ + p, w_, res + q);
+  // パレットの轉寫
+  auto pp = pct->paletteBuffer();
+  std::copy_n(pal_, 256, pp);
 
-  RgbColor* rp = pct->paletteBuffer();
-  std::copy_n(pal_, 256, rp);
+  // 内容の轉寫
+  pct->blt(*this, 0, 0, w_, h_, 0, 0);
+
+
+  //std::uint8_t* res = pct->buffer();
+  //int oo = pct->offset();
+  //for (int i = 0, p = 0, q = 0; i < h_; i++, p += offset_, q += oo)
+  //  std::copy_n(buf_ + p, w_, res + q);
+
+  //RgbColor* rp = pct->paletteBuffer();
+  //std::copy_n(pal_, 256, rp);
 
   return pct;
 }
@@ -276,8 +288,13 @@ urania::PaintMemDeviceIndexed::clone() const
   auto res = create(w_, h_);
   if (!res)
     return nullptr;
-  std::copy_n(buf_, h_ * offset_, res->buf_);
+
   std::copy_n(pal_, 256, res->pal_);
+  res->updatePalette();
+  res->blt(*this, 0, 0, w_, h_, 0, 0);
+
+  //std::copy_n(buf_, h_ * offset_, res->buf_);
+
   return res;
 }
 

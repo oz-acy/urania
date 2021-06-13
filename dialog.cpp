@@ -33,12 +33,16 @@
  * @date 2016.10.1  修正
  * @date 2019.8.30  修正
  *
+ * @date 2021.6.13  メッセージハンドラと初期化子の型を公開型に變更
+ *
  */
 #include <memory>
 #include "dialog.h"
 
 
-int urania::Dialog::doModal(int rid, Ini_ ini, Ini_ ui, H_ hnd, void* app)
+int
+urania::Dialog::doModal(
+  int rid, Initializer ini, Initializer ui, MsgHandler hnd, void* app)
 {
   std::unique_ptr<Dialog> dlg(new Dialog(ini, ui, hnd, true, app));
   return
@@ -49,7 +53,8 @@ int urania::Dialog::doModal(int rid, Ini_ ini, Ini_ ui, H_ hnd, void* app)
 
 
 std::unique_ptr<urania::Dialog>
-urania::Dialog::doModeless(int rid, Ini_ ini, Ini_ ui, H_ hnd, void* app)
+urania::Dialog::doModeless(
+  int rid, Initializer ini, Initializer ui, MsgHandler hnd, void* app)
 {
   std::unique_ptr<Dialog> dlg(new Dialog(ini, ui, hnd, false, app));
   ::CreateDialogParam(
@@ -60,24 +65,26 @@ urania::Dialog::doModeless(int rid, Ini_ ini, Ini_ ui, H_ hnd, void* app)
 
 int
 urania::Dialog::doOwnedModal(
-  int rid, urania::WndBase* par, Ini_ ini, Ini_ ui, H_ hnd, void* app)
+  int rid, urania::WndBase* par,
+  Initializer ini, Initializer ui, MsgHandler hnd, void* app)
 {
   std::unique_ptr<Dialog> dlg(new Dialog(ini, ui, hnd, true, app));
   return
     ::DialogBoxParam(
-      getHI_(), MAKEINTRESOURCE(rid), getHW_(par), (DLGPROC)dlgproc_,
+      getHI_(), MAKEINTRESOURCE(rid), getHWND(par), (DLGPROC)dlgproc_,
       (LPARAM)dlg.get());
 }
 
 
 std::unique_ptr<urania::Dialog>
 urania::Dialog::doOwnedModeless(
-  int rid, urania::WndBase* par, Ini_ ini, Ini_ ui, H_ hnd, void* app)
+  int rid, urania::WndBase* par,
+  Initializer ini, Initializer ui, MsgHandler hnd, void* app)
 {
   std::unique_ptr<Dialog> dlg(new Dialog(ini, ui, hnd, false, app));
 
   ::CreateDialogParam(
-    getHI_(), MAKEINTRESOURCE(rid), getHW_(par), (DLGPROC)dlgproc_,
+    getHI_(), MAKEINTRESOURCE(rid), getHWND(par), (DLGPROC)dlgproc_,
     (LPARAM)dlg.get());
 
   return dlg;
