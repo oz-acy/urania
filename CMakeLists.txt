@@ -79,7 +79,7 @@ target_compile_options(urania-debug PRIVATE
   $<$<CXX_COMPILER_ID:MSVC>:/W4>
 )
 
-target_compile_definitions(urania-debug PRIVATE _UNICODE UNICODE WINVER=0x500)
+target_compile_definitions(urania-debug PRIVATE _UNICODE UNICODE WINVER=0x0601)
 
 
 # インストール設定
