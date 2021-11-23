@@ -58,7 +58,7 @@ add_library(urania STATIC ${URANIA_SOURCES})
 set_target_properties(urania
   PROPERTIES PUBLIC_HEADER "${URANIA_HEADERS}"
 )
-target_link_libraries(urania PRIVATE eunomia polymnia themis)
+target_link_libraries(urania PRIVATE eunomia)
 
 target_compile_options(urania PRIVATE
   $<$<CXX_COMPILER_ID:GNU>:-Wall -O3>
@@ -71,7 +71,7 @@ target_compile_definitions(urania PRIVATE NDEBUG _UNICODE UNICODE WINVER=0x500)
 
 # DEBUG版ライブラリ
 add_library(urania-debug STATIC ${URANIA_SOURCES})
-target_link_libraries(urania-debug PRIVATE eunomia-debug polymnia-debug themis)
+target_link_libraries(urania-debug PRIVATE eunomia-debug)
 
 target_compile_options(urania-debug PRIVATE
   $<$<CXX_COMPILER_ID:GNU>:-Wall -g3 -ggdb>
