@@ -33,10 +33,16 @@
  *  @date  24 Apr 2008  修正
  *  @date   4 Apr 2009  修正 for UNICODE對應
  *  @date  29 Feb 2016  修正
+ *  @date   6 Dec 2021  修正
  *
  */
 #ifndef INCLUDE_GUARD_URANIA_REGISTRY_H
 #define INCLUDE_GUARD_URANIA_REGISTRY_H
+
+// windows.hのmin/maxマクロの抑止
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif 
 
 #include <windows.h>
 #include <string>

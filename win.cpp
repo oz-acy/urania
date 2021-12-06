@@ -37,6 +37,7 @@
  */
 #include <cstdlib>
 #include <algorithm>
+#include <functional>
 #include <windowsx.h>
 #include "window.h"
 

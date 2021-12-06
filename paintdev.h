@@ -31,15 +31,24 @@
  *
  * @date 2016.3.2   修正
  * @date 2019.8.29  修正
+ *
  * @date 2021.3.23
  *   PaintDevice::blt()の仕樣を一部變更。PaintDevice::stretchBlt()を追加。
  *
  * @date 2021.6.11
  *   依據ライブラリをthemis+polymniaからeunomiaに切り替へるための修正
  *
+ * @date 2021.12.6
+ *   MSVSでビルドするためにNOMINMAXを#define
+ *
  */
 #ifndef INCLUDE_GUARD_URANIA_PAINTDEVICE_H
 #define INCLUDE_GUARD_URANIA_PAINTDEVICE_H
+
+// windows.hのmin/maxマクロの抑止
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif 
 
 #include <windows.h>
 #include <eunomia/picture.h>

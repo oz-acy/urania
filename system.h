@@ -43,10 +43,17 @@
  * @date 13 Jun 2021
  *   System::getCmdLineArgs() を削除
  *   System::getCmdLineArgsW(const wchar_t*) を追加 
+ * @date 6 Dec 2021
+ *   MSVSでビルドするためにNOMINMAXを#define
  *
  */
 #ifndef INCLUDE_GUARD_URANIA_SYSTEM_H
 #define INCLUDE_GUARD_URANIA_SYSTEM_H
+
+// windows.hのmin/maxマクロの抑止
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif 
 
 #include <windows.h>
 #include <string>

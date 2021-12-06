@@ -36,9 +36,17 @@
  * @date 2021.6.11
  *   依據ライブラリをthemis+polymniaからeunomiaに切り替へるための修正
  *
+ * @date 2021.12.6
+ *   MSVSでビルドするためにNOMINMAXを#define
+ *
  */
 #ifndef INCLUDE_GUARD_URANIA_MENU_H
 #define INCLUDE_GUARD_URANIA_MENU_H
+
+// windows.hのmin/maxマクロの抑止
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif 
 
 #include <vector>
 #include <string>
