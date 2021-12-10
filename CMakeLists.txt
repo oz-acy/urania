@@ -1,6 +1,7 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.19)
 project(urania CXX)
 set(CMAKE_VERBOSE_MAKEFILE 1)
+set(CMAKE_OPTIMIZE_DEPENDENCIES ON)
 
 enable_language(CXX)
 #set(CMAKE_CXX_STANDARD 17)
@@ -73,36 +74,6 @@ endif()
 #target_include_directories(urania PRIVATE
 #  ${EUNOMIA_INCLUDE_DIRS}
 #)
-
-
-## Release版ライブラリ
-#add_library(urania STATIC ${URANIA_SOURCES})
-
-#set_target_properties(urania
-#  PROPERTIES PUBLIC_HEADER "${URANIA_HEADERS}"
-#)
-#target_link_libraries(urania PRIVATE eunomia)
-
-#target_compile_options(urania PRIVATE
-#  $<$<CXX_COMPILER_ID:GNU>:-Wall -O3>
-#  $<$<CXX_COMPILER_ID:Clang>:-Wall -O3>
-#  $<$<CXX_COMPILER_ID:MSVC>:/W4 /Ot>
-#)
-
-#target_compile_definitions(urania PRIVATE NDEBUG _UNICODE UNICODE WINVER=0x500)
-
-
-# DEBUG版ライブラリ
-#add_library(urania-debug STATIC ${URANIA_SOURCES})
-#target_link_libraries(urania-debug PRIVATE eunomia-debug)
-
-#target_compile_options(urania-debug PRIVATE
-#  $<$<CXX_COMPILER_ID:GNU>:-Wall -g3 -ggdb>
-#  $<$<CXX_COMPILER_ID:Clang>:-Wall -O3>
-#  $<$<CXX_COMPILER_ID:MSVC>:/W4>
-#)
-
-#target_compile_definitions(urania-debug PRIVATE _UNICODE UNICODE WINVER=0x0601)
 
 
 # インストール設定
