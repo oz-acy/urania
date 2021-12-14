@@ -1,23 +1,57 @@
+# CMakeLists.txt
+#
+# by oZ/acy
+# Copyright 2021 oZ/acy (名賀月晃嗣) <acy@hiemalis.org>
+#
+# Redistribution and use in source and binary forms, 
+#     with or without modification, 
+#   are permitted provided that the following conditions are met:
+#
+# 1. Redistributions of source code must retain the above copyright notice,
+#    this list of conditions and the following disclaimer.
+#
+# 2. Redistributions in binary form must reproduce the above copyright notice,
+#    this list of conditions and the following disclaimer in the documentation
+#    and/or other materials provided with the distribution.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, 
+# THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+# PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+# CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+# EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+# PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+# OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+# OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+# ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 cmake_minimum_required(VERSION 3.19)
 project(urania CXX)
 set(CMAKE_VERBOSE_MAKEFILE 1)
 set(CMAKE_OPTIMIZE_DEPENDENCIES ON)
 
-enable_language(CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 include(GNUInstallDirs)
 
-# 依存するライブラリ
 
-## 姑息的解決手段
-if(MSVC)
-  find_package(PNG REQUIRED)
-  find_package(JPEG REQUIRED)
+option(BUILD_SHARED_LIBS
+  "Build shared libraries (.dll/.so) instead of static ones (.lib/.a)"
+  OFF
+)
+
+# staticなライブラリをビルドする場合は、依存ライブラリもstaticにする。
+if (NOT BUILD_SHARED_LIBS AND NOT MSVC)
+  set(CMAKE_FIND_LIBRARY_SUFFIXES .a;.dll.a;.lib)
 endif()
 
+
+# 依存するライブラリ
+find_package(PNG)
+find_package(JPEG)
 find_package(eunomia REQUIRED)
 
 
@@ -59,21 +93,17 @@ set(URANIA_HEADERS
 )
 
 
-# build target
-add_library(urania STATIC ${URANIA_SOURCES})
+#### liburania ########
+add_library(urania ${URANIA_SOURCES})
 set_target_properties(urania
   PROPERTIES PUBLIC_HEADER "${URANIA_HEADERS}"
 )
 target_link_libraries(urania PRIVATE eunomia::eunomia)
-target_compile_definitions(urania PRIVATE NDEBUG _UNICODE UNICODE WINVER=0x500)
+target_compile_definitions(urania PRIVATE NDEBUG _UNICODE UNICODE WINVER=0x0A00)
 if(MSVC)
   set_target_properties(urania PROPERTIES PREFIX "lib")
   target_compile_options(urania PRIVATE /source-charset:utf-8)
 endif()
-
-#target_include_directories(urania PRIVATE
-#  ${EUNOMIA_INCLUDE_DIRS}
-#)
 
 
 # インストール設定
@@ -90,7 +120,7 @@ install(EXPORT urania-export
   FILE urania-config.cmake
   DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/cmake/urania/
   NAMESPACE urania::
-#  EXPORT_LINK_INTERFACE_LIBRARIES
+  EXPORT_LINK_INTERFACE_LIBRARIES
 )
 
 
