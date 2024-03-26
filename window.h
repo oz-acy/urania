@@ -278,7 +278,8 @@ public:
 
   std::shared_ptr<urania::Menu> getMenu() const { return menu_; }
   void setMenu(const std::shared_ptr<urania::Menu>& m) { linkMenu_(m); }
-  void setMenu(std::shared_ptr<urania::Menu>&& m) { linkMenu_(m); }
+  void setMenu(std::shared_ptr<urania::Menu>&& m)
+    { linkMenu_(std::move(m)); }
 
 protected:
   /// 各Windowのメッセージ処理プロシージャ
@@ -290,13 +291,13 @@ protected:
   HMENU linkMenu_(const std::shared_ptr<urania::Menu>& mn)
   {
     menu_ = mn;
-    return mn->giveHM_();
+    return menu_->giveHM_();
   }
 
   HMENU linkMenu_(std::shared_ptr<urania::Menu>&& mn)
   {
-    menu_ = mn;
-    return mn->giveHM_();
+    menu_ = std::move(mn);
+    return menu_->giveHM_();
   }
 };
 

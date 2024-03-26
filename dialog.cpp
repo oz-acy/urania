@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2021 oZ/acy (名賀月晃嗣)
+ * Copyright 2002-2024 oZ/acy (名賀月晃嗣)
  * Redistribution and use in source and binary forms, 
  *     with or without modification, 
  *   are permitted provided that the following conditions are met:
@@ -34,6 +34,7 @@
  * @date 2019.8.30  修正
  *
  * @date 2021.6.13  メッセージハンドラと初期化子の型を公開型に變更
+ * @date 2024.3.26  アプリケーションデータの保持方法を變更
  *
  */
 #include <memory>
@@ -42,7 +43,8 @@
 
 int
 urania::Dialog::doModal(
-  int rid, Initializer ini, Initializer ui, MsgHandler hnd, void* app)
+  int rid, Initializer ini, Initializer ui, MsgHandler hnd,
+  const std::any& app)
 {
   std::unique_ptr<Dialog> dlg(new Dialog(ini, ui, hnd, true, app));
   return
@@ -54,7 +56,8 @@ urania::Dialog::doModal(
 
 std::unique_ptr<urania::Dialog>
 urania::Dialog::doModeless(
-  int rid, Initializer ini, Initializer ui, MsgHandler hnd, void* app)
+  int rid, Initializer ini, Initializer ui, MsgHandler hnd,
+  const std::any& app)
 {
   std::unique_ptr<Dialog> dlg(new Dialog(ini, ui, hnd, false, app));
   ::CreateDialogParam(
@@ -66,7 +69,7 @@ urania::Dialog::doModeless(
 int
 urania::Dialog::doOwnedModal(
   int rid, urania::WndBase* par,
-  Initializer ini, Initializer ui, MsgHandler hnd, void* app)
+  Initializer ini, Initializer ui, MsgHandler hnd, const std::any& app)
 {
   std::unique_ptr<Dialog> dlg(new Dialog(ini, ui, hnd, true, app));
   return
@@ -79,7 +82,7 @@ urania::Dialog::doOwnedModal(
 std::unique_ptr<urania::Dialog>
 urania::Dialog::doOwnedModeless(
   int rid, urania::WndBase* par,
-  Initializer ini, Initializer ui, MsgHandler hnd, void* app)
+  Initializer ini, Initializer ui, MsgHandler hnd, const std::any& app)
 {
   std::unique_ptr<Dialog> dlg(new Dialog(ini, ui, hnd, false, app));
 

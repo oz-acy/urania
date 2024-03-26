@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2021 oZ/acy (名賀月晃嗣)
+ * Copyright 2000-2024 oZ/acy (名賀月晃嗣)
  * Redistribution and use in source and binary forms, 
  *     with or without modification, 
  *   are permitted provided that the following conditions are met:
@@ -34,31 +34,28 @@
 
 
 std::unique_ptr<urania::ClickPanel> urania::ClickPanel::create(
-  int x, int y, int w, int h, ClickPanel::PH_ ph, void* ap,
-  urania::WndBase* par, int id)
+  int x, int y, int w, int h, ClickPanel::PH_ ph,
+  const std::any& ap, urania::WndBase* par, int id)
 {
-   std::unique_ptr<ClickPanel> panel(new ClickPanel);
-   if (!panel)
-     return nullptr;
+  std::unique_ptr<ClickPanel> panel(new ClickPanel(ph, ap));
+  if (!panel)
+    return nullptr;
 
-   panel->ph_ = ph;
-   panel->app_ = ap;
+  D0_ de;
+  de.title = L"";
+  de.popup = true;
+  de.x = x;
+  de.y = y;
+  de.w = w;
+  de.h = h;
 
-   D0_ de;
-   de.title = L"";
-   de.popup = true;
-   de.x = x;
-   de.y = y;
-   de.w = w;
-   de.h = h;
+  panel->pw_ = getHWND(par);
+  de.pwnd = panel->pw_;
+  panel->id_ = id;
+  de.hm = reinterpret_cast<HMENU>(id);
+  panel->createWindow0_(de);
 
-   panel->pw_ = getHWND(par);
-   de.pwnd = panel->pw_;
-   panel->id_ = id;
-   de.hm = reinterpret_cast<HMENU>(id);
-   panel->createWindow0_(de);
-
-   return panel;
+  return panel;
 }
 
 

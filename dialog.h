@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2021 oZ/acy (名賀月晃嗣)
+ * Copyright 2002-2024 oZ/acy (名賀月晃嗣)
  * Redistribution and use in source and binary forms, 
  *     with or without modification, 
  *   are permitted provided that the following conditions are met:
@@ -34,11 +34,13 @@
  * @date 2019.8.30  修正
  *
  * @date 2021.6.13  メッセージハンドラと初期化子の型を公開型に變更
+ * @date 2024.3.26  アプリケーションデータの保持方法を變更
  *
  */
 #ifndef INCLUDE_GUARD_URANIA_DIALOG_H
 #define INCLUDE_GUARD_URANIA_DIALOG_H
 
+#include <any>
 #include "wbase.h"
 
 
@@ -61,9 +63,9 @@ protected:
   Initializer uini_;
   MsgHandler handler_;
   bool modal_;
-  void* app_;
+  std::any app_;
 
-  Dialog(Initializer i, Initializer u, MsgHandler h, bool m, void* a)
+  Dialog(Initializer i, Initializer u, MsgHandler h, bool m, const std::any& a)
   : ini_(i), uini_(i), handler_(h), modal_(m), app_(a) {}
 
   void init_(HWND hw) override;
@@ -78,28 +80,26 @@ public:
   /// @param ini 初期化子。nullptrも可。
   /// @param ui 初期化解除子。nullptrも可。
   /// @param hnd メッセージハンドラ
-  /// @param app
-  ///   任意のポインタ(void\*)。設定しておくと getAppData() で參照できる。
+  /// @param app 任意のコピー可能なデータ。設定しておくと getAppData() で參照できる。
   /// @return ダイアログの返した整數値
   static
   int
   doModal(
     int rid, Initializer ini, Initializer ui, MsgHandler hnd,
-    void* app = nullptr);
+    const std::any& app = std::any());
 
   /// @brief Modelessなダイアログの作成
   /// @param rid リソースID
   /// @param ini 初期化子。nullptrも可。
   /// @param ui 初期化解除子。nullptrも可。
   /// @param hnd メッセージハンドラ
-  /// @param app
-  ///   任意のポインタ(void\*)。設定しておくと getAppData() で參照できる。
+  /// @param app 任意のコピー可能なデータ。設定しておくと getAppData() で參照できる。
   /// @return 作成されたダイアログを保持するunique_ptr
   static
   std::unique_ptr<Dialog>
   doModeless(
     int rid, Initializer ini, Initializer ui, MsgHandler hnd,
-    void* app = nullptr);
+    const std::any& a = std::any());
 
   /// @brief 所有者附のModalなダイアログの作成
   /// @param rid リソースID
@@ -107,14 +107,13 @@ public:
   /// @param ini 初期化子。nullptrも可。
   /// @param ui 初期化解除子。nullptrも可。
   /// @param hnd メッセージハンドラ
-  /// @param app
-  ///   任意のポインタ(void\*)。設定しておくと getAppData() で參照できる。
+  /// @param app 任意のコピー可能なデータ。設定しておくと getAppData() で參照できる。
   /// @return ダイアログの返した整數値
   static
   int
   doOwnedModal(
     int rid, WndBase* par, Initializer ini, Initializer ui, MsgHandler hnd,
-    void* app = nullptr);
+    const std::any& a = std::any());
 
   /// 所有者附のModelessなダイアログの作成
   /// @param rid リソースID
@@ -122,23 +121,23 @@ public:
   /// @param ini 初期化子。nullptrも可。
   /// @param ui 初期化解除子。nullptrも可。
   /// @param hnd メッセージハンドラ
-  /// @param app
-  ///   任意のポインタ(void\*)。設定しておくと getAppData() で參照できる。
+  /// @param app 任意のコピー可能なデータ。設定しておくと getAppData() で參照できる。
   /// @return 作成されたダイアログを保持するunique_ptr
   static
   std::unique_ptr<Dialog>
   doOwnedModeless(
     int rid, WndBase* par, Initializer ini, Initializer ui, MsgHandler hnd,
-    void* app = nullptr);
+    const std::any& a = std::any());
 
 
   /// @brief Modalなダイアログの終了
   /// @param i doModal() あるいは doOwnedModal() に返す整數値
   void endModal(int i);
 
-  /// @brief 作成時設定のポインタの取得
-  /// @return 作成時に設定された任意のポインタ(void*)
-  void* getAppData() { return app_; }
+  /// @brief 設定データの參照
+  /// @return 作成時に設定された任意のデータへの參照
+  std::any& getAppData() { return app_; }
+
 
 protected:
   /// @brief 各Dialogのメッセージ處理「プロシージャ」
